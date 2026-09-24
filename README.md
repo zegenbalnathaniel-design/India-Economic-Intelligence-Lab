@@ -1,5 +1,28 @@
 # India Economic Intelligence Lab
 
+This repository holds two things:
+
+| | |
+| --- | --- |
+| **`web/`** | **IEIL — the India Economics Intelligence Lab web application.** An interactive research laboratory: two live economic models, a research paper whose central figure is a working instrument, a sourced data explorer and a command palette over the whole lab. React + TypeScript + Vite. See [`web/README.md`](web/README.md). |
+| everything else | The original Python / Streamlit computational supplement — the analysis modules, illustrative bank panel and methodology notes the web application grew out of. |
+
+```bash
+# the web application
+cd web && npm install && npm run dev
+
+# the Python supplement
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+streamlit run app/Home.py
+```
+
+The two share a subject and a discipline but not a codebase: the web application
+reimplements its mathematics in TypeScript so that every model runs in the reader's
+browser, with the working shown and the assumptions editable.
+
+---
+
 **An interactive computational economics research portfolio.**
 
 An exploration of how economic theory can be translated into quantitative models, simulations and empirical analysis using Indian economic and financial data. This repository is the computational supplement to two written research papers — it is not a commercial product, a financial-advice platform, or a general economics dashboard.

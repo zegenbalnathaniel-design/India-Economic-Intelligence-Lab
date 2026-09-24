@@ -1,0 +1,214 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --grid-line: rgba(255, 255, 255, 0.045);
+    --hairline: rgba(255, 255, 255, 0.09);
+    --hairline-strong: rgba(255, 255, 255, 0.16);
+    --accent: #e8933a;
+    --lab-nav-h: 56px;
+  }
+
+  * {
+    border-color: var(--hairline);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: auto;
+  }
+
+  body {
+    @apply bg-ink-950 text-ink-200 font-sans antialiased;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'ss01';
+    overflow-x: hidden;
+  }
+
+  /* Tabular, instrument-like numerals everywhere numbers are shown. */
+  .font-mono,
+  [data-numeric] {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum', 'zero';
+  }
+
+  ::selection {
+    background: rgba(232, 147, 58, 0.28);
+    color: #f4f6f6;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #08090a;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #262d32;
+    border: 3px solid #08090a;
+    border-radius: 6px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #414c53;
+  }
+
+  :focus-visible {
+    outline: 1px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  input[type='range'] {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: ew-resize;
+  }
+  input[type='range']::-webkit-slider-runnable-track {
+    height: 2px;
+    background: #262d32;
+  }
+  input[type='range']::-moz-range-track {
+    height: 2px;
+    background: #262d32;
+  }
+  input[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 13px;
+    height: 13px;
+    margin-top: -5.5px;
+    border-radius: 999px;
+    background: #e4e8ea;
+    border: 1px solid #08090a;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+    transition: background 120ms ease, box-shadow 120ms ease;
+  }
+  input[type='range']::-moz-range-thumb {
+    width: 13px;
+    height: 13px;
+    border-radius: 999px;
+    background: #e4e8ea;
+    border: 1px solid #08090a;
+  }
+  input[type='range']:hover::-webkit-slider-thumb,
+  input[type='range']:focus-visible::-webkit-slider-thumb {
+    background: var(--accent);
+    box-shadow: 0 0 0 4px rgba(232, 147, 58, 0.16);
+  }
+  input[type='range']:disabled::-webkit-slider-thumb {
+    background: #5d6a72;
+  }
+}
+
+@layer components {
+  /* ---- Structural primitives ---------------------------------------- */
+  .hairline {
+    border-color: var(--hairline);
+  }
+
+  .lab-grid {
+    background-image: linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size: 72px 72px;
+  }
+
+  .lab-panel {
+    @apply border bg-ink-900/60;
+    border-color: var(--hairline);
+  }
+
+  /* ---- Typographic roles -------------------------------------------- */
+  .label {
+    @apply font-mono text-2xs uppercase text-ink-500;
+    letter-spacing: 0.18em;
+  }
+
+  .label-accent {
+    @apply font-mono text-2xs uppercase;
+    color: var(--accent);
+    letter-spacing: 0.18em;
+  }
+
+  .display {
+    @apply font-display font-light text-ink-50;
+    letter-spacing: -0.015em;
+    line-height: 1.06;
+  }
+
+  .metric {
+    @apply font-mono text-ink-50;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+
+  .prose-research {
+    @apply font-display text-[1.0625rem] leading-[1.75] text-ink-200;
+  }
+  .prose-research p + p {
+    @apply mt-5;
+  }
+
+  /* ---- Controls ------------------------------------------------------ */
+  .btn {
+    @apply inline-flex items-center gap-2 border px-4 py-2 font-mono text-2xs uppercase transition-colors duration-150;
+    letter-spacing: 0.14em;
+    border-color: var(--hairline-strong);
+  }
+  .btn:hover {
+    @apply bg-ink-850 text-ink-50;
+    border-color: rgba(232, 147, 58, 0.5);
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #08090a;
+    border-color: var(--accent);
+  }
+  .btn-primary:hover {
+    background: #f0a45a;
+  }
+
+  .numfield {
+    @apply w-full border bg-ink-950 px-2 py-1.5 font-mono text-sm text-ink-50 outline-none transition-colors;
+    border-color: var(--hairline);
+    font-variant-numeric: tabular-nums;
+  }
+  .numfield:focus {
+    border-color: rgba(232, 147, 58, 0.55);
+  }
+
+  .scrim-top {
+    mask-image: linear-gradient(to bottom, transparent, black 18%);
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+}
+
+/* Accessibility: honour the OS reduced-motion preference (spec §64).
+   Transform/opacity transitions collapse to near-instant; JS-driven
+   animation reads the same preference via useReducedMotionPref(). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
