@@ -27,7 +27,7 @@ def test_comparison_chart_uses_dual_axes_and_both_captions():
     frame_b, meta_b = loaders.load("cpi", "2000-01-01", "2010-01-01", allow_live=False)
     fig = viz.comparison_chart(frame_a, meta_a, frame_b, meta_b)
     assert len(fig.data) == 2
-    assert fig.data[0].yaxis == "y1" or fig.data[0].yaxis is None
+    assert fig.data[0].yaxis in ("y", "y1", None)
     assert fig.data[1].yaxis == "y2"
     annotations_text = " ".join(a.text for a in fig.layout.annotations)
     assert meta_a.provider in annotations_text

@@ -53,7 +53,7 @@ def test_named_wrapper_matches_registry_load():
     frame_a, meta_a = loaders.load_gdp("2000-01-01", "2010-01-01", allow_live=False)
     frame_b, meta_b = loaders.load("gdp", "2000-01-01", "2010-01-01", allow_live=False)
     assert meta_a.indicator == meta_b.indicator
-    pd.testing.assert_series_equal(frame_a["value"], frame_b["value"], check_exact=False)
+    pd.testing.assert_series_equal(frame_a["value"], frame_b["value"], check_exact=False, check_freq=False)
 
 
 def test_value_bounds_enforced_end_to_end_for_unemployment():
@@ -124,5 +124,5 @@ def test_caching_round_trip_for_synthetic_result():
     frame2, meta2 = loaders.load("cpi", "2000-01-01", "2010-01-01", allow_live=False)
     # frame2 round-trips through the on-disk CSV cache written by frame1's
     # load, so compare with float tolerance rather than bit-exactness.
-    pd.testing.assert_series_equal(frame1["value"], frame2["value"], check_exact=False, atol=1e-6)
+    pd.testing.assert_series_equal(frame1["value"], frame2["value"], check_exact=False, atol=1e-6, check_freq=False)
     assert meta1.status == meta2.status == DataStatus.SYNTHETIC

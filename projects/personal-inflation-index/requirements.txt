@@ -4,3 +4,6 @@ scipy>=1.10
 streamlit>=1.30
 plotly>=5.18
 pytest>=7.4
+
+# notebook-only extra (for notebooks/01_building_a_personal_index.ipynb)
+matplotlib>=3.7
