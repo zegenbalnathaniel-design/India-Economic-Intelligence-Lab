@@ -40,8 +40,8 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/nathanielzegenbal/India-Economic-Intelligence-Lab"
-Repository = "https://github.com/nathanielzegenbal/India-Economic-Intelligence-Lab"
+Homepage = "https://github.com/zegenbalnathaniel-design/India-Economic-Intelligence-Lab"
+Repository = "https://github.com/zegenbalnathaniel-design/India-Economic-Intelligence-Lab"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/india_econ"]

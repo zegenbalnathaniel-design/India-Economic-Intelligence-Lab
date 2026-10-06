@@ -39,7 +39,7 @@ notebooks = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/NathanielZegenbal/India-Economic-Intelligence-Lab"
+Homepage = "https://github.com/zegenbalnathaniel-design/India-Economic-Intelligence-Lab"
 
 [tool.setuptools.packages.find]
 where = ["src"]
