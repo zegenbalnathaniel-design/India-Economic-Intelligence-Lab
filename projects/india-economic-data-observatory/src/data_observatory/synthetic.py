@@ -36,7 +36,7 @@ def synthetic_level_series(
     base_value: float,
     annual_drift: float,
     annual_vol: float,
-    freq: str = "A",
+    freq: str = "YS",
 ) -> pd.Series:
     """Geometric random walk with drift, for unbounded "level" indicators
     (GDP in current US$, exports/imports in current US$, etc.).
@@ -50,15 +50,14 @@ def synthetic_level_series(
         dates = pd.DatetimeIndex([pd.Timestamp(start)])
     n = len(dates)
     rng = np.random.default_rng(_seed_from_key(key))
-    steps_per_year = {"A": 1, "Y": 1, "Q": 4, "M": 12}.get(freq, 1)
+    steps_per_year = {"YS": 1, "A": 1, "Y": 1, "Q": 4, "M": 12}.get(freq, 1)
     dt = 1.0 / steps_per_year
     shocks = rng.normal(
         (annual_drift - 0.5 * annual_vol ** 2) * dt,
         annual_vol * np.sqrt(dt),
         size=n,
     )
-    log_level = np.log(base_value) + np.cumsum(shocks) - shocks[0] + shocks[0]
-    # anchor first observation exactly at base_value, then apply the walk
+    # anchor the first observation exactly at base_value, then apply the walk
     log_level = np.log(base_value) + np.concatenate([[0.0], np.cumsum(shocks)[:-1]])
     values = np.exp(log_level)
     return pd.Series(values, index=dates, name=key)
@@ -73,7 +72,7 @@ def synthetic_bounded_series(
     vol: float,
     lower_bound: float = 0.0,
     upper_bound: float = float("inf"),
-    freq: str = "A",
+    freq: str = "YS",
 ) -> pd.Series:
     """Mean-reverting (discretized Ornstein-Uhlenbeck) process clipped to
     `[lower_bound, upper_bound]`, for indicators that economically cannot
@@ -85,7 +84,7 @@ def synthetic_bounded_series(
         dates = pd.DatetimeIndex([pd.Timestamp(start)])
     n = len(dates)
     rng = np.random.default_rng(_seed_from_key(key + "::bounded"))
-    steps_per_year = {"A": 1, "Y": 1, "Q": 4, "M": 12}.get(freq, 1)
+    steps_per_year = {"YS": 1, "A": 1, "Y": 1, "Q": 4, "M": 12}.get(freq, 1)
     dt = 1.0 / steps_per_year
 
     values = np.empty(n)

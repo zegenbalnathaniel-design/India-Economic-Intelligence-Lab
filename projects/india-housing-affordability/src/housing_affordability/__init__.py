@@ -8,6 +8,7 @@ figures used by the bundled example/app are explicitly SYNTHETIC — see
 """
 from __future__ import annotations
 
+from .data_loader import CITY_NAMES, city_baseline, load_synthetic_city_baseline
 from .metrics import (
     AffordabilitySummary,
     affordability_summary,
@@ -42,4 +43,7 @@ __all__ = [
     "STANDARD_SCENARIOS",
     "project_scenario",
     "run_standard_scenarios",
+    "CITY_NAMES",
+    "city_baseline",
+    "load_synthetic_city_baseline",
 ]

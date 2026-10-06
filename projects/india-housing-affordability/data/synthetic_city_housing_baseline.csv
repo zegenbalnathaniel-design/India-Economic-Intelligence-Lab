@@ -1,0 +1,9 @@
+city,synthetic_annual_household_income_inr,synthetic_house_price_inr,illustrative_price_to_income_anchor,data_status,synthetic_price_to_income_ratio
+Ahmedabad,1113000.0,5932000.0,5.0,SYNTHETIC,5.33
+Bengaluru,1614000.0,12407000.0,8.0,SYNTHETIC,7.69
+Chennai,1150000.0,6918000.0,6.0,SYNTHETIC,6.02
+Delhi NCR,1539000.0,14131000.0,9.0,SYNTHETIC,9.18
+Hyderabad,1392000.0,9318000.0,6.5,SYNTHETIC,6.69
+Kolkata,1040000.0,5046000.0,5.0,SYNTHETIC,4.85
+Mumbai,1566000.0,18251000.0,11.0,SYNTHETIC,11.65
+Pune,1262000.0,9120000.0,7.0,SYNTHETIC,7.23

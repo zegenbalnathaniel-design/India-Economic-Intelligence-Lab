@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "econ-lab"
+version = "0.1.0"
+description = "An interactive, mathematically correct micro/macro/finance economics teaching lab built from small, extensible, independently-testable modules."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+authors = [{ name = "Nathaniel Zegenbal" }]
+dependencies = ["numpy>=1.26"]
+
+[project.optional-dependencies]
+app = ["streamlit>=1.32", "plotly>=5.19"]
+dev = ["pytest>=8.0"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

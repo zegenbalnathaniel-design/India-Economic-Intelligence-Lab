@@ -1,0 +1,33 @@
+# NOTE: GitHub Actions only discovers workflow files in a repository's
+# ROOT .github/workflows/ directory. This project currently lives at
+# projects/india-econ/ inside a larger monorepo, so this file does NOT run
+# automatically as-is -- it is provided for the day this folder is split
+# out into its own standalone repository (or this file is copied to
+# .github/workflows/ at that repo's root), at which point it will run with
+# no changes needed. See the README's "CI" section for the same note.
+
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install india-econ
+        run: pip install -e ".[dev]"
+
+      - name: Run tests
+        run: pytest tests/ -q
