@@ -1,156 +1,76 @@
 # India Economic Intelligence Lab
 
-**An interactive computational economics research portfolio.**
+A portfolio of nine independent, open-source computational projects exploring economics, finance, education and Indian economic data.
 
-An exploration of how economic theory can be translated into quantitative models, simulations and empirical analysis using Indian economic and financial data. This repository is the computational supplement to two written research papers — it is not a commercial product, a financial-advice platform, or a general economics dashboard.
+I build open-source computational projects exploring economics, finance, education, and Indian economic data. Each project below is self-contained — its own README, license, tests, methodology and (where relevant) Streamlit app — but they share a common thread: using data and computation to make economic questions understandable, rather than just asserted.
 
-> I did not build a dashboard to display economic data. I built an interactive computational environment to investigate economic questions from my own research.
+## The nine projects
 
----
+| # | Project | What it does |
+|---|---|---|
+| 1 | [`india-economic-policy-simulator`](projects/india-economic-policy-simulator/) | A pedagogical fiscal/monetary policy simulator (open-economy fiscal multiplier, Phillips curve, Okun's law, debt dynamics, crowding out) plus an empirical bank-performance/repo-rate transmission analysis (iBFPI). |
+| 2 | [`india-wealth-inequality-toolkit`](projects/india-wealth-inequality-toolkit/) | A reusable Gini / Lorenz curve / percentile-share / Palma-ratio inequality toolkit, plus the household wealth-composition simulator from the author's research on wealth accumulation in India. |
+| 3 | [`india-housing-affordability`](projects/india-housing-affordability/) | Price-to-income, EMI, loan-to-value and down-payment-burden metrics across major Indian cities, with conservative/baseline/optimistic scenario comparison. |
+| 4 | [`portfolio-optimization-lab`](projects/portfolio-optimization-lab/) | Modern Portfolio Theory from scratch: Sharpe ratios, the minimum-variance and maximum-Sharpe portfolios derived via Lagrange multipliers, and the efficient frontier, over a configurable six-exchange global stock universe (US, India NSE/BSE, London, Tokyo, Shanghai, Hong Kong) — including a 3D frontier and a 3D correlation-network view. |
+| 5 | [`sip-monte-carlo`](projects/sip-monte-carlo/) | A Monte Carlo simulator for systematic-investment-plan wealth accumulation: percentile fan charts, probability of reaching a target, sequence-of-returns risk, fees and inflation. |
+| 6 | [`personal-inflation-index`](projects/personal-inflation-index/) | Build your own household consumption basket and compute a personalized Laspeyres inflation index, compared against an illustrative CPI-style basket. |
+| 7 | [`economics-interactive-lab`](projects/economics-interactive-lab/) | An extensible interactive economics-education platform — micro (supply/demand, elasticity, tax incidence), macro (AD/AS, multipliers, growth) and finance (compound interest, diversification) modules, each with its own concept, equation, controls, visualization, experiment and limitations. |
+| 8 | [`india-economic-data-observatory`](projects/india-economic-data-observatory/) | A data ingestion/cleaning/validation pipeline for Indian economic indicators (growth, prices, labour, government, external sector, financial system), with standardized metadata and reusable visualization functions. |
+| 9 | [`india-econ`](projects/india-econ/) | A genuinely pip-installable Python package exposing a clean API (`gdp()`, `inflation()`, `unemployment()`, `trade()`, ...) for a focused, honestly-scoped subset of Indian economic data. |
 
-## What the site does
+See [`docs/PORTFOLIO_BUILD_ORDER.md`](docs/PORTFOLIO_BUILD_ORDER.md) for the recommended order to read/build these in, and why.
 
-Two research questions drive every interactive module:
+## How this portfolio is organized
 
-1. **Wealth & inequality.** *How do income, ownership, asset composition and returns on capital influence wealth accumulation and economic mobility in India?* Interactive composition-effect simulator, asset-allocation comparison and r − g explorer.
-2. **Banking & monetary policy.** *To what extent did policy rate changes influence bank financial performance during 2018-2024?* Adapts the BFPI methodology from the accompanying JP Morgan / Federal Reserve paper to a five-bank Indian panel (the **iBFPI**), and compares the aggregate iBFPI to the RBI repo rate with a rate-regime split.
-
----
-
-## Running it locally
-
-```bash
-git clone <this repo>
-cd india-economic-intelligence-lab
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-python -m data_sources.build_illustrative_data   # regenerates the shipped CSVs deterministically
-streamlit run app/Home.py
-```
-
-Runs on Python 3.11+. No API keys, no external services.
-
----
-
-## Repository structure
+This is a **monorepo of independent projects**, not one integrated application. Every project under `projects/` has its own:
 
 ```
-india-economic-intelligence-lab/
-│
-├── app/                    Streamlit UI (Home + 6 pages)
-│   ├── Home.py
-│   ├── components/         theme + shared UI helpers
-│   └── pages/              1_Wealth_Inequality_Lab.py ... 6_About.py
-│
-├── analysis/               Domain logic
-│   ├── wealth.py           composition effect, r − g
-│   └── banking.py          iBFPI robust z-score, Spearman, regime split
-│
-├── data/
-│   ├── raw/                (empty — user-supplied)
-│   ├── processed/          bank_panel.csv, repo_rate.csv
-│   └── cache/              (empty — future API-cached pulls)
-│
-├── data_sources/           Loaders + illustrative-panel builder
-├── models/                 (reserved for future extensions)
-├── tests/                  Unit tests for analysis modules (pytest)
-├── docs/                   Notes on figures and methodology
-│
-├── README.md
-├── methodology.md
-├── data_dictionary.md
-├── requirements.txt
-├── .env.example
-└── LICENSE
+README.md          — research question, theory, methodology, usage, limitations
+LICENSE             — MIT
+pyproject.toml      — installable package metadata
+requirements.txt
+src/<package>/      — the actual implementation
+tests/              — pytest, checked against closed-form math wherever possible
+docs/METHODOLOGY.md — full derivations and assumptions
+docs/DATA_SOURCES.md — where real data would come from, and what's synthetic in the meantime
+notebooks/          — a runnable walkthrough
+app/                — a Streamlit interface, where the project calls for one
 ```
 
----
+Nothing imports across project folders — each one clones, installs and runs on its own.
 
-## Site structure
+## Conceptual relationships
 
-| Page | Purpose |
-| --- | --- |
-| Home | Introduction and the three research themes: wealth, banking, method. |
-| Wealth & Inequality Lab | Income → wealth framework · composition effect · asset allocation · r − g. |
-| Banking & Monetary Policy Lab | iBFPI construction · aggregate & per-bank time series · repo-rate comparison · regime split. |
-| Research | The two underlying papers + a conservative evaluation table (SUPPORTS / MIXED / CONTRADICTS / INSUFFICIENT DATA). |
-| Methodology | Every formula, every direction coefficient, every assumption — separated into *from the papers* vs *new here*. |
-| Data | Source registry with dates, units and retrieval notes. |
-| About | Stack, reproducibility, licence, citation. |
+Although independent, the projects form a loose pipeline, each feeding ideas (not code) into the next:
 
----
+```
+India Economic Data Observatory
+      ↓
+India Economic Policy Simulator
+      ↓
+India Housing Affordability
+      ↓
+Personal Inflation Index
+      ↓
+India Wealth Inequality Toolkit
+      ↓
+Portfolio Optimization Lab
+      ↓
+SIP Monte Carlo
+      ↓
+Economics Interactive Lab
+      ↓
+India Econ Python Package
+```
 
-## Methodologies implemented
+The shared theme: using data and computation to make economic questions understandable.
 
-- **Composition-effect simulation** — deterministic future-value with annual rebalancing across six asset classes; nominal and real path.
-- **r − g on a consistent basis** — Fisher-style deflation before comparison; identity reported, no causal claim.
-- **Robust z-score** — `Z* = D · (X − median) / (1.4826 · MAD)`, standardised **per bank** so within-bank history is the reference.
-- **iBFPI composite** — equal-weight mean of five standardised indicators (PPNR / assets, CET1, NCO rate, LCR, unrealised losses / CET1).
-- **Cross-bank aggregation** — equal or user-weighted mean across banks.
-- **Spearman rank correlation** with two-sided p-value.
-- **Rate-regime classification** using the three-quarter rolling change in the repo rate (±25bp threshold).
+## A note on data and rigor
 
----
+Every project in this portfolio distinguishes **Theory** (what economic theory predicts), **Data** (what real data shows, where available), **Model** (what a computational model assumes), **Simulation** (what happens under stated hypothetical assumptions) and **Empirical result** (what is actually observed). Where real, authoritative data (RBI, MoSPI, World Bank, IMF) isn't accessible in a given environment, every project ships a clearly-labelled **synthetic** or **illustrative** fallback instead — never presented as a real finding. Each project's `docs/DATA_SOURCES.md` says exactly which is which, and where to get the real thing.
 
-## What comes from my research vs what is new here
-
-| Component | Origin | User-editable |
-| --- | --- | --- |
-| Composition-effect exhibit | **Paper A** | Contribution, horizon, weights, returns, inflation |
-| Asset-allocation comparison | New here | Same parameters |
-| r − g explorer | Framing from Paper A + literature | r, π, g |
-| BFPI robust z-score construction | **Paper B** | Direction coefficients fixed |
-| iBFPI (India application) | New here | Bank subset, weighting |
-| RBI rate × iBFPI Spearman + regime split | New here | Bank subset, weighting |
-| Illustrative bank panel | New here (synthetic) | Replace CSVs to reproduce with real data |
-
----
-
-## Data sources
-
-Every value on the site is either an author calculation from user-supplied assumptions, or drawn from an official source listed on the Data page. Priority sources: **RBI DBIE**, **RBI Basel III disclosures**, **bank annual reports**, **MOSPI**, **Economic Survey**, **SEBI / NSE / BSE**, **World Bank / IMF / BIS**, **Federal Reserve FRED**.
-
-The MVP ships with an **illustrative synthetic panel** so the methodology can be exercised without API keys. Replace the two CSVs in `data/processed/` with real values to reproduce.
-
----
-
-## Assumptions
-
-- Long-run nominal returns used as defaults are indicative reference points from historical averages, not forecasts. Every value is editable.
-- Household simulations use annual contributions at year-start with annual compounding and optional annual rebalancing.
-- Bank indicators are standardised within each bank's own history — cross-bank levels are not directly comparable in absolute terms.
-- Fees, taxes and transaction costs are omitted from the wealth-path calculation.
-- The regime split uses a fixed ±25bp threshold; alternative thresholds change the labels.
-
----
-
-## Limitations
-
-- **Correlation is not causation.** No causal identification is implied by any coefficient reported on the site.
-- **Historical returns are not future returns.** The composition-effect simulator is deterministic given the assumptions supplied.
-- Top-tail wealth is systematically undercovered in most Indian survey data — a Gini computed from surveys should be read with that caveat.
-- Small samples: the iBFPI comparison spans ≈26 quarters; regime-conditional correlations are computed on subsets and should be interpreted cautiously.
-- Cross-bank accounting differences and structural breaks (IND-AS transition, Covid-era accounting relief) are not adjusted for.
-- Autocorrelation in quarterly series inflates effective sample size; Spearman ρ p-values do not correct for this.
-- Composite indices are subjective — equal weights are a choice; the direction coefficients are a choice; results depend on both.
-
----
-
-## Suggested future research directions
-
-- Ingest live RBI DBIE and bank-filing data via a scheduled pull; replace the illustrative panel entirely.
-- FOMC / RBI MPC event studies around individual rate decisions (see the JP Morgan paper).
-- Bank fixed-effects panel regression of iBFPI on the repo rate with macro controls.
-- Sensitivity analysis of the composition-effect module to return-distribution assumptions (Monte Carlo, not deterministic).
-- A distributional Gini simulation seeded with household-level ownership rates from the AIDIS / NSS surveys.
-- Cross-country replication of the BFPI on other emerging-market bank systems.
-
----
+None of this is investment advice, a policy recommendation, or a forecast. These are educational, computational projects for exploring how economic theory, data and simulation relate to each other.
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
-
-## Citation
-
-Please cite the underlying research papers when referring to the methodologies, and this repository when referring to any specific interactive result.
+Each project carries its own MIT license (see the corresponding `LICENSE` file inside each `projects/*/` folder).
