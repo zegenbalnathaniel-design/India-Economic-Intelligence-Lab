@@ -1,12 +1,23 @@
 __pycache__/
 *.py[cod]
 *.egg-info/
+*.egg
+build/
+dist/
 .venv/
+venv/
 .env
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
 .streamlit/secrets.toml
-data/cache/*
-!data/cache/.gitkeep
-data/raw/*
-!data/raw/.gitkeep
 .DS_Store
+.coverage
+htmlcov/
+
+# Per-project cache/raw data holding pens: keep the folder, ignore contents.
+projects/*/data/cache/*
+!projects/*/data/cache/.gitkeep
+projects/*/data/raw/*
+!projects/*/data/raw/.gitkeep
