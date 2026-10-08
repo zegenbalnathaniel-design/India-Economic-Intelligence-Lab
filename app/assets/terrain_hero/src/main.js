@@ -194,6 +194,28 @@ function mountTerrainHero(root) {
     hotEls.push(hot);
   });
 
+  // Small decorative annotation chips -- generic economic category labels
+  // (not data points, no numbers attached), echoing the brief's "technical
+  // identity system" around the hero artwork. Placed in the field's margins
+  // so they don't collide with the four region hotspots.
+  const ANNOTATIONS = [
+    { text: "CAPITAL", x: 0.06, y: 0.18 },
+    { text: "GROWTH", x: 0.94, y: 0.18 },
+    { text: "CREDIT", x: 0.06, y: 0.5 },
+    { text: "PRODUCTIVITY", x: 0.94, y: 0.5 },
+    { text: "DISTRIBUTION", x: 0.06, y: 0.84 },
+    { text: "HOUSING", x: 0.94, y: 0.84 },
+  ];
+  ANNOTATIONS.forEach((a) => {
+    const el = document.createElement("div");
+    el.className = "th-annot";
+    el.style.left = `${a.x * 100}%`;
+    el.style.top = `${a.y * 100}%`;
+    el.style.transform = `translate(${a.x > 0.5 ? "-100%" : "0"}, -50%)`;
+    el.textContent = a.text;
+    overlay.appendChild(el);
+  });
+
   return figure;
 }
 

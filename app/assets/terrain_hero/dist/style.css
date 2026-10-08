@@ -1,31 +1,28 @@
-/* Economic Terrain hero. Palette matches app/components/theme.py's
-   cinematic dark theme: #0A0908 (void), #221C16 (espresso), #D4AF37 (gold),
-   #8E2424 (deep red), #EAEAE0 (parchment) -- so the embedded iframe reads
-   as part of the page, not a foreign widget. */
+/* Economic Terrain hero. Vibrant home-page palette: #11131A (deep ink),
+   #3155D9 (cobalt base), #F3C542 (gold peaks/highlights), #F04A32
+   (vermillion edges) -- colour, not the gold/espresso cinematic theme the
+   Lab pages use. No border/background box: the terrain sits directly in
+   the page composition instead of inside a bordered widget. */
 .th-wrap {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  aspect-ratio: 16 / 6;
-  min-height: 300px;
-  background: #0A0908;
-  border: 1px solid #3A3026;
-  border-radius: 4px;
-  overflow: hidden;
+  aspect-ratio: 16 / 7;
+  min-height: 320px;
+  background: transparent;
   font-family: -apple-system, "Segoe UI", sans-serif;
 
   /* Hairline's own theme hooks (see @lucasmarkes/hairline/src/core/styles.ts):
      plate = pillar fill, hi = bright stroke + pointer mark, edge = silhouette
-     outline, mid/lo = crease lines. Re-themed to the palette above instead
-     of Hairline's default light/dark grays -- this *is* "colouring the
-     terrain", not a cosmetic layer on top of it. */
-  --hairline-plate: #221C16;
-  --hairline-hi: #D4AF37;
-  --hairline-edge: #6B5E4A;
-  --hairline-mid: #3A3026;
-  --hairline-lo: #2A2118;
+     outline, mid/lo = crease lines. This *is* colouring the terrain, not a
+     layer on top of it. */
+  --hairline-plate: #181B26;
+  --hairline-hi: #F3C542;
+  --hairline-edge: #3155D9;
+  --hairline-mid: #F04A32;
+  --hairline-lo: #22262F;
 }
 
 /* Hairline's `terrain` draws into a fixed 400x320 (5:4) viewBox. th-wrap is
@@ -60,13 +57,13 @@
   padding: 10px 14px;
   border-radius: 3px;
   outline-offset: 3px;
-  outline-color: #D4AF37;
+  outline-color: #F3C542;
 }
 
 .th-hot:hover,
 .th-hot:focus-visible,
 .th-hot.is-active {
-  background: rgba(212, 175, 55, 0.1);
+  background: rgba(243, 197, 66, 0.12);
 }
 
 .th-label {
@@ -80,7 +77,7 @@
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.06em;
-  color: #D4AF37;
+  color: #F3C542;
   opacity: 0;
   transition: opacity 160ms ease;
 }
@@ -102,9 +99,24 @@
   bottom: 0;
   padding: 10px 16px;
   font-size: 12.5px;
-  color: #EAEAE0;
-  background: linear-gradient(to top, rgba(10, 9, 8, 0.92), rgba(10, 9, 8, 0));
+  color: #F5F0E6;
+  background: linear-gradient(to top, rgba(17, 19, 26, 0.9), rgba(17, 19, 26, 0));
   pointer-events: none;
+}
+
+/* Small decorative annotation chips scattered around the field -- generic
+   economic category labels (not data points), echoing the brief's
+   "technical annotation" micro-label system. Static, not pointer-following:
+   that would need per-frame position math tied to Hairline's internals,
+   which isn't exposed -- noted as a follow-up, not attempted here. */
+.th-annot {
+  position: absolute;
+  pointer-events: none;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #6B7280;
 }
 
 @media (prefers-reduced-motion: reduce) {
