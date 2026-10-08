@@ -25,6 +25,7 @@ from data_sources.loaders import (
 )
 from app.components.theme import (
     setup, kicker, callout, source_badge, stat_card, footnote,
+    GOLD, CRIMSON, MUTED, PARCHMENT,
 )
 
 
@@ -143,9 +144,9 @@ st.subheader("Aggregate iBFPI over time")
 agg_fig = go.Figure()
 agg_fig.add_scatter(
     x=agg["period"], y=agg["ibfpi_system"], mode="lines+markers",
-    line=dict(width=2.4, color="#0A4D68"), name="iBFPI (system)",
+    line=dict(width=2.4, color=GOLD), name="iBFPI (system)",
 )
-agg_fig.add_hline(y=0, line=dict(color="#9CA3AF", width=1, dash="dash"))
+agg_fig.add_hline(y=0, line=dict(color=MUTED, width=1, dash="dash"))
 agg_fig.update_layout(
     title=f"iBFPI, {weighting.lower()} across {len(selected)} bank(s)",
     yaxis_title="iBFPI (robust z-units)",
@@ -170,7 +171,7 @@ pb = scored[["bank", "period", "ibfpi"]].pivot(index="period", columns="bank", v
 pb_fig = go.Figure()
 for col in pb.columns:
     pb_fig.add_scatter(x=pb.index, y=pb[col], mode="lines", name=col, line=dict(width=1.8))
-pb_fig.add_hline(y=0, line=dict(color="#9CA3AF", width=1, dash="dash"))
+pb_fig.add_hline(y=0, line=dict(color=MUTED, width=1, dash="dash"))
 pb_fig.update_layout(
     title="Per-bank iBFPI — each series is standardised to its own history",
     yaxis_title="iBFPI (robust z-units)",
@@ -211,9 +212,9 @@ merged = agg.merge(repo, on="period", how="inner").dropna()
 
 fig = make_subplots(specs=[[{"secondary_y": True}]])
 fig.add_scatter(x=merged["period"], y=merged["ibfpi_system"], name="iBFPI",
-                line=dict(color="#0A4D68", width=2.4), secondary_y=False)
+                line=dict(color=GOLD, width=2.4), secondary_y=False)
 fig.add_scatter(x=merged["period"], y=merged["repo_rate"], name="RBI repo rate (%)",
-                line=dict(color="#B45309", width=2.0, dash="dot"), secondary_y=True)
+                line=dict(color=CRIMSON, width=2.0, dash="dot"), secondary_y=True)
 fig.update_yaxes(title_text="iBFPI (robust z-units)", secondary_y=False)
 fig.update_yaxes(title_text="Repo rate (%)", secondary_y=True)
 fig.update_layout(title="iBFPI vs RBI repo rate", height=380, hovermode="x unified")
@@ -247,11 +248,11 @@ labelled, rising, falling, stable = banking.regime_split(
 )
 
 reg_fig = go.Figure()
-palette = {"rising": "#B45309", "falling": "#0F766E", "stable": "#6B7280"}
+palette = {"rising": CRIMSON, "falling": GOLD, "stable": MUTED}
 for reg, sub in labelled.groupby("regime"):
     reg_fig.add_scatter(
         x=sub["repo_rate"], y=sub["ibfpi_system"], mode="markers",
-        name=reg.title(), marker=dict(size=10, color=palette[reg], line=dict(color="#FFFFFF", width=1)),
+        name=reg.title(), marker=dict(size=10, color=palette[reg], line=dict(color=PARCHMENT, width=1)),
     )
 reg_fig.update_layout(
     title="iBFPI vs repo rate by regime",
