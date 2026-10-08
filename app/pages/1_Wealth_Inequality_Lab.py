@@ -24,7 +24,7 @@ import streamlit as st
 
 from analysis import wealth
 from app.components.theme import (
-    setup, kicker, callout, source_badge, stat_card, footnote,
+    setup, kicker, callout, source_badge, stat_card, footnote, GOLD, CRIMSON, MUTED,
 )
 
 
@@ -207,7 +207,7 @@ path_fig.add_scatter(x=result.years, y=result.real_wealth,
                      mode="lines", name="Real wealth (deflated)", line=dict(width=2.4, dash="dot"))
 path_fig.add_scatter(x=result.years, y=result.total_contributions,
                      mode="lines", name="Cumulative contributions",
-                     line=dict(width=1.6, color="#6B7280"))
+                     line=dict(width=1.6, color=MUTED))
 path_fig.update_layout(
     title="Wealth accumulation path",
     xaxis_title="Year", yaxis_title="Wealth (₹)",
@@ -283,30 +283,30 @@ mc = wealth.monte_carlo(
 mc_fig = go.Figure()
 mc_fig.add_scatter(
     x=mc.years, y=mc.percentiles["p95"], mode="lines", name="95th pct",
-    line=dict(width=0, color="#0A4D68"), showlegend=False,
+    line=dict(width=0, color=GOLD), showlegend=False,
 )
 mc_fig.add_scatter(
     x=mc.years, y=mc.percentiles["p05"], mode="lines", name="5-95% band",
     fill="tonexty", fillcolor="rgba(10,77,104,0.12)",
-    line=dict(width=0, color="#0A4D68"),
+    line=dict(width=0, color=GOLD),
 )
 mc_fig.add_scatter(
     x=mc.years, y=mc.percentiles["p75"], mode="lines", name="75th pct",
-    line=dict(width=0, color="#0A4D68"), showlegend=False,
+    line=dict(width=0, color=GOLD), showlegend=False,
 )
 mc_fig.add_scatter(
     x=mc.years, y=mc.percentiles["p25"], mode="lines", name="25-75% band",
     fill="tonexty", fillcolor="rgba(10,77,104,0.22)",
-    line=dict(width=0, color="#0A4D68"),
+    line=dict(width=0, color=GOLD),
 )
 mc_fig.add_scatter(
     x=mc.years, y=mc.percentiles["p50"], mode="lines", name="Median",
-    line=dict(width=2.4, color="#0A4D68"),
+    line=dict(width=2.4, color=GOLD),
 )
 mc_fig.add_scatter(
     x=result.years, y=result.nominal_wealth, mode="lines",
     name="Deterministic path (mean returns)",
-    line=dict(width=1.6, dash="dot", color="#B45309"),
+    line=dict(width=1.6, dash="dot", color=CRIMSON),
 )
 mc_fig.update_layout(
     title=f"Monte Carlo wealth paths ({mc.n_paths:,} simulations)",
@@ -369,7 +369,7 @@ display["Final real"] = display["Final real"].map(_rupee)
 st.dataframe(display, hide_index=True, use_container_width=True)
 
 bar = go.Figure()
-bar.add_bar(x=compare["Asset"], y=compare["Final real"], name="Final real wealth", marker_color="#0A4D68")
+bar.add_bar(x=compare["Asset"], y=compare["Final real"], name="Final real wealth", marker_color=GOLD)
 bar.update_layout(
     title="Final wealth if concentrated in one asset (real terms)",
     yaxis_title="₹ (real)", xaxis_title="", height=360, showlegend=False,
