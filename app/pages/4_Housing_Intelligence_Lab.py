@@ -16,10 +16,10 @@ import plotly.graph_objects as go
 import streamlit as st
 
 from analysis import housing
-from app.components.theme import setup, kicker, callout, source_badge, stat_card, footnote
+from app.components.theme import setup, kicker, callout, source_badge, stat_card, footnote, GOLD
 from data_sources import loaders
 
-setup("Housing Intelligence Lab")
+setup("Housing Intelligence Lab", accent=GOLD)
 
 with st.sidebar:
     st.markdown("## Housing Intelligence Lab")
