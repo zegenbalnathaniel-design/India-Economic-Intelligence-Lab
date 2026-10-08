@@ -16,6 +16,7 @@ if str(ROOT) not in sys.path:
 import streamlit as st
 
 from app.components.theme import setup, kicker, callout, footnote
+from app.components import terrain_hero
 
 
 setup("Home")
@@ -34,6 +35,12 @@ st.markdown(
     "An exploration of how economic theory can be translated into quantitative "
     "models, simulations and empirical analysis using Indian economic and "
     "financial data."
+)
+
+terrain_hero.render()
+st.caption(
+    "Hover or tab through the terrain above to find each Lab — the labelled "
+    "rises are navigation, not data. On a touch device, tap a rise."
 )
 
 st.markdown("---")
