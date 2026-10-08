@@ -1,0 +1,13 @@
+bank,quarter,quarter_end,basis,net_interest_income_inr_crore,non_interest_income_inr_crore,net_revenue_inr_crore,operating_expenses_inr_crore,operating_profit_inr_crore,provisions_inr_crore,profit_before_tax_inr_crore,profit_after_tax_inr_crore,total_assets_inr_crore,net_interest_margin_pct,return_on_assets_pct,cet1_pct,capital_adequacy_ratio_pct,lcr_pct
+HDFC Bank,Q2 FY2025,2024-09-30,standalone,30110.0,11480.0,41590.0,16890.0,24700,2700.0,22000.0,16820,368810.0,3.5,1.9,17.3,19.8,128.0
+HDFC Bank,Q1 FY2026,2025-06-30,standalone,31440.0,21730.0,53170.0,17430.0,35740,14440.0,21290.0,18160,395410.0,3.4,1.9,17.4,20.0,124.0
+HDFC Bank,Q2 FY2026,2025-09-30,standalone,31550.0,14350.0,45900.0,17980.0,27920,3500.0,24420.0,18640,400300.0,3.27,1.9,17.5,20.0,120.0
+ICICI Bank,Q2 FY2025,2024-09-30,standalone,20048.0,6496.0,26544.0,10501.0,16043,1233.0,15490.0,11746,1976858.0,,,,,
+ICICI Bank,Q1 FY2026,2025-06-30,standalone,21635.0,7264.0,28899.0,11394.0,17505,1815.0,16931.0,12768,2118240.0,,,,,
+ICICI Bank,Q2 FY2026,2025-09-30,standalone,21529.0,7356.0,28885.0,11807.0,17078,914.0,16384.0,12359,2123839.0,4.3,,16.35,17.0,
+SBI,Q2 FY2025,2024-09-30,whole_bank,41620.0,,,,29294,3631.0,,18331,,,,9.95,13.76,
+SBI,Q1 FY2026,2025-06-30,whole_bank,41072.0,,,,30544,4934.0,,19160,,,,11.1,14.63,
+SBI,Q2 FY2026,2025-09-30,whole_bank,42984.0,,,,31904,4132.0,,20160,,2.97,,11.47,14.62,
+Axis Bank,Q2 FY2025,2024-09-30,standalone,,,,,10712,,,6918,,,1.84,,16.61,
+Axis Bank,Q1 FY2026,2025-06-30,standalone,13560.0,,,9303.0,11515,,,5806,,,,,,
+Axis Bank,Q2 FY2026,2025-09-30,standalone,13745.0,,,9957.0,10413,,,5090,1676614.0,3.73,1.23,14.43,16.55,119.0

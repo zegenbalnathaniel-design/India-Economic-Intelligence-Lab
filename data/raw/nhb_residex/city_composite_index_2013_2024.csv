@@ -1,0 +1,2301 @@
+City,quarter_raw,composite_index
+Ahmedabad,Jun-2013,74.0
+Bengaluru,Jun-2013,80.0
+Bhiwadi,Jun-2013,87.0
+Bhopal,Jun-2013,89.0
+Bhubaneswar,Jun-2013,73.0
+Bidhan Nagar (Excluding Rajarhat),Jun-2013,58.0
+Chakan,Jun-2013,76.0
+Chandigarh (Tricity),Jun-2013,92.0
+Chennai,Jun-2013,76.0
+Coimbatore,Jun-2013,75.0
+Dehradun,Jun-2013,0.0
+Delhi,Jun-2013,106.0
+Faridabad,Jun-2013,105.0
+Gandhinagar,Jun-2013,83.0
+Ghaziabad,Jun-2013,88.0
+Greater Noida,Jun-2013,97.0
+Gurugram,Jun-2013,120.0
+Guwahati,Jun-2013,0.0
+Howrah,Jun-2013,94.0
+Hyderabad,Jun-2013,71.0
+Indore,Jun-2013,83.0
+Jaipur,Jun-2013,90.0
+Kalyan Dombivali,Jun-2013,79.0
+Kanpur,Jun-2013,74.0
+Kochi,Jun-2013,80.0
+Kolkata,Jun-2013,92.0
+Lucknow,Jun-2013,80.0
+Ludhiana,Jun-2013,0.0
+Meerut,Jun-2013,0.0
+Mira Bhayander,Jun-2013,84.0
+Mumbai,Jun-2013,77.0
+Nagpur,Jun-2013,76.0
+Nashik,Jun-2013,84.0
+Navi Mumbai,Jun-2013,79.0
+New Town Kolkata,Jun-2013,90.0
+Noida,Jun-2013,93.0
+Panvel,Jun-2013,75.0
+Patna,Jun-2013,125.0
+Pimpri Chinchwad,Jun-2013,80.0
+Pune,Jun-2013,77.0
+Raipur,Jun-2013,0.0
+Rajkot,Jun-2013,0.0
+Ranchi,Jun-2013,0.0
+Surat,Jun-2013,78.0
+Thane,Jun-2013,79.0
+Thiruvananthapuram,Jun-2013,73.0
+Vadodara,Jun-2013,94.0
+Vasai Virar,Jun-2013,92.0
+Vijayawada,Jun-2013,0.0
+Vizag,Jun-2013,0.0
+Ahmedabad,Sep-2013,75.0
+Bengaluru,Sep-2013,83.0
+Bhiwadi,Sep-2013,89.0
+Bhopal,Sep-2013,89.0
+Bhubaneswar,Sep-2013,73.0
+Bidhan Nagar (Excluding Rajarhat),Sep-2013,59.0
+Chakan,Sep-2013,79.0
+Chandigarh (Tricity),Sep-2013,94.0
+Chennai,Sep-2013,77.0
+Coimbatore,Sep-2013,76.0
+Dehradun,Sep-2013,0.0
+Delhi,Sep-2013,106.0
+Faridabad,Sep-2013,110.0
+Gandhinagar,Sep-2013,82.0
+Ghaziabad,Sep-2013,92.0
+Greater Noida,Sep-2013,100.0
+Gurugram,Sep-2013,112.0
+Guwahati,Sep-2013,0.0
+Howrah,Sep-2013,97.0
+Hyderabad,Sep-2013,73.0
+Indore,Sep-2013,83.0
+Jaipur,Sep-2013,93.0
+Kalyan Dombivali,Sep-2013,80.0
+Kanpur,Sep-2013,77.0
+Kochi,Sep-2013,81.0
+Kolkata,Sep-2013,92.0
+Lucknow,Sep-2013,82.0
+Ludhiana,Sep-2013,0.0
+Meerut,Sep-2013,0.0
+Mira Bhayander,Sep-2013,87.0
+Mumbai,Sep-2013,79.0
+Nagpur,Sep-2013,78.0
+Nashik,Sep-2013,84.0
+Navi Mumbai,Sep-2013,79.0
+New Town Kolkata,Sep-2013,92.0
+Noida,Sep-2013,95.0
+Panvel,Sep-2013,76.0
+Patna,Sep-2013,125.0
+Pimpri Chinchwad,Sep-2013,83.0
+Pune,Sep-2013,80.0
+Raipur,Sep-2013,0.0
+Rajkot,Sep-2013,0.0
+Ranchi,Sep-2013,0.0
+Surat,Sep-2013,79.0
+Thane,Sep-2013,81.0
+Thiruvananthapuram,Sep-2013,75.0
+Vadodara,Sep-2013,94.0
+Vasai Virar,Sep-2013,94.0
+Vijayawada,Sep-2013,0.0
+Vizag,Sep-2013,0.0
+Ahmedabad,Dec-2013,76.0
+Bengaluru,Dec-2013,85.0
+Bhiwadi,Dec-2013,92.0
+Bhopal,Dec-2013,88.0
+Bhubaneswar,Dec-2013,73.0
+Bidhan Nagar (Excluding Rajarhat),Dec-2013,65.0
+Chakan,Dec-2013,82.0
+Chandigarh (Tricity),Dec-2013,95.0
+Chennai,Dec-2013,79.0
+Coimbatore,Dec-2013,78.0
+Dehradun,Dec-2013,0.0
+Delhi,Dec-2013,105.0
+Faridabad,Dec-2013,113.0
+Gandhinagar,Dec-2013,83.0
+Ghaziabad,Dec-2013,95.0
+Greater Noida,Dec-2013,102.0
+Gurugram,Dec-2013,113.0
+Guwahati,Dec-2013,0.0
+Howrah,Dec-2013,114.0
+Hyderabad,Dec-2013,76.0
+Indore,Dec-2013,83.0
+Jaipur,Dec-2013,96.0
+Kalyan Dombivali,Dec-2013,81.0
+Kanpur,Dec-2013,79.0
+Kochi,Dec-2013,83.0
+Kolkata,Dec-2013,90.0
+Lucknow,Dec-2013,83.0
+Ludhiana,Dec-2013,0.0
+Meerut,Dec-2013,0.0
+Mira Bhayander,Dec-2013,90.0
+Mumbai,Dec-2013,80.0
+Nagpur,Dec-2013,81.0
+Nashik,Dec-2013,85.0
+Navi Mumbai,Dec-2013,79.0
+New Town Kolkata,Dec-2013,94.0
+Noida,Dec-2013,97.0
+Panvel,Dec-2013,77.0
+Patna,Dec-2013,125.0
+Pimpri Chinchwad,Dec-2013,84.0
+Pune,Dec-2013,82.0
+Raipur,Dec-2013,0.0
+Rajkot,Dec-2013,0.0
+Ranchi,Dec-2013,0.0
+Surat,Dec-2013,78.0
+Thane,Dec-2013,83.0
+Thiruvananthapuram,Dec-2013,78.0
+Vadodara,Dec-2013,94.0
+Vasai Virar,Dec-2013,95.0
+Vijayawada,Dec-2013,0.0
+Vizag,Dec-2013,0.0
+Ahmedabad,Mar-2014,78.0
+Bengaluru,Mar-2014,87.0
+Bhiwadi,Mar-2014,94.0
+Bhopal,Mar-2014,85.0
+Bhubaneswar,Mar-2014,72.0
+Bidhan Nagar (Excluding Rajarhat),Mar-2014,68.0
+Chakan,Mar-2014,85.0
+Chandigarh (Tricity),Mar-2014,96.0
+Chennai,Mar-2014,81.0
+Coimbatore,Mar-2014,79.0
+Dehradun,Mar-2014,0.0
+Delhi,Mar-2014,105.0
+Faridabad,Mar-2014,113.0
+Gandhinagar,Mar-2014,84.0
+Ghaziabad,Mar-2014,97.0
+Greater Noida,Mar-2014,101.0
+Gurugram,Mar-2014,112.0
+Guwahati,Mar-2014,0.0
+Howrah,Mar-2014,121.0
+Hyderabad,Mar-2014,78.0
+Indore,Mar-2014,84.0
+Jaipur,Mar-2014,96.0
+Kalyan Dombivali,Mar-2014,82.0
+Kanpur,Mar-2014,79.0
+Kochi,Mar-2014,92.0
+Kolkata,Mar-2014,90.0
+Lucknow,Mar-2014,84.0
+Ludhiana,Mar-2014,0.0
+Meerut,Mar-2014,0.0
+Mira Bhayander,Mar-2014,92.0
+Mumbai,Mar-2014,81.0
+Nagpur,Mar-2014,85.0
+Nashik,Mar-2014,86.0
+Navi Mumbai,Mar-2014,81.0
+New Town Kolkata,Mar-2014,95.0
+Noida,Mar-2014,98.0
+Panvel,Mar-2014,77.0
+Patna,Mar-2014,125.0
+Pimpri Chinchwad,Mar-2014,85.0
+Pune,Mar-2014,84.0
+Raipur,Mar-2014,0.0
+Rajkot,Mar-2014,0.0
+Ranchi,Mar-2014,0.0
+Surat,Mar-2014,79.0
+Thane,Mar-2014,84.0
+Thiruvananthapuram,Mar-2014,80.0
+Vadodara,Mar-2014,95.0
+Vasai Virar,Mar-2014,95.0
+Vijayawada,Mar-2014,0.0
+Vizag,Mar-2014,0.0
+Ahmedabad,Jun-2014,80.0
+Bengaluru,Jun-2014,90.0
+Bhiwadi,Jun-2014,95.0
+Bhopal,Jun-2014,86.0
+Bhubaneswar,Jun-2014,72.0
+Bidhan Nagar (Excluding Rajarhat),Jun-2014,71.0
+Chakan,Jun-2014,87.0
+Chandigarh (Tricity),Jun-2014,95.0
+Chennai,Jun-2014,82.0
+Coimbatore,Jun-2014,81.0
+Dehradun,Jun-2014,0.0
+Delhi,Jun-2014,104.0
+Faridabad,Jun-2014,113.0
+Gandhinagar,Jun-2014,85.0
+Ghaziabad,Jun-2014,98.0
+Greater Noida,Jun-2014,100.0
+Gurugram,Jun-2014,113.0
+Guwahati,Jun-2014,0.0
+Howrah,Jun-2014,125.0
+Hyderabad,Jun-2014,80.0
+Indore,Jun-2014,84.0
+Jaipur,Jun-2014,95.0
+Kalyan Dombivali,Jun-2014,84.0
+Kanpur,Jun-2014,81.0
+Kochi,Jun-2014,99.0
+Kolkata,Jun-2014,91.0
+Lucknow,Jun-2014,85.0
+Ludhiana,Jun-2014,0.0
+Meerut,Jun-2014,0.0
+Mira Bhayander,Jun-2014,93.0
+Mumbai,Jun-2014,83.0
+Nagpur,Jun-2014,89.0
+Nashik,Jun-2014,88.0
+Navi Mumbai,Jun-2014,84.0
+New Town Kolkata,Jun-2014,97.0
+Noida,Jun-2014,100.0
+Panvel,Jun-2014,77.0
+Patna,Jun-2014,124.0
+Pimpri Chinchwad,Jun-2014,87.0
+Pune,Jun-2014,86.0
+Raipur,Jun-2014,0.0
+Rajkot,Jun-2014,0.0
+Ranchi,Jun-2014,0.0
+Surat,Jun-2014,80.0
+Thane,Jun-2014,85.0
+Thiruvananthapuram,Jun-2014,82.0
+Vadodara,Jun-2014,95.0
+Vasai Virar,Jun-2014,96.0
+Vijayawada,Jun-2014,0.0
+Vizag,Jun-2014,0.0
+Ahmedabad,Sep-2014,81.0
+Bengaluru,Sep-2014,95.0
+Bhiwadi,Sep-2014,96.0
+Bhopal,Sep-2014,89.0
+Bhubaneswar,Sep-2014,73.0
+Bidhan Nagar (Excluding Rajarhat),Sep-2014,73.0
+Chakan,Sep-2014,88.0
+Chandigarh (Tricity),Sep-2014,96.0
+Chennai,Sep-2014,86.0
+Coimbatore,Sep-2014,83.0
+Dehradun,Sep-2014,0.0
+Delhi,Sep-2014,103.0
+Faridabad,Sep-2014,113.0
+Gandhinagar,Sep-2014,86.0
+Ghaziabad,Sep-2014,98.0
+Greater Noida,Sep-2014,101.0
+Gurugram,Sep-2014,114.0
+Guwahati,Sep-2014,0.0
+Howrah,Sep-2014,128.0
+Hyderabad,Sep-2014,84.0
+Indore,Sep-2014,86.0
+Jaipur,Sep-2014,95.0
+Kalyan Dombivali,Sep-2014,86.0
+Kanpur,Sep-2014,81.0
+Kochi,Sep-2014,101.0
+Kolkata,Sep-2014,91.0
+Lucknow,Sep-2014,83.0
+Ludhiana,Sep-2014,0.0
+Meerut,Sep-2014,0.0
+Mira Bhayander,Sep-2014,93.0
+Mumbai,Sep-2014,85.0
+Nagpur,Sep-2014,92.0
+Nashik,Sep-2014,91.0
+Navi Mumbai,Sep-2014,90.0
+New Town Kolkata,Sep-2014,104.0
+Noida,Sep-2014,100.0
+Panvel,Sep-2014,78.0
+Patna,Sep-2014,125.0
+Pimpri Chinchwad,Sep-2014,88.0
+Pune,Sep-2014,87.0
+Raipur,Sep-2014,0.0
+Rajkot,Sep-2014,0.0
+Ranchi,Sep-2014,0.0
+Surat,Sep-2014,81.0
+Thane,Sep-2014,87.0
+Thiruvananthapuram,Sep-2014,84.0
+Vadodara,Sep-2014,98.0
+Vasai Virar,Sep-2014,96.0
+Vijayawada,Sep-2014,0.0
+Vizag,Sep-2014,0.0
+Ahmedabad,Dec-2014,82.0
+Bengaluru,Dec-2014,98.0
+Bhiwadi,Dec-2014,97.0
+Bhopal,Dec-2014,91.0
+Bhubaneswar,Dec-2014,76.0
+Bidhan Nagar (Excluding Rajarhat),Dec-2014,75.0
+Chakan,Dec-2014,89.0
+Chandigarh (Tricity),Dec-2014,94.0
+Chennai,Dec-2014,89.0
+Coimbatore,Dec-2014,86.0
+Dehradun,Dec-2014,0.0
+Delhi,Dec-2014,102.0
+Faridabad,Dec-2014,112.0
+Gandhinagar,Dec-2014,87.0
+Ghaziabad,Dec-2014,98.0
+Greater Noida,Dec-2014,100.0
+Gurugram,Dec-2014,116.0
+Guwahati,Dec-2014,0.0
+Howrah,Dec-2014,130.0
+Hyderabad,Dec-2014,86.0
+Indore,Dec-2014,87.0
+Jaipur,Dec-2014,96.0
+Kalyan Dombivali,Dec-2014,90.0
+Kanpur,Dec-2014,80.0
+Kochi,Dec-2014,102.0
+Kolkata,Dec-2014,92.0
+Lucknow,Dec-2014,82.0
+Ludhiana,Dec-2014,0.0
+Meerut,Dec-2014,0.0
+Mira Bhayander,Dec-2014,94.0
+Mumbai,Dec-2014,88.0
+Nagpur,Dec-2014,95.0
+Nashik,Dec-2014,93.0
+Navi Mumbai,Dec-2014,96.0
+New Town Kolkata,Dec-2014,109.0
+Noida,Dec-2014,99.0
+Panvel,Dec-2014,78.0
+Patna,Dec-2014,122.0
+Pimpri Chinchwad,Dec-2014,90.0
+Pune,Dec-2014,89.0
+Raipur,Dec-2014,0.0
+Rajkot,Dec-2014,0.0
+Ranchi,Dec-2014,0.0
+Surat,Dec-2014,83.0
+Thane,Dec-2014,88.0
+Thiruvananthapuram,Dec-2014,87.0
+Vadodara,Dec-2014,99.0
+Vasai Virar,Dec-2014,97.0
+Vijayawada,Dec-2014,0.0
+Vizag,Dec-2014,0.0
+Ahmedabad,Mar-2015,83.0
+Bengaluru,Mar-2015,99.0
+Bhiwadi,Mar-2015,97.0
+Bhopal,Mar-2015,94.0
+Bhubaneswar,Mar-2015,79.0
+Bidhan Nagar (Excluding Rajarhat),Mar-2015,76.0
+Chakan,Mar-2015,89.0
+Chandigarh (Tricity),Mar-2015,93.0
+Chennai,Mar-2015,91.0
+Coimbatore,Mar-2015,86.0
+Dehradun,Mar-2015,0.0
+Delhi,Mar-2015,102.0
+Faridabad,Mar-2015,112.0
+Gandhinagar,Mar-2015,89.0
+Ghaziabad,Mar-2015,99.0
+Greater Noida,Mar-2015,100.0
+Gurugram,Mar-2015,112.0
+Guwahati,Mar-2015,0.0
+Howrah,Mar-2015,127.0
+Hyderabad,Mar-2015,89.0
+Indore,Mar-2015,88.0
+Jaipur,Mar-2015,99.0
+Kalyan Dombivali,Mar-2015,93.0
+Kanpur,Mar-2015,82.0
+Kochi,Mar-2015,98.0
+Kolkata,Mar-2015,93.0
+Lucknow,Mar-2015,83.0
+Ludhiana,Mar-2015,0.0
+Meerut,Mar-2015,0.0
+Mira Bhayander,Mar-2015,95.0
+Mumbai,Mar-2015,89.0
+Nagpur,Mar-2015,98.0
+Nashik,Mar-2015,96.0
+Navi Mumbai,Mar-2015,101.0
+New Town Kolkata,Mar-2015,111.0
+Noida,Mar-2015,98.0
+Panvel,Mar-2015,79.0
+Patna,Mar-2015,122.0
+Pimpri Chinchwad,Mar-2015,92.0
+Pune,Mar-2015,92.0
+Raipur,Mar-2015,0.0
+Rajkot,Mar-2015,0.0
+Ranchi,Mar-2015,0.0
+Surat,Mar-2015,86.0
+Thane,Mar-2015,88.0
+Thiruvananthapuram,Mar-2015,89.0
+Vadodara,Mar-2015,101.0
+Vasai Virar,Mar-2015,99.0
+Vijayawada,Mar-2015,0.0
+Vizag,Mar-2015,0.0
+Ahmedabad,Jun-2015,85.0
+Bengaluru,Jun-2015,99.0
+Bhiwadi,Jun-2015,97.0
+Bhopal,Jun-2015,96.0
+Bhubaneswar,Jun-2015,81.0
+Bidhan Nagar (Excluding Rajarhat),Jun-2015,78.0
+Chakan,Jun-2015,91.0
+Chandigarh (Tricity),Jun-2015,87.0
+Chennai,Jun-2015,93.0
+Coimbatore,Jun-2015,87.0
+Dehradun,Jun-2015,0.0
+Delhi,Jun-2015,101.0
+Faridabad,Jun-2015,114.0
+Gandhinagar,Jun-2015,92.0
+Ghaziabad,Jun-2015,99.0
+Greater Noida,Jun-2015,101.0
+Gurugram,Jun-2015,108.0
+Guwahati,Jun-2015,0.0
+Howrah,Jun-2015,123.0
+Hyderabad,Jun-2015,90.0
+Indore,Jun-2015,88.0
+Jaipur,Jun-2015,98.0
+Kalyan Dombivali,Jun-2015,95.0
+Kanpur,Jun-2015,82.0
+Kochi,Jun-2015,97.0
+Kolkata,Jun-2015,93.0
+Lucknow,Jun-2015,83.0
+Ludhiana,Jun-2015,0.0
+Meerut,Jun-2015,0.0
+Mira Bhayander,Jun-2015,97.0
+Mumbai,Jun-2015,90.0
+Nagpur,Jun-2015,99.0
+Nashik,Jun-2015,98.0
+Navi Mumbai,Jun-2015,103.0
+New Town Kolkata,Jun-2015,111.0
+Noida,Jun-2015,99.0
+Panvel,Jun-2015,80.0
+Patna,Jun-2015,119.0
+Pimpri Chinchwad,Jun-2015,93.0
+Pune,Jun-2015,95.0
+Raipur,Jun-2015,0.0
+Rajkot,Jun-2015,0.0
+Ranchi,Jun-2015,0.0
+Surat,Jun-2015,89.0
+Thane,Jun-2015,89.0
+Thiruvananthapuram,Jun-2015,91.0
+Vadodara,Jun-2015,102.0
+Vasai Virar,Jun-2015,100.0
+Vijayawada,Jun-2015,0.0
+Vizag,Jun-2015,0.0
+Ahmedabad,Sep-2015,88.0
+Bengaluru,Sep-2015,98.0
+Bhiwadi,Sep-2015,97.0
+Bhopal,Sep-2015,98.0
+Bhubaneswar,Sep-2015,83.0
+Bidhan Nagar (Excluding Rajarhat),Sep-2015,79.0
+Chakan,Sep-2015,93.0
+Chandigarh (Tricity),Sep-2015,87.0
+Chennai,Sep-2015,98.0
+Coimbatore,Sep-2015,88.0
+Dehradun,Sep-2015,0.0
+Delhi,Sep-2015,100.0
+Faridabad,Sep-2015,115.0
+Gandhinagar,Sep-2015,94.0
+Ghaziabad,Sep-2015,99.0
+Greater Noida,Sep-2015,102.0
+Gurugram,Sep-2015,106.0
+Guwahati,Sep-2015,0.0
+Howrah,Sep-2015,107.0
+Hyderabad,Sep-2015,91.0
+Indore,Sep-2015,89.0
+Jaipur,Sep-2015,98.0
+Kalyan Dombivali,Sep-2015,96.0
+Kanpur,Sep-2015,85.0
+Kochi,Sep-2015,99.0
+Kolkata,Sep-2015,94.0
+Lucknow,Sep-2015,84.0
+Ludhiana,Sep-2015,0.0
+Meerut,Sep-2015,0.0
+Mira Bhayander,Sep-2015,97.0
+Mumbai,Sep-2015,91.0
+Nagpur,Sep-2015,99.0
+Nashik,Sep-2015,99.0
+Navi Mumbai,Sep-2015,104.0
+New Town Kolkata,Sep-2015,110.0
+Noida,Sep-2015,100.0
+Panvel,Sep-2015,81.0
+Patna,Sep-2015,115.0
+Pimpri Chinchwad,Sep-2015,94.0
+Pune,Sep-2015,97.0
+Raipur,Sep-2015,0.0
+Rajkot,Sep-2015,0.0
+Ranchi,Sep-2015,0.0
+Surat,Sep-2015,90.0
+Thane,Sep-2015,90.0
+Thiruvananthapuram,Sep-2015,92.0
+Vadodara,Sep-2015,102.0
+Vasai Virar,Sep-2015,100.0
+Vijayawada,Sep-2015,0.0
+Vizag,Sep-2015,0.0
+Ahmedabad,Dec-2015,91.0
+Bengaluru,Dec-2015,97.0
+Bhiwadi,Dec-2015,96.0
+Bhopal,Dec-2015,100.0
+Bhubaneswar,Dec-2015,84.0
+Bidhan Nagar (Excluding Rajarhat),Dec-2015,82.0
+Chakan,Dec-2015,95.0
+Chandigarh (Tricity),Dec-2015,88.0
+Chennai,Dec-2015,102.0
+Coimbatore,Dec-2015,88.0
+Dehradun,Dec-2015,0.0
+Delhi,Dec-2015,100.0
+Faridabad,Dec-2015,114.0
+Gandhinagar,Dec-2015,95.0
+Ghaziabad,Dec-2015,100.0
+Greater Noida,Dec-2015,102.0
+Gurugram,Dec-2015,104.0
+Guwahati,Dec-2015,0.0
+Howrah,Dec-2015,103.0
+Hyderabad,Dec-2015,91.0
+Indore,Dec-2015,89.0
+Jaipur,Dec-2015,99.0
+Kalyan Dombivali,Dec-2015,98.0
+Kanpur,Dec-2015,88.0
+Kochi,Dec-2015,99.0
+Kolkata,Dec-2015,94.0
+Lucknow,Dec-2015,86.0
+Ludhiana,Dec-2015,0.0
+Meerut,Dec-2015,0.0
+Mira Bhayander,Dec-2015,97.0
+Mumbai,Dec-2015,91.0
+Nagpur,Dec-2015,99.0
+Nashik,Dec-2015,101.0
+Navi Mumbai,Dec-2015,102.0
+New Town Kolkata,Dec-2015,110.0
+Noida,Dec-2015,100.0
+Panvel,Dec-2015,84.0
+Patna,Dec-2015,109.0
+Pimpri Chinchwad,Dec-2015,95.0
+Pune,Dec-2015,98.0
+Raipur,Dec-2015,0.0
+Rajkot,Dec-2015,0.0
+Ranchi,Dec-2015,0.0
+Surat,Dec-2015,92.0
+Thane,Dec-2015,91.0
+Thiruvananthapuram,Dec-2015,94.0
+Vadodara,Dec-2015,102.0
+Vasai Virar,Dec-2015,100.0
+Vijayawada,Dec-2015,0.0
+Vizag,Dec-2015,0.0
+Ahmedabad,Mar-2016,93.0
+Bengaluru,Mar-2016,97.0
+Bhiwadi,Mar-2016,95.0
+Bhopal,Mar-2016,101.0
+Bhubaneswar,Mar-2016,86.0
+Bidhan Nagar (Excluding Rajarhat),Mar-2016,85.0
+Chakan,Mar-2016,96.0
+Chandigarh (Tricity),Mar-2016,89.0
+Chennai,Mar-2016,105.0
+Coimbatore,Mar-2016,92.0
+Dehradun,Mar-2016,0.0
+Delhi,Mar-2016,99.0
+Faridabad,Mar-2016,116.0
+Gandhinagar,Mar-2016,97.0
+Ghaziabad,Mar-2016,100.0
+Greater Noida,Mar-2016,102.0
+Gurugram,Mar-2016,103.0
+Guwahati,Mar-2016,0.0
+Howrah,Mar-2016,103.0
+Hyderabad,Mar-2016,92.0
+Indore,Mar-2016,90.0
+Jaipur,Mar-2016,99.0
+Kalyan Dombivali,Mar-2016,100.0
+Kanpur,Mar-2016,89.0
+Kochi,Mar-2016,100.0
+Kolkata,Mar-2016,95.0
+Lucknow,Mar-2016,86.0
+Ludhiana,Mar-2016,0.0
+Meerut,Mar-2016,0.0
+Mira Bhayander,Mar-2016,97.0
+Mumbai,Mar-2016,92.0
+Nagpur,Mar-2016,99.0
+Nashik,Mar-2016,101.0
+Navi Mumbai,Mar-2016,101.0
+New Town Kolkata,Mar-2016,111.0
+Noida,Mar-2016,100.0
+Panvel,Mar-2016,88.0
+Patna,Mar-2016,106.0
+Pimpri Chinchwad,Mar-2016,96.0
+Pune,Mar-2016,98.0
+Raipur,Mar-2016,0.0
+Rajkot,Mar-2016,0.0
+Ranchi,Mar-2016,0.0
+Surat,Mar-2016,92.0
+Thane,Mar-2016,93.0
+Thiruvananthapuram,Mar-2016,98.0
+Vadodara,Mar-2016,102.0
+Vasai Virar,Mar-2016,101.0
+Vijayawada,Mar-2016,0.0
+Vizag,Mar-2016,0.0
+Ahmedabad,Jun-2016,95.0
+Bengaluru,Jun-2016,96.0
+Bhiwadi,Jun-2016,95.0
+Bhopal,Jun-2016,101.0
+Bhubaneswar,Jun-2016,89.0
+Bidhan Nagar (Excluding Rajarhat),Jun-2016,87.0
+Chakan,Jun-2016,97.0
+Chandigarh (Tricity),Jun-2016,90.0
+Chennai,Jun-2016,109.0
+Coimbatore,Jun-2016,94.0
+Dehradun,Jun-2016,0.0
+Delhi,Jun-2016,98.0
+Faridabad,Jun-2016,115.0
+Gandhinagar,Jun-2016,99.0
+Ghaziabad,Jun-2016,100.0
+Greater Noida,Jun-2016,101.0
+Gurugram,Jun-2016,103.0
+Guwahati,Jun-2016,0.0
+Howrah,Jun-2016,101.0
+Hyderabad,Jun-2016,93.0
+Indore,Jun-2016,90.0
+Jaipur,Jun-2016,100.0
+Kalyan Dombivali,Jun-2016,101.0
+Kanpur,Jun-2016,90.0
+Kochi,Jun-2016,98.0
+Kolkata,Jun-2016,97.0
+Lucknow,Jun-2016,86.0
+Ludhiana,Jun-2016,0.0
+Meerut,Jun-2016,0.0
+Mira Bhayander,Jun-2016,97.0
+Mumbai,Jun-2016,93.0
+Nagpur,Jun-2016,100.0
+Nashik,Jun-2016,101.0
+Navi Mumbai,Jun-2016,101.0
+New Town Kolkata,Jun-2016,109.0
+Noida,Jun-2016,100.0
+Panvel,Jun-2016,90.0
+Patna,Jun-2016,105.0
+Pimpri Chinchwad,Jun-2016,96.0
+Pune,Jun-2016,98.0
+Raipur,Jun-2016,0.0
+Rajkot,Jun-2016,0.0
+Ranchi,Jun-2016,0.0
+Surat,Jun-2016,93.0
+Thane,Jun-2016,94.0
+Thiruvananthapuram,Jun-2016,100.0
+Vadodara,Jun-2016,103.0
+Vasai Virar,Jun-2016,101.0
+Vijayawada,Jun-2016,0.0
+Vizag,Jun-2016,0.0
+Ahmedabad,Sep-2016,97.0
+Bengaluru,Sep-2016,97.0
+Bhiwadi,Sep-2016,94.0
+Bhopal,Sep-2016,101.0
+Bhubaneswar,Sep-2016,91.0
+Bidhan Nagar (Excluding Rajarhat),Sep-2016,89.0
+Chakan,Sep-2016,97.0
+Chandigarh (Tricity),Sep-2016,89.0
+Chennai,Sep-2016,108.0
+Coimbatore,Sep-2016,92.0
+Dehradun,Sep-2016,0.0
+Delhi,Sep-2016,98.0
+Faridabad,Sep-2016,113.0
+Gandhinagar,Sep-2016,99.0
+Ghaziabad,Sep-2016,100.0
+Greater Noida,Sep-2016,98.0
+Gurugram,Sep-2016,103.0
+Guwahati,Sep-2016,0.0
+Howrah,Sep-2016,101.0
+Hyderabad,Sep-2016,94.0
+Indore,Sep-2016,90.0
+Jaipur,Sep-2016,101.0
+Kalyan Dombivali,Sep-2016,101.0
+Kanpur,Sep-2016,88.0
+Kochi,Sep-2016,98.0
+Kolkata,Sep-2016,93.0
+Lucknow,Sep-2016,87.0
+Ludhiana,Sep-2016,0.0
+Meerut,Sep-2016,0.0
+Mira Bhayander,Sep-2016,97.0
+Mumbai,Sep-2016,95.0
+Nagpur,Sep-2016,101.0
+Nashik,Sep-2016,102.0
+Navi Mumbai,Sep-2016,101.0
+New Town Kolkata,Sep-2016,101.0
+Noida,Sep-2016,98.0
+Panvel,Sep-2016,91.0
+Patna,Sep-2016,105.0
+Pimpri Chinchwad,Sep-2016,97.0
+Pune,Sep-2016,99.0
+Raipur,Sep-2016,0.0
+Rajkot,Sep-2016,0.0
+Ranchi,Sep-2016,0.0
+Surat,Sep-2016,94.0
+Thane,Sep-2016,94.0
+Thiruvananthapuram,Sep-2016,102.0
+Vadodara,Sep-2016,103.0
+Vasai Virar,Sep-2016,101.0
+Vijayawada,Sep-2016,0.0
+Vizag,Sep-2016,0.0
+Ahmedabad,Dec-2016,97.0
+Bengaluru,Dec-2016,97.0
+Bhiwadi,Dec-2016,94.0
+Bhopal,Dec-2016,101.0
+Bhubaneswar,Dec-2016,93.0
+Bidhan Nagar (Excluding Rajarhat),Dec-2016,88.0
+Chakan,Dec-2016,99.0
+Chandigarh (Tricity),Dec-2016,93.0
+Chennai,Dec-2016,104.0
+Coimbatore,Dec-2016,96.0
+Dehradun,Dec-2016,0.0
+Delhi,Dec-2016,98.0
+Faridabad,Dec-2016,112.0
+Gandhinagar,Dec-2016,100.0
+Ghaziabad,Dec-2016,100.0
+Greater Noida,Dec-2016,98.0
+Gurugram,Dec-2016,102.0
+Guwahati,Dec-2016,0.0
+Howrah,Dec-2016,100.0
+Hyderabad,Dec-2016,95.0
+Indore,Dec-2016,91.0
+Jaipur,Dec-2016,101.0
+Kalyan Dombivali,Dec-2016,101.0
+Kanpur,Dec-2016,88.0
+Kochi,Dec-2016,98.0
+Kolkata,Dec-2016,91.0
+Lucknow,Dec-2016,86.0
+Ludhiana,Dec-2016,0.0
+Meerut,Dec-2016,0.0
+Mira Bhayander,Dec-2016,96.0
+Mumbai,Dec-2016,96.0
+Nagpur,Dec-2016,100.0
+Nashik,Dec-2016,103.0
+Navi Mumbai,Dec-2016,102.0
+New Town Kolkata,Dec-2016,97.0
+Noida,Dec-2016,98.0
+Panvel,Dec-2016,92.0
+Patna,Dec-2016,104.0
+Pimpri Chinchwad,Dec-2016,98.0
+Pune,Dec-2016,99.0
+Raipur,Dec-2016,0.0
+Rajkot,Dec-2016,0.0
+Ranchi,Dec-2016,0.0
+Surat,Dec-2016,95.0
+Thane,Dec-2016,94.0
+Thiruvananthapuram,Dec-2016,105.0
+Vadodara,Dec-2016,104.0
+Vasai Virar,Dec-2016,101.0
+Vijayawada,Dec-2016,0.0
+Vizag,Dec-2016,0.0
+Ahmedabad,Mar-2017,98.0
+Bengaluru,Mar-2017,98.0
+Bhiwadi,Mar-2017,94.0
+Bhopal,Mar-2017,101.0
+Bhubaneswar,Mar-2017,95.0
+Bidhan Nagar (Excluding Rajarhat),Mar-2017,88.0
+Chakan,Mar-2017,99.0
+Chandigarh (Tricity),Mar-2017,95.0
+Chennai,Mar-2017,101.0
+Coimbatore,Mar-2017,96.0
+Dehradun,Mar-2017,0.0
+Delhi,Mar-2017,97.0
+Faridabad,Mar-2017,110.0
+Gandhinagar,Mar-2017,99.0
+Ghaziabad,Mar-2017,99.0
+Greater Noida,Mar-2017,97.0
+Gurugram,Mar-2017,102.0
+Guwahati,Mar-2017,0.0
+Howrah,Mar-2017,104.0
+Hyderabad,Mar-2017,95.0
+Indore,Mar-2017,91.0
+Jaipur,Mar-2017,101.0
+Kalyan Dombivali,Mar-2017,100.0
+Kanpur,Mar-2017,88.0
+Kochi,Mar-2017,100.0
+Kolkata,Mar-2017,89.0
+Lucknow,Mar-2017,90.0
+Ludhiana,Mar-2017,0.0
+Meerut,Mar-2017,0.0
+Mira Bhayander,Mar-2017,97.0
+Mumbai,Mar-2017,96.0
+Nagpur,Mar-2017,99.0
+Nashik,Mar-2017,101.0
+Navi Mumbai,Mar-2017,102.0
+New Town Kolkata,Mar-2017,94.0
+Noida,Mar-2017,97.0
+Panvel,Mar-2017,92.0
+Patna,Mar-2017,103.0
+Pimpri Chinchwad,Mar-2017,98.0
+Pune,Mar-2017,99.0
+Raipur,Mar-2017,0.0
+Rajkot,Mar-2017,0.0
+Ranchi,Mar-2017,0.0
+Surat,Mar-2017,96.0
+Thane,Mar-2017,94.0
+Thiruvananthapuram,Mar-2017,106.0
+Vadodara,Mar-2017,104.0
+Vasai Virar,Mar-2017,101.0
+Vijayawada,Mar-2017,0.0
+Vizag,Mar-2017,0.0
+Ahmedabad,Jun-2017,99.0
+Bengaluru,Jun-2017,99.0
+Bhiwadi,Jun-2017,96.0
+Bhopal,Jun-2017,101.0
+Bhubaneswar,Jun-2017,96.0
+Bidhan Nagar (Excluding Rajarhat),Jun-2017,90.0
+Chakan,Jun-2017,100.0
+Chandigarh (Tricity),Jun-2017,97.0
+Chennai,Jun-2017,98.0
+Coimbatore,Jun-2017,97.0
+Dehradun,Jun-2017,0.0
+Delhi,Jun-2017,97.0
+Faridabad,Jun-2017,108.0
+Gandhinagar,Jun-2017,98.0
+Ghaziabad,Jun-2017,99.0
+Greater Noida,Jun-2017,98.0
+Gurugram,Jun-2017,100.0
+Guwahati,Jun-2017,0.0
+Howrah,Jun-2017,104.0
+Hyderabad,Jun-2017,96.0
+Indore,Jun-2017,93.0
+Jaipur,Jun-2017,101.0
+Kalyan Dombivali,Jun-2017,98.0
+Kanpur,Jun-2017,93.0
+Kochi,Jun-2017,102.0
+Kolkata,Jun-2017,89.0
+Lucknow,Jun-2017,93.0
+Ludhiana,Jun-2017,0.0
+Meerut,Jun-2017,0.0
+Mira Bhayander,Jun-2017,97.0
+Mumbai,Jun-2017,97.0
+Nagpur,Jun-2017,98.0
+Nashik,Jun-2017,100.0
+Navi Mumbai,Jun-2017,100.0
+New Town Kolkata,Jun-2017,94.0
+Noida,Jun-2017,97.0
+Panvel,Jun-2017,94.0
+Patna,Jun-2017,101.0
+Pimpri Chinchwad,Jun-2017,98.0
+Pune,Jun-2017,99.0
+Raipur,Jun-2017,0.0
+Rajkot,Jun-2017,0.0
+Ranchi,Jun-2017,0.0
+Surat,Jun-2017,98.0
+Thane,Jun-2017,95.0
+Thiruvananthapuram,Jun-2017,106.0
+Vadodara,Jun-2017,103.0
+Vasai Virar,Jun-2017,100.0
+Vijayawada,Jun-2017,0.0
+Vizag,Jun-2017,0.0
+Ahmedabad,Sep-2017,99.0
+Bengaluru,Sep-2017,99.0
+Bhiwadi,Sep-2017,97.0
+Bhopal,Sep-2017,101.0
+Bhubaneswar,Sep-2017,97.0
+Bidhan Nagar (Excluding Rajarhat),Sep-2017,93.0
+Chakan,Sep-2017,100.0
+Chandigarh (Tricity),Sep-2017,99.0
+Chennai,Sep-2017,97.0
+Coimbatore,Sep-2017,99.0
+Dehradun,Sep-2017,0.0
+Delhi,Sep-2017,98.0
+Faridabad,Sep-2017,107.0
+Gandhinagar,Sep-2017,99.0
+Ghaziabad,Sep-2017,99.0
+Greater Noida,Sep-2017,98.0
+Gurugram,Sep-2017,99.0
+Guwahati,Sep-2017,0.0
+Howrah,Sep-2017,103.0
+Hyderabad,Sep-2017,97.0
+Indore,Sep-2017,96.0
+Jaipur,Sep-2017,99.0
+Kalyan Dombivali,Sep-2017,97.0
+Kanpur,Sep-2017,96.0
+Kochi,Sep-2017,99.0
+Kolkata,Sep-2017,92.0
+Lucknow,Sep-2017,97.0
+Ludhiana,Sep-2017,0.0
+Meerut,Sep-2017,0.0
+Mira Bhayander,Sep-2017,98.0
+Mumbai,Sep-2017,98.0
+Nagpur,Sep-2017,98.0
+Nashik,Sep-2017,99.0
+Navi Mumbai,Sep-2017,100.0
+New Town Kolkata,Sep-2017,96.0
+Noida,Sep-2017,97.0
+Panvel,Sep-2017,96.0
+Patna,Sep-2017,100.0
+Pimpri Chinchwad,Sep-2017,98.0
+Pune,Sep-2017,99.0
+Raipur,Sep-2017,0.0
+Rajkot,Sep-2017,0.0
+Ranchi,Sep-2017,0.0
+Surat,Sep-2017,99.0
+Thane,Sep-2017,96.0
+Thiruvananthapuram,Sep-2017,104.0
+Vadodara,Sep-2017,102.0
+Vasai Virar,Sep-2017,100.0
+Vijayawada,Sep-2017,0.0
+Vizag,Sep-2017,0.0
+Ahmedabad,Dec-2017,99.0
+Bengaluru,Dec-2017,100.0
+Bhiwadi,Dec-2017,98.0
+Bhopal,Dec-2017,101.0
+Bhubaneswar,Dec-2017,98.0
+Bidhan Nagar (Excluding Rajarhat),Dec-2017,97.0
+Chakan,Dec-2017,101.0
+Chandigarh (Tricity),Dec-2017,99.0
+Chennai,Dec-2017,100.0
+Coimbatore,Dec-2017,99.0
+Dehradun,Dec-2017,0.0
+Delhi,Dec-2017,98.0
+Faridabad,Dec-2017,104.0
+Gandhinagar,Dec-2017,99.0
+Ghaziabad,Dec-2017,99.0
+Greater Noida,Dec-2017,99.0
+Gurugram,Dec-2017,98.0
+Guwahati,Dec-2017,0.0
+Howrah,Dec-2017,102.0
+Hyderabad,Dec-2017,98.0
+Indore,Dec-2017,98.0
+Jaipur,Dec-2017,100.0
+Kalyan Dombivali,Dec-2017,98.0
+Kanpur,Dec-2017,98.0
+Kochi,Dec-2017,98.0
+Kolkata,Dec-2017,96.0
+Lucknow,Dec-2017,100.0
+Ludhiana,Dec-2017,0.0
+Meerut,Dec-2017,0.0
+Mira Bhayander,Dec-2017,99.0
+Mumbai,Dec-2017,99.0
+Nagpur,Dec-2017,98.0
+Nashik,Dec-2017,99.0
+Navi Mumbai,Dec-2017,99.0
+New Town Kolkata,Dec-2017,98.0
+Noida,Dec-2017,98.0
+Panvel,Dec-2017,99.0
+Patna,Dec-2017,98.0
+Pimpri Chinchwad,Dec-2017,99.0
+Pune,Dec-2017,100.0
+Raipur,Dec-2017,0.0
+Rajkot,Dec-2017,0.0
+Ranchi,Dec-2017,0.0
+Surat,Dec-2017,100.0
+Thane,Dec-2017,98.0
+Thiruvananthapuram,Dec-2017,102.0
+Vadodara,Dec-2017,102.0
+Vasai Virar,Dec-2017,100.0
+Vijayawada,Dec-2017,0.0
+Vizag,Dec-2017,0.0
+Ahmedabad,Mar-2018,100.0
+Bengaluru,Mar-2018,100.0
+Bhiwadi,Mar-2018,100.0
+Bhopal,Mar-2018,100.0
+Bhubaneswar,Mar-2018,100.0
+Bidhan Nagar (Excluding Rajarhat),Mar-2018,100.0
+Chakan,Mar-2018,100.0
+Chandigarh (Tricity),Mar-2018,100.0
+Chennai,Mar-2018,100.0
+Coimbatore,Mar-2018,100.0
+Dehradun,Mar-2018,0.0
+Delhi,Mar-2018,100.0
+Faridabad,Mar-2018,101.0
+Gandhinagar,Mar-2018,100.0
+Ghaziabad,Mar-2018,100.0
+Greater Noida,Mar-2018,100.0
+Gurugram,Mar-2018,99.0
+Guwahati,Mar-2018,0.0
+Howrah,Mar-2018,100.0
+Hyderabad,Mar-2018,100.0
+Indore,Mar-2018,101.0
+Jaipur,Mar-2018,100.0
+Kalyan Dombivali,Mar-2018,100.0
+Kanpur,Mar-2018,100.0
+Kochi,Mar-2018,101.0
+Kolkata,Mar-2018,100.0
+Lucknow,Mar-2018,100.0
+Ludhiana,Mar-2018,0.0
+Meerut,Mar-2018,0.0
+Mira Bhayander,Mar-2018,100.0
+Mumbai,Mar-2018,100.0
+Nagpur,Mar-2018,100.0
+Nashik,Mar-2018,100.0
+Navi Mumbai,Mar-2018,100.0
+New Town Kolkata,Mar-2018,100.0
+Noida,Mar-2018,100.0
+Panvel,Mar-2018,100.0
+Patna,Mar-2018,99.0
+Pimpri Chinchwad,Mar-2018,100.0
+Pune,Mar-2018,100.0
+Raipur,Mar-2018,0.0
+Rajkot,Mar-2018,0.0
+Ranchi,Mar-2018,0.0
+Surat,Mar-2018,100.0
+Thane,Mar-2018,100.0
+Thiruvananthapuram,Mar-2018,99.0
+Vadodara,Mar-2018,100.0
+Vasai Virar,Mar-2018,100.0
+Vijayawada,Mar-2018,0.0
+Vizag,Mar-2018,0.0
+Ahmedabad,JUN-2018,101.0
+Bengaluru,JUN-2018,100.0
+Bhiwadi,JUN-2018,102.0
+Bhopal,JUN-2018,100.0
+Bhubaneswar,JUN-2018,101.0
+Bidhan Nagar (Excluding Rajarhat),JUN-2018,103.0
+Chakan,JUN-2018,100.0
+Chandigarh (Tricity),JUN-2018,100.0
+Chennai,JUN-2018,101.0
+Coimbatore,JUN-2018,101.0
+Dehradun,JUN-2018,101.0
+Delhi,JUN-2018,101.0
+Faridabad,JUN-2018,99.0
+Gandhinagar,JUN-2018,102.0
+Ghaziabad,JUN-2018,101.0
+Greater Noida,JUN-2018,101.0
+Gurugram,JUN-2018,101.0
+Guwahati,JUN-2018,101.0
+Howrah,JUN-2018,99.0
+Hyderabad,JUN-2018,102.0
+Indore,JUN-2018,102.0
+Jaipur,JUN-2018,100.0
+Kalyan Dombivali,JUN-2018,103.0
+Kanpur,JUN-2018,100.0
+Kochi,JUN-2018,101.0
+Kolkata,JUN-2018,104.0
+Lucknow,JUN-2018,100.0
+Ludhiana,JUN-2018,100.0
+Meerut,JUN-2018,100.0
+Mira Bhayander,JUN-2018,102.0
+Mumbai,JUN-2018,101.0
+Nagpur,JUN-2018,102.0
+Nashik,JUN-2018,100.0
+Navi Mumbai,JUN-2018,101.0
+New Town Kolkata,JUN-2018,99.0
+Noida,JUN-2018,102.0
+Panvel,JUN-2018,101.0
+Patna,JUN-2018,99.0
+Pimpri Chinchwad,JUN-2018,100.0
+Pune,JUN-2018,101.0
+Raipur,JUN-2018,99.0
+Rajkot,JUN-2018,101.0
+Ranchi,JUN-2018,101.0
+Surat,JUN-2018,100.0
+Thane,JUN-2018,101.0
+Thiruvananthapuram,JUN-2018,98.0
+Vadodara,JUN-2018,99.0
+Vasai Virar,JUN-2018,101.0
+Vijayawada,JUN-2018,101.0
+Vizag,JUN-2018,101.0
+Ahmedabad,SEP-2018,101.0
+Bengaluru,SEP-2018,101.0
+Bhiwadi,SEP-2018,104.0
+Bhopal,SEP-2018,100.0
+Bhubaneswar,SEP-2018,103.0
+Bidhan Nagar (Excluding Rajarhat),SEP-2018,106.0
+Chakan,SEP-2018,100.0
+Chandigarh (Tricity),SEP-2018,101.0
+Chennai,SEP-2018,102.0
+Coimbatore,SEP-2018,103.0
+Dehradun,SEP-2018,101.0
+Delhi,SEP-2018,102.0
+Faridabad,SEP-2018,98.0
+Gandhinagar,SEP-2018,104.0
+Ghaziabad,SEP-2018,102.0
+Greater Noida,SEP-2018,102.0
+Gurugram,SEP-2018,103.0
+Guwahati,SEP-2018,103.0
+Howrah,SEP-2018,101.0
+Hyderabad,SEP-2018,105.0
+Indore,SEP-2018,103.0
+Jaipur,SEP-2018,102.0
+Kalyan Dombivali,SEP-2018,106.0
+Kanpur,SEP-2018,100.0
+Kochi,SEP-2018,101.0
+Kolkata,SEP-2018,108.0
+Lucknow,SEP-2018,99.0
+Ludhiana,SEP-2018,100.0
+Meerut,SEP-2018,99.0
+Mira Bhayander,SEP-2018,103.0
+Mumbai,SEP-2018,102.0
+Nagpur,SEP-2018,104.0
+Nashik,SEP-2018,101.0
+Navi Mumbai,SEP-2018,101.0
+New Town Kolkata,SEP-2018,98.0
+Noida,SEP-2018,103.0
+Panvel,SEP-2018,101.0
+Patna,SEP-2018,100.0
+Pimpri Chinchwad,SEP-2018,100.0
+Pune,SEP-2018,101.0
+Raipur,SEP-2018,99.0
+Rajkot,SEP-2018,102.0
+Ranchi,SEP-2018,101.0
+Surat,SEP-2018,100.0
+Thane,SEP-2018,102.0
+Thiruvananthapuram,SEP-2018,97.0
+Vadodara,SEP-2018,98.0
+Vasai Virar,SEP-2018,101.0
+Vijayawada,SEP-2018,103.0
+Vizag,SEP-2018,103.0
+Ahmedabad,DEC-2018,102.0
+Bengaluru,DEC-2018,101.0
+Bhiwadi,DEC-2018,103.0
+Bhopal,DEC-2018,100.0
+Bhubaneswar,DEC-2018,104.0
+Bidhan Nagar (Excluding Rajarhat),DEC-2018,107.0
+Chakan,DEC-2018,100.0
+Chandigarh (Tricity),DEC-2018,100.0
+Chennai,DEC-2018,102.0
+Coimbatore,DEC-2018,103.0
+Dehradun,DEC-2018,101.0
+Delhi,DEC-2018,101.0
+Faridabad,DEC-2018,93.0
+Gandhinagar,DEC-2018,106.0
+Ghaziabad,DEC-2018,102.0
+Greater Noida,DEC-2018,102.0
+Gurugram,DEC-2018,104.0
+Guwahati,DEC-2018,106.0
+Howrah,DEC-2018,102.0
+Hyderabad,DEC-2018,108.0
+Indore,DEC-2018,105.0
+Jaipur,DEC-2018,104.0
+Kalyan Dombivali,DEC-2018,110.0
+Kanpur,DEC-2018,101.0
+Kochi,DEC-2018,101.0
+Kolkata,DEC-2018,110.0
+Lucknow,DEC-2018,100.0
+Ludhiana,DEC-2018,101.0
+Meerut,DEC-2018,98.0
+Mira Bhayander,DEC-2018,105.0
+Mumbai,DEC-2018,103.0
+Nagpur,DEC-2018,108.0
+Nashik,DEC-2018,102.0
+Navi Mumbai,DEC-2018,103.0
+New Town Kolkata,DEC-2018,98.0
+Noida,DEC-2018,101.0
+Panvel,DEC-2018,101.0
+Patna,DEC-2018,104.0
+Pimpri Chinchwad,DEC-2018,100.0
+Pune,DEC-2018,102.0
+Raipur,DEC-2018,98.0
+Rajkot,DEC-2018,102.0
+Ranchi,DEC-2018,100.0
+Surat,DEC-2018,101.0
+Thane,DEC-2018,102.0
+Thiruvananthapuram,DEC-2018,96.0
+Vadodara,DEC-2018,99.0
+Vasai Virar,DEC-2018,102.0
+Vijayawada,DEC-2018,102.0
+Vizag,DEC-2018,105.0
+Ahmedabad,Mar-2019,103.0
+Bengaluru,Mar-2019,101.0
+Bhiwadi,Mar-2019,102.0
+Bhopal,Mar-2019,100.0
+Bhubaneswar,Mar-2019,105.0
+Bidhan Nagar (Excluding Rajarhat),Mar-2019,109.0
+Chakan,Mar-2019,100.0
+Chandigarh (Tricity),Mar-2019,100.0
+Chennai,Mar-2019,103.0
+Coimbatore,Mar-2019,103.0
+Dehradun,Mar-2019,100.0
+Delhi,Mar-2019,99.0
+Faridabad,Mar-2019,92.0
+Gandhinagar,Mar-2019,108.0
+Ghaziabad,Mar-2019,102.0
+Greater Noida,Mar-2019,102.0
+Gurugram,Mar-2019,102.0
+Guwahati,Mar-2019,108.0
+Howrah,Mar-2019,103.0
+Hyderabad,Mar-2019,112.0
+Indore,Mar-2019,107.0
+Jaipur,Mar-2019,105.0
+Kalyan Dombivali,Mar-2019,113.0
+Kanpur,Mar-2019,102.0
+Kochi,Mar-2019,99.0
+Kolkata,Mar-2019,111.0
+Lucknow,Mar-2019,101.0
+Ludhiana,Mar-2019,101.0
+Meerut,Mar-2019,97.0
+Mira Bhayander,Mar-2019,107.0
+Mumbai,Mar-2019,104.0
+Nagpur,Mar-2019,110.0
+Nashik,Mar-2019,103.0
+Navi Mumbai,Mar-2019,106.0
+New Town Kolkata,Mar-2019,98.0
+Noida,Mar-2019,99.0
+Panvel,Mar-2019,101.0
+Patna,Mar-2019,109.0
+Pimpri Chinchwad,Mar-2019,99.0
+Pune,Mar-2019,102.0
+Raipur,Mar-2019,98.0
+Rajkot,Mar-2019,102.0
+Ranchi,Mar-2019,99.0
+Surat,Mar-2019,102.0
+Thane,Mar-2019,103.0
+Thiruvananthapuram,Mar-2019,96.0
+Vadodara,Mar-2019,103.0
+Vasai Virar,Mar-2019,103.0
+Vijayawada,Mar-2019,100.0
+Vizag,Mar-2019,106.0
+Ahmedabad,Jun-2019,103.0
+Bengaluru,Jun-2019,102.0
+Bhiwadi,Jun-2019,101.0
+Bhopal,Jun-2019,100.0
+Bhubaneswar,Jun-2019,106.0
+Bidhan Nagar (Excluding Rajarhat),Jun-2019,111.0
+Chakan,Jun-2019,101.0
+Chandigarh (Tricity),Jun-2019,100.0
+Chennai,Jun-2019,102.0
+Coimbatore,Jun-2019,104.0
+Dehradun,Jun-2019,99.0
+Delhi,Jun-2019,97.0
+Faridabad,Jun-2019,92.0
+Gandhinagar,Jun-2019,111.0
+Ghaziabad,Jun-2019,101.0
+Greater Noida,Jun-2019,102.0
+Gurugram,Jun-2019,100.0
+Guwahati,Jun-2019,109.0
+Howrah,Jun-2019,103.0
+Hyderabad,Jun-2019,116.0
+Indore,Jun-2019,110.0
+Jaipur,Jun-2019,108.0
+Kalyan Dombivali,Jun-2019,113.0
+Kanpur,Jun-2019,103.0
+Kochi,Jun-2019,98.0
+Kolkata,Jun-2019,112.0
+Lucknow,Jun-2019,101.0
+Ludhiana,Jun-2019,102.0
+Meerut,Jun-2019,97.0
+Mira Bhayander,Jun-2019,108.0
+Mumbai,Jun-2019,104.0
+Nagpur,Jun-2019,112.0
+Nashik,Jun-2019,102.0
+Navi Mumbai,Jun-2019,109.0
+New Town Kolkata,Jun-2019,99.0
+Noida,Jun-2019,95.0
+Panvel,Jun-2019,101.0
+Patna,Jun-2019,114.0
+Pimpri Chinchwad,Jun-2019,98.0
+Pune,Jun-2019,102.0
+Raipur,Jun-2019,99.0
+Rajkot,Jun-2019,103.0
+Ranchi,Jun-2019,99.0
+Surat,Jun-2019,103.0
+Thane,Jun-2019,103.0
+Thiruvananthapuram,Jun-2019,96.0
+Vadodara,Jun-2019,106.0
+Vasai Virar,Jun-2019,103.0
+Vijayawada,Jun-2019,99.0
+Vizag,Jun-2019,108.0
+Ahmedabad,Sep-2019,103.0
+Bengaluru,Sep-2019,103.0
+Bhiwadi,Sep-2019,98.0
+Bhopal,Sep-2019,100.0
+Bhubaneswar,Sep-2019,107.0
+Bidhan Nagar (Excluding Rajarhat),Sep-2019,113.0
+Chakan,Sep-2019,101.0
+Chandigarh (Tricity),Sep-2019,99.0
+Chennai,Sep-2019,101.0
+Coimbatore,Sep-2019,105.0
+Dehradun,Sep-2019,99.0
+Delhi,Sep-2019,95.0
+Faridabad,Sep-2019,89.0
+Gandhinagar,Sep-2019,112.0
+Ghaziabad,Sep-2019,101.0
+Greater Noida,Sep-2019,102.0
+Gurugram,Sep-2019,99.0
+Guwahati,Sep-2019,110.0
+Howrah,Sep-2019,101.0
+Hyderabad,Sep-2019,119.0
+Indore,Sep-2019,112.0
+Jaipur,Sep-2019,109.0
+Kalyan Dombivali,Sep-2019,114.0
+Kanpur,Sep-2019,104.0
+Kochi,Sep-2019,98.0
+Kolkata,Sep-2019,112.0
+Lucknow,Sep-2019,102.0
+Ludhiana,Sep-2019,101.0
+Meerut,Sep-2019,96.0
+Mira Bhayander,Sep-2019,110.0
+Mumbai,Sep-2019,104.0
+Nagpur,Sep-2019,112.0
+Nashik,Sep-2019,102.0
+Navi Mumbai,Sep-2019,113.0
+New Town Kolkata,Sep-2019,102.0
+Noida,Sep-2019,93.0
+Panvel,Sep-2019,101.0
+Patna,Sep-2019,118.0
+Pimpri Chinchwad,Sep-2019,97.0
+Pune,Sep-2019,101.0
+Raipur,Sep-2019,101.0
+Rajkot,Sep-2019,103.0
+Ranchi,Sep-2019,98.0
+Surat,Sep-2019,103.0
+Thane,Sep-2019,104.0
+Thiruvananthapuram,Sep-2019,96.0
+Vadodara,Sep-2019,108.0
+Vasai Virar,Sep-2019,105.0
+Vijayawada,Sep-2019,99.0
+Vizag,Sep-2019,109.0
+Ahmedabad,Dec-2019,103.0
+Bengaluru,Dec-2019,104.0
+Bhiwadi,Dec-2019,96.0
+Bhopal,Dec-2019,100.0
+Bhubaneswar,Dec-2019,108.0
+Bidhan Nagar (Excluding Rajarhat),Dec-2019,115.0
+Chakan,Dec-2019,101.0
+Chandigarh (Tricity),Dec-2019,99.0
+Chennai,Dec-2019,101.0
+Coimbatore,Dec-2019,105.0
+Dehradun,Dec-2019,99.0
+Delhi,Dec-2019,95.0
+Faridabad,Dec-2019,88.0
+Gandhinagar,Dec-2019,113.0
+Ghaziabad,Dec-2019,102.0
+Greater Noida,Dec-2019,103.0
+Gurugram,Dec-2019,99.0
+Guwahati,Dec-2019,111.0
+Howrah,Dec-2019,100.0
+Hyderabad,Dec-2019,122.0
+Indore,Dec-2019,115.0
+Jaipur,Dec-2019,110.0
+Kalyan Dombivali,Dec-2019,113.0
+Kanpur,Dec-2019,105.0
+Kochi,Dec-2019,97.0
+Kolkata,Dec-2019,111.0
+Lucknow,Dec-2019,104.0
+Ludhiana,Dec-2019,99.0
+Meerut,Dec-2019,97.0
+Mira Bhayander,Dec-2019,111.0
+Mumbai,Dec-2019,102.0
+Nagpur,Dec-2019,112.0
+Nashik,Dec-2019,100.0
+Navi Mumbai,Dec-2019,117.0
+New Town Kolkata,Dec-2019,104.0
+Noida,Dec-2019,93.0
+Panvel,Dec-2019,102.0
+Patna,Dec-2019,120.0
+Pimpri Chinchwad,Dec-2019,95.0
+Pune,Dec-2019,99.0
+Raipur,Dec-2019,103.0
+Rajkot,Dec-2019,104.0
+Ranchi,Dec-2019,98.0
+Surat,Dec-2019,103.0
+Thane,Dec-2019,103.0
+Thiruvananthapuram,Dec-2019,98.0
+Vadodara,Dec-2019,111.0
+Vasai Virar,Dec-2019,107.0
+Vijayawada,Dec-2019,98.0
+Vizag,Dec-2019,111.0
+Ahmedabad,Mar-2020,102.0
+Bengaluru,Mar-2020,104.0
+Bhiwadi,Mar-2020,97.0
+Bhopal,Mar-2020,101.0
+Bhubaneswar,Mar-2020,108.0
+Bidhan Nagar (Excluding Rajarhat),Mar-2020,117.0
+Chakan,Mar-2020,102.0
+Chandigarh (Tricity),Mar-2020,98.0
+Chennai,Mar-2020,101.0
+Coimbatore,Mar-2020,105.0
+Dehradun,Mar-2020,100.0
+Delhi,Mar-2020,95.0
+Faridabad,Mar-2020,88.0
+Gandhinagar,Mar-2020,115.0
+Ghaziabad,Mar-2020,103.0
+Greater Noida,Mar-2020,104.0
+Gurugram,Mar-2020,100.0
+Guwahati,Mar-2020,112.0
+Howrah,Mar-2020,100.0
+Hyderabad,Mar-2020,126.0
+Indore,Mar-2020,118.0
+Jaipur,Mar-2020,110.0
+Kalyan Dombivali,Mar-2020,112.0
+Kanpur,Mar-2020,106.0
+Kochi,Mar-2020,97.0
+Kolkata,Mar-2020,110.0
+Lucknow,Mar-2020,107.0
+Ludhiana,Mar-2020,98.0
+Meerut,Mar-2020,97.0
+Mira Bhayander,Mar-2020,113.0
+Mumbai,Mar-2020,101.0
+Nagpur,Mar-2020,112.0
+Nashik,Mar-2020,99.0
+Navi Mumbai,Mar-2020,120.0
+New Town Kolkata,Mar-2020,106.0
+Noida,Mar-2020,93.0
+Panvel,Mar-2020,103.0
+Patna,Mar-2020,121.0
+Pimpri Chinchwad,Mar-2020,94.0
+Pune,Mar-2020,97.0
+Raipur,Mar-2020,106.0
+Rajkot,Mar-2020,105.0
+Ranchi,Mar-2020,100.0
+Surat,Mar-2020,103.0
+Thane,Mar-2020,102.0
+Thiruvananthapuram,Mar-2020,100.0
+Vadodara,Mar-2020,112.0
+Vasai Virar,Mar-2020,107.0
+Vijayawada,Mar-2020,98.0
+Vizag,Mar-2020,112.0
+Ahmedabad,Jun-2020,102.0
+Bengaluru,Jun-2020,105.0
+Bhiwadi,Jun-2020,97.0
+Bhopal,Jun-2020,102.0
+Bhubaneswar,Jun-2020,109.0
+Bidhan Nagar (Excluding Rajarhat),Jun-2020,118.0
+Chakan,Jun-2020,101.0
+Chandigarh (Tricity),Jun-2020,99.0
+Chennai,Jun-2020,101.0
+Coimbatore,Jun-2020,105.0
+Dehradun,Jun-2020,101.0
+Delhi,Jun-2020,95.0
+Faridabad,Jun-2020,87.0
+Gandhinagar,Jun-2020,116.0
+Ghaziabad,Jun-2020,105.0
+Greater Noida,Jun-2020,105.0
+Gurugram,Jun-2020,101.0
+Guwahati,Jun-2020,112.0
+Howrah,Jun-2020,99.0
+Hyderabad,Jun-2020,129.0
+Indore,Jun-2020,119.0
+Jaipur,Jun-2020,109.0
+Kalyan Dombivali,Jun-2020,113.0
+Kanpur,Jun-2020,106.0
+Kochi,Jun-2020,96.0
+Kolkata,Jun-2020,109.0
+Lucknow,Jun-2020,110.0
+Ludhiana,Jun-2020,97.0
+Meerut,Jun-2020,97.0
+Mira Bhayander,Jun-2020,113.0
+Mumbai,Jun-2020,100.0
+Nagpur,Jun-2020,112.0
+Nashik,Jun-2020,99.0
+Navi Mumbai,Jun-2020,122.0
+New Town Kolkata,Jun-2020,107.0
+Noida,Jun-2020,93.0
+Panvel,Jun-2020,104.0
+Patna,Jun-2020,122.0
+Pimpri Chinchwad,Jun-2020,93.0
+Pune,Jun-2020,96.0
+Raipur,Jun-2020,109.0
+Rajkot,Jun-2020,103.0
+Ranchi,Jun-2020,101.0
+Surat,Jun-2020,103.0
+Thane,Jun-2020,101.0
+Thiruvananthapuram,Jun-2020,102.0
+Vadodara,Jun-2020,112.0
+Vasai Virar,Jun-2020,108.0
+Vijayawada,Jun-2020,97.0
+Vizag,Jun-2020,113.0
+Ahmedabad,Sep-2020,102.0
+Bengaluru,Sep-2020,105.0
+Bhiwadi,Sep-2020,97.0
+Bhopal,Sep-2020,102.0
+Bhubaneswar,Sep-2020,109.0
+Bidhan Nagar (Excluding Rajarhat),Sep-2020,119.0
+Chakan,Sep-2020,101.0
+Chandigarh (Tricity),Sep-2020,100.0
+Chennai,Sep-2020,101.0
+Coimbatore,Sep-2020,105.0
+Dehradun,Sep-2020,102.0
+Delhi,Sep-2020,95.0
+Faridabad,Sep-2020,87.0
+Gandhinagar,Sep-2020,116.0
+Ghaziabad,Sep-2020,105.0
+Greater Noida,Sep-2020,107.0
+Gurugram,Sep-2020,102.0
+Guwahati,Sep-2020,112.0
+Howrah,Sep-2020,99.0
+Hyderabad,Sep-2020,131.0
+Indore,Sep-2020,119.0
+Jaipur,Sep-2020,107.0
+Kalyan Dombivali,Sep-2020,112.0
+Kanpur,Sep-2020,106.0
+Kochi,Sep-2020,96.0
+Kolkata,Sep-2020,108.0
+Lucknow,Sep-2020,112.0
+Ludhiana,Sep-2020,97.0
+Meerut,Sep-2020,99.0
+Mira Bhayander,Sep-2020,114.0
+Mumbai,Sep-2020,99.0
+Nagpur,Sep-2020,111.0
+Nashik,Sep-2020,98.0
+Navi Mumbai,Sep-2020,122.0
+New Town Kolkata,Sep-2020,106.0
+Noida,Sep-2020,93.0
+Panvel,Sep-2020,105.0
+Patna,Sep-2020,122.0
+Pimpri Chinchwad,Sep-2020,92.0
+Pune,Sep-2020,94.0
+Raipur,Sep-2020,110.0
+Rajkot,Sep-2020,102.0
+Ranchi,Sep-2020,103.0
+Surat,Sep-2020,103.0
+Thane,Sep-2020,100.0
+Thiruvananthapuram,Sep-2020,104.0
+Vadodara,Sep-2020,113.0
+Vasai Virar,Sep-2020,108.0
+Vijayawada,Sep-2020,96.0
+Vizag,Sep-2020,114.0
+Ahmedabad,Dec-2020,103.0
+Bengaluru,Dec-2020,106.0
+Bhiwadi,Dec-2020,97.0
+Bhopal,Dec-2020,102.0
+Bhubaneswar,Dec-2020,107.0
+Bidhan Nagar (Excluding Rajarhat),Dec-2020,119.0
+Chakan,Dec-2020,101.0
+Chandigarh (Tricity),Dec-2020,102.0
+Chennai,Dec-2020,101.0
+Coimbatore,Dec-2020,106.0
+Dehradun,Dec-2020,103.0
+Delhi,Dec-2020,95.0
+Faridabad,Dec-2020,86.0
+Gandhinagar,Dec-2020,117.0
+Ghaziabad,Dec-2020,106.0
+Greater Noida,Dec-2020,107.0
+Gurugram,Dec-2020,104.0
+Guwahati,Dec-2020,111.0
+Howrah,Dec-2020,100.0
+Hyderabad,Dec-2020,134.0
+Indore,Dec-2020,120.0
+Jaipur,Dec-2020,103.0
+Kalyan Dombivali,Dec-2020,112.0
+Kanpur,Dec-2020,105.0
+Kochi,Dec-2020,97.0
+Kolkata,Dec-2020,108.0
+Lucknow,Dec-2020,114.0
+Ludhiana,Dec-2020,97.0
+Meerut,Dec-2020,100.0
+Mira Bhayander,Dec-2020,114.0
+Mumbai,Dec-2020,98.0
+Nagpur,Dec-2020,111.0
+Nashik,Dec-2020,98.0
+Navi Mumbai,Dec-2020,123.0
+New Town Kolkata,Dec-2020,107.0
+Noida,Dec-2020,92.0
+Panvel,Dec-2020,106.0
+Patna,Dec-2020,123.0
+Pimpri Chinchwad,Dec-2020,92.0
+Pune,Dec-2020,93.0
+Raipur,Dec-2020,112.0
+Rajkot,Dec-2020,101.0
+Ranchi,Dec-2020,105.0
+Surat,Dec-2020,103.0
+Thane,Dec-2020,100.0
+Thiruvananthapuram,Dec-2020,105.0
+Vadodara,Dec-2020,112.0
+Vasai Virar,Dec-2020,108.0
+Vijayawada,Dec-2020,95.0
+Vizag,Dec-2020,117.0
+Ahmedabad,Mar-2021,104.0
+Bengaluru,Mar-2021,107.0
+Bhiwadi,Mar-2021,96.0
+Bhopal,Mar-2021,103.0
+Bhubaneswar,Mar-2021,109.0
+Bidhan Nagar (Excluding Rajarhat),Mar-2021,118.0
+Chakan,Mar-2021,101.0
+Chandigarh (Tricity),Mar-2021,106.0
+Chennai,Mar-2021,102.0
+Coimbatore,Mar-2021,106.0
+Dehradun,Mar-2021,104.0
+Delhi,Mar-2021,96.0
+Faridabad,Mar-2021,85.0
+Gandhinagar,Mar-2021,118.0
+Ghaziabad,Mar-2021,109.0
+Greater Noida,Mar-2021,110.0
+Gurugram,Mar-2021,106.0
+Guwahati,Mar-2021,111.0
+Howrah,Mar-2021,100.0
+Hyderabad,Mar-2021,137.0
+Indore,Mar-2021,120.0
+Jaipur,Mar-2021,101.0
+Kalyan Dombivali,Mar-2021,112.0
+Kanpur,Mar-2021,106.0
+Kochi,Mar-2021,98.0
+Kolkata,Mar-2021,108.0
+Lucknow,Mar-2021,115.0
+Ludhiana,Mar-2021,99.0
+Meerut,Mar-2021,101.0
+Mira Bhayander,Mar-2021,115.0
+Mumbai,Mar-2021,98.0
+Nagpur,Mar-2021,110.0
+Nashik,Mar-2021,98.0
+Navi Mumbai,Mar-2021,125.0
+New Town Kolkata,Mar-2021,107.0
+Noida,Mar-2021,93.0
+Panvel,Mar-2021,105.0
+Patna,Mar-2021,131.0
+Pimpri Chinchwad,Mar-2021,92.0
+Pune,Mar-2021,93.0
+Raipur,Mar-2021,111.0
+Rajkot,Mar-2021,101.0
+Ranchi,Mar-2021,107.0
+Surat,Mar-2021,102.0
+Thane,Mar-2021,100.0
+Thiruvananthapuram,Mar-2021,106.0
+Vadodara,Mar-2021,112.0
+Vasai Virar,Mar-2021,110.0
+Vijayawada,Mar-2021,95.0
+Vizag,Mar-2021,120.0
+Ahmedabad,Jun-2021,106.0
+Bengaluru,Jun-2021,108.0
+Bhiwadi,Jun-2021,96.0
+Bhopal,Jun-2021,103.0
+Bhubaneswar,Jun-2021,112.0
+Bidhan Nagar (Excluding Rajarhat),Jun-2021,118.0
+Chakan,Jun-2021,101.0
+Chandigarh (Tricity),Jun-2021,108.0
+Chennai,Jun-2021,102.0
+Coimbatore,Jun-2021,104.0
+Dehradun,Jun-2021,106.0
+Delhi,Jun-2021,97.0
+Faridabad,Jun-2021,84.0
+Gandhinagar,Jun-2021,115.0
+Ghaziabad,Jun-2021,112.0
+Greater Noida,Jun-2021,114.0
+Gurugram,Jun-2021,108.0
+Guwahati,Jun-2021,113.0
+Howrah,Jun-2021,101.0
+Hyderabad,Jun-2021,140.0
+Indore,Jun-2021,121.0
+Jaipur,Jun-2021,101.0
+Kalyan Dombivali,Jun-2021,113.0
+Kanpur,Jun-2021,108.0
+Kochi,Jun-2021,98.0
+Kolkata,Jun-2021,109.0
+Lucknow,Jun-2021,113.0
+Ludhiana,Jun-2021,101.0
+Meerut,Jun-2021,103.0
+Mira Bhayander,Jun-2021,116.0
+Mumbai,Jun-2021,97.0
+Nagpur,Jun-2021,109.0
+Nashik,Jun-2021,98.0
+Navi Mumbai,Jun-2021,125.0
+New Town Kolkata,Jun-2021,108.0
+Noida,Jun-2021,95.0
+Panvel,Jun-2021,105.0
+Patna,Jun-2021,137.0
+Pimpri Chinchwad,Jun-2021,92.0
+Pune,Jun-2021,93.0
+Raipur,Jun-2021,111.0
+Rajkot,Jun-2021,103.0
+Ranchi,Jun-2021,108.0
+Surat,Jun-2021,102.0
+Thane,Jun-2021,99.0
+Thiruvananthapuram,Jun-2021,107.0
+Vadodara,Jun-2021,112.0
+Vasai Virar,Jun-2021,111.0
+Vijayawada,Jun-2021,94.0
+Vizag,Jun-2021,122.0
+Ahmedabad,Sep-2021,107.0
+Bengaluru,Sep-2021,109.0
+Bhiwadi,Sep-2021,97.0
+Bhopal,Sep-2021,104.0
+Bhubaneswar,Sep-2021,112.0
+Bidhan Nagar (Excluding Rajarhat),Sep-2021,118.0
+Chakan,Sep-2021,101.0
+Chandigarh (Tricity),Sep-2021,111.0
+Chennai,Sep-2021,102.0
+Coimbatore,Sep-2021,103.0
+Dehradun,Sep-2021,110.0
+Delhi,Sep-2021,99.0
+Faridabad,Sep-2021,82.0
+Gandhinagar,Sep-2021,115.0
+Ghaziabad,Sep-2021,116.0
+Greater Noida,Sep-2021,119.0
+Gurugram,Sep-2021,109.0
+Guwahati,Sep-2021,116.0
+Howrah,Sep-2021,107.0
+Hyderabad,Sep-2021,142.0
+Indore,Sep-2021,116.0
+Jaipur,Sep-2021,103.0
+Kalyan Dombivali,Sep-2021,113.0
+Kanpur,Sep-2021,110.0
+Kochi,Sep-2021,99.0
+Kolkata,Sep-2021,110.0
+Lucknow,Sep-2021,113.0
+Ludhiana,Sep-2021,104.0
+Meerut,Sep-2021,105.0
+Mira Bhayander,Sep-2021,118.0
+Mumbai,Sep-2021,97.0
+Nagpur,Sep-2021,108.0
+Nashik,Sep-2021,100.0
+Navi Mumbai,Sep-2021,126.0
+New Town Kolkata,Sep-2021,110.0
+Noida,Sep-2021,99.0
+Panvel,Sep-2021,105.0
+Patna,Sep-2021,143.0
+Pimpri Chinchwad,Sep-2021,93.0
+Pune,Sep-2021,94.0
+Raipur,Sep-2021,110.0
+Rajkot,Sep-2021,103.0
+Ranchi,Sep-2021,110.0
+Surat,Sep-2021,102.0
+Thane,Sep-2021,99.0
+Thiruvananthapuram,Sep-2021,107.0
+Vadodara,Sep-2021,112.0
+Vasai Virar,Sep-2021,111.0
+Vijayawada,Sep-2021,94.0
+Vizag,Sep-2021,122.0
+Ahmedabad,Dec-2021,108.0
+Bengaluru,Dec-2021,110.0
+Bhiwadi,Dec-2021,99.0
+Bhopal,Dec-2021,104.0
+Bhubaneswar,Dec-2021,125.0
+Bidhan Nagar (Excluding Rajarhat),Dec-2021,118.0
+Chakan,Dec-2021,101.0
+Chandigarh (Tricity),Dec-2021,115.0
+Chennai,Dec-2021,100.0
+Coimbatore,Dec-2021,100.0
+Dehradun,Dec-2021,113.0
+Delhi,Dec-2021,101.0
+Faridabad,Dec-2021,81.0
+Gandhinagar,Dec-2021,115.0
+Ghaziabad,Dec-2021,123.0
+Greater Noida,Dec-2021,126.0
+Gurugram,Dec-2021,107.0
+Guwahati,Dec-2021,119.0
+Howrah,Dec-2021,109.0
+Hyderabad,Dec-2021,145.0
+Indore,Dec-2021,111.0
+Jaipur,Dec-2021,108.0
+Kalyan Dombivali,Dec-2021,111.0
+Kanpur,Dec-2021,113.0
+Kochi,Dec-2021,99.0
+Kolkata,Dec-2021,113.0
+Lucknow,Dec-2021,112.0
+Ludhiana,Dec-2021,106.0
+Meerut,Dec-2021,105.0
+Mira Bhayander,Dec-2021,119.0
+Mumbai,Dec-2021,97.0
+Nagpur,Dec-2021,107.0
+Nashik,Dec-2021,103.0
+Navi Mumbai,Dec-2021,127.0
+New Town Kolkata,Dec-2021,110.0
+Noida,Dec-2021,104.0
+Panvel,Dec-2021,105.0
+Patna,Dec-2021,148.0
+Pimpri Chinchwad,Dec-2021,94.0
+Pune,Dec-2021,95.0
+Raipur,Dec-2021,109.0
+Rajkot,Dec-2021,105.0
+Ranchi,Dec-2021,110.0
+Surat,Dec-2021,103.0
+Thane,Dec-2021,100.0
+Thiruvananthapuram,Dec-2021,108.0
+Vadodara,Dec-2021,113.0
+Vasai Virar,Dec-2021,111.0
+Vijayawada,Dec-2021,95.0
+Vizag,Dec-2021,122.0
+Ahmedabad,Mar-2022,110.0
+Bengaluru,Mar-2022,112.0
+Bhiwadi,Mar-2022,100.0
+Bhopal,Mar-2022,106.0
+Bhubaneswar,Mar-2022,135.0
+Bidhan Nagar (Excluding Rajarhat),Mar-2022,119.0
+Chakan,Mar-2022,100.0
+Chandigarh (Tricity),Mar-2022,115.0
+Chennai,Mar-2022,99.0
+Coimbatore,Mar-2022,98.0
+Dehradun,Mar-2022,115.0
+Delhi,Mar-2022,103.0
+Faridabad,Mar-2022,83.0
+Gandhinagar,Mar-2022,118.0
+Ghaziabad,Mar-2022,130.0
+Greater Noida,Mar-2022,132.0
+Gurugram,Mar-2022,108.0
+Guwahati,Mar-2022,124.0
+Howrah,Mar-2022,109.0
+Hyderabad,Mar-2022,147.0
+Indore,Mar-2022,107.0
+Jaipur,Mar-2022,114.0
+Kalyan Dombivali,Mar-2022,110.0
+Kanpur,Mar-2022,112.0
+Kochi,Mar-2022,101.0
+Kolkata,Mar-2022,121.0
+Lucknow,Mar-2022,110.0
+Ludhiana,Mar-2022,109.0
+Meerut,Mar-2022,106.0
+Mira Bhayander,Mar-2022,120.0
+Mumbai,Mar-2022,98.0
+Nagpur,Mar-2022,106.0
+Nashik,Mar-2022,105.0
+Navi Mumbai,Mar-2022,128.0
+New Town Kolkata,Mar-2022,116.0
+Noida,Mar-2022,110.0
+Panvel,Mar-2022,106.0
+Patna,Mar-2022,154.0
+Pimpri Chinchwad,Mar-2022,94.0
+Pune,Mar-2022,96.0
+Raipur,Mar-2022,112.0
+Rajkot,Mar-2022,105.0
+Ranchi,Mar-2022,109.0
+Surat,Mar-2022,104.0
+Thane,Mar-2022,101.0
+Thiruvananthapuram,Mar-2022,109.0
+Vadodara,Mar-2022,115.0
+Vasai Virar,Mar-2022,112.0
+Vijayawada,Mar-2022,96.0
+Vizag,Mar-2022,122.0
+Ahmedabad,Jun-2022,111.0
+Bengaluru,Jun-2022,114.0
+Bhiwadi,Jun-2022,101.0
+Bhopal,Jun-2022,108.0
+Bhubaneswar,Jun-2022,144.0
+Bidhan Nagar (Excluding Rajarhat),Jun-2022,119.0
+Chakan,Jun-2022,101.0
+Chandigarh (Tricity),Jun-2022,117.0
+Chennai,Jun-2022,98.0
+Coimbatore,Jun-2022,97.0
+Dehradun,Jun-2022,115.0
+Delhi,Jun-2022,105.0
+Faridabad,Jun-2022,84.0
+Gandhinagar,Jun-2022,121.0
+Ghaziabad,Jun-2022,141.0
+Greater Noida,Jun-2022,139.0
+Gurugram,Jun-2022,108.0
+Guwahati,Jun-2022,129.0
+Howrah,Jun-2022,109.0
+Hyderabad,Jun-2022,148.0
+Indore,Jun-2022,105.0
+Jaipur,Jun-2022,119.0
+Kalyan Dombivali,Jun-2022,111.0
+Kanpur,Jun-2022,112.0
+Kochi,Jun-2022,102.0
+Kolkata,Jun-2022,126.0
+Lucknow,Jun-2022,130.0
+Ludhiana,Jun-2022,111.0
+Meerut,Jun-2022,106.0
+Mira Bhayander,Jun-2022,121.0
+Mumbai,Jun-2022,99.0
+Nagpur,Jun-2022,107.0
+Nashik,Jun-2022,107.0
+Navi Mumbai,Jun-2022,128.0
+New Town Kolkata,Jun-2022,123.0
+Noida,Jun-2022,117.0
+Panvel,Jun-2022,103.0
+Patna,Jun-2022,161.0
+Pimpri Chinchwad,Jun-2022,95.0
+Pune,Jun-2022,98.0
+Raipur,Jun-2022,116.0
+Rajkot,Jun-2022,103.0
+Ranchi,Jun-2022,109.0
+Surat,Jun-2022,105.0
+Thane,Jun-2022,102.0
+Thiruvananthapuram,Jun-2022,110.0
+Vadodara,Jun-2022,116.0
+Vasai Virar,Jun-2022,115.0
+Vijayawada,Jun-2022,98.0
+Vizag,Jun-2022,133.0
+Ahmedabad,Sep-2022,113.96
+Bengaluru,Sep-2022,117.87
+Bhiwadi,Sep-2022,100.73
+Bhopal,Sep-2022,115.6
+Bhubaneswar,Sep-2022,154.23
+Bidhan Nagar (Excluding Rajarhat),Sep-2022,120.38
+Chakan,Sep-2022,101.66
+Chandigarh (Tricity),Sep-2022,123.46
+Chennai,Sep-2022,99.33
+Coimbatore,Sep-2022,98.36
+Dehradun,Sep-2022,115.56
+Delhi,Sep-2022,110.68
+Faridabad,Sep-2022,88.24
+Gandhinagar,Sep-2022,123.54
+Ghaziabad,Sep-2022,154.05
+Greater Noida,Sep-2022,146.44
+Gurugram,Sep-2022,112.21
+Guwahati,Sep-2022,133.88
+Howrah,Sep-2022,114.45
+Hyderabad,Sep-2022,150.08
+Indore,Sep-2022,108.42
+Jaipur,Sep-2022,122.62
+Kalyan Dombivali,Sep-2022,112.67
+Kanpur,Sep-2022,111.66
+Kochi,Sep-2022,103.09
+Kolkata,Sep-2022,131.94
+Lucknow,Sep-2022,147.07
+Ludhiana,Sep-2022,112.31
+Meerut,Sep-2022,105.11
+Mira Bhayander,Sep-2022,121.92
+Mumbai,Sep-2022,100.61
+Nagpur,Sep-2022,109.04
+Nashik,Sep-2022,108.43
+Navi Mumbai,Sep-2022,126.2
+New Town Kolkata,Sep-2022,134.84
+Noida,Sep-2022,123.42
+Panvel,Sep-2022,102.1
+Patna,Sep-2022,170.98
+Pimpri Chinchwad,Sep-2022,97.6
+Pune,Sep-2022,101.62
+Raipur,Sep-2022,119.58
+Rajkot,Sep-2022,102.32
+Ranchi,Sep-2022,108.65
+Surat,Sep-2022,105.79
+Thane,Sep-2022,104.02
+Thiruvananthapuram,Sep-2022,112.54
+Vadodara,Sep-2022,117.94
+Vasai Virar,Sep-2022,117.55
+Vijayawada,Sep-2022,103.77
+Vizag,Sep-2022,144.71
+Ahmedabad,Dec-2022,117.09
+Bengaluru,Dec-2022,121.58
+Bhiwadi,Dec-2022,100.44
+Bhopal,Dec-2022,124.26
+Bhubaneswar,Dec-2022,165.78
+Bidhan Nagar (Excluding Rajarhat),Dec-2022,120.79
+Chakan,Dec-2022,102.03
+Chandigarh (Tricity),Dec-2022,126.82
+Chennai,Dec-2022,102.11
+Coimbatore,Dec-2022,104.4
+Dehradun,Dec-2022,116.67
+Delhi,Dec-2022,115.84
+Faridabad,Dec-2022,91.82
+Gandhinagar,Dec-2022,125.89
+Ghaziabad,Dec-2022,160.25
+Greater Noida,Dec-2022,152.29
+Gurugram,Dec-2022,122.35
+Guwahati,Dec-2022,137.55
+Howrah,Dec-2022,118.25
+Hyderabad,Dec-2022,152.45
+Indore,Dec-2022,114.67
+Jaipur,Dec-2022,123.52
+Kalyan Dombivali,Dec-2022,115.03
+Kanpur,Dec-2022,112.08
+Kochi,Dec-2022,104.22
+Kolkata,Dec-2022,137.42
+Lucknow,Dec-2022,158.19
+Ludhiana,Dec-2022,113.46
+Meerut,Dec-2022,111.77
+Mira Bhayander,Dec-2022,123.12
+Mumbai,Dec-2022,101.95
+Nagpur,Dec-2022,113.41
+Nashik,Dec-2022,109.92
+Navi Mumbai,Dec-2022,126.85
+New Town Kolkata,Dec-2022,150.37
+Noida,Dec-2022,130.66
+Panvel,Dec-2022,102.31
+Patna,Dec-2022,177.79
+Pimpri Chinchwad,Dec-2022,100.23
+Pune,Dec-2022,105.89
+Raipur,Dec-2022,126.11
+Rajkot,Dec-2022,101.46
+Ranchi,Dec-2022,109.36
+Surat,Dec-2022,107.06
+Thane,Dec-2022,104.9
+Thiruvananthapuram,Dec-2022,115.13
+Vadodara,Dec-2022,118.73
+Vasai Virar,Dec-2022,120.43
+Vijayawada,Dec-2022,108.75
+Vizag,Dec-2022,148.52
+Ahmedabad,Mar-2023,119.74
+Bengaluru,Mar-2023,128.15
+Bhiwadi,Mar-2023,102.39
+Bhopal,Mar-2023,131.89
+Bhubaneswar,Mar-2023,174.04
+Bidhan Nagar (Excluding Rajarhat),Mar-2023,121.8
+Chakan,Mar-2023,103.48
+Chandigarh (Tricity),Mar-2023,133.53
+Chennai,Mar-2023,104.24
+Coimbatore,Mar-2023,109.92
+Dehradun,Mar-2023,116.81
+Delhi,Mar-2023,121.0
+Faridabad,Mar-2023,95.96
+Gandhinagar,Mar-2023,127.67
+Ghaziabad,Mar-2023,163.45
+Greater Noida,Mar-2023,157.31
+Gurugram,Mar-2023,131.89
+Guwahati,Mar-2023,140.09
+Howrah,Mar-2023,122.08
+Hyderabad,Mar-2023,154.64
+Indore,Mar-2023,120.94
+Jaipur,Mar-2023,119.11
+Kalyan Dombivali,Mar-2023,117.54
+Kanpur,Mar-2023,112.6
+Kochi,Mar-2023,105.0
+Kolkata,Mar-2023,140.64
+Lucknow,Mar-2023,162.34
+Ludhiana,Mar-2023,116.09
+Meerut,Mar-2023,113.98
+Mira Bhayander,Mar-2023,125.34
+Mumbai,Mar-2023,103.21
+Nagpur,Mar-2023,116.81
+Nashik,Mar-2023,111.22
+Navi Mumbai,Mar-2023,126.73
+New Town Kolkata,Mar-2023,157.75
+Noida,Mar-2023,134.42
+Panvel,Mar-2023,101.61
+Patna,Mar-2023,183.96
+Pimpri Chinchwad,Mar-2023,102.67
+Pune,Mar-2023,109.18
+Raipur,Mar-2023,130.56
+Rajkot,Mar-2023,100.72
+Ranchi,Mar-2023,110.1
+Surat,Mar-2023,108.02
+Thane,Mar-2023,106.73
+Thiruvananthapuram,Mar-2023,116.59
+Vadodara,Mar-2023,120.66
+Vasai Virar,Mar-2023,122.56
+Vijayawada,Mar-2023,112.25
+Vizag,Mar-2023,153.92
+Ahmedabad,Jun-2023,121.64
+Bengaluru,Jun-2023,133.09
+Bhiwadi,Jun-2023,102.33
+Bhopal,Jun-2023,139.66
+Bhubaneswar,Jun-2023,184.22
+Bidhan Nagar (Excluding Rajarhat),Jun-2023,122.77
+Chakan,Jun-2023,104.41
+Chandigarh (Tricity),Jun-2023,140.27
+Chennai,Jun-2023,105.46
+Coimbatore,Jun-2023,114.91
+Dehradun,Jun-2023,120.49
+Delhi,Jun-2023,124.57
+Faridabad,Jun-2023,98.79
+Gandhinagar,Jun-2023,130.3
+Ghaziabad,Jun-2023,165.3
+Greater Noida,Jun-2023,163.36
+Gurugram,Jun-2023,140.64
+Guwahati,Jun-2023,147.11
+Howrah,Jun-2023,124.63
+Hyderabad,Jun-2023,158.26
+Indore,Jun-2023,127.46
+Jaipur,Jun-2023,117.31
+Kalyan Dombivali,Jun-2023,119.07
+Kanpur,Jun-2023,113.69
+Kochi,Jun-2023,104.83
+Kolkata,Jun-2023,143.97
+Lucknow,Jun-2023,163.72
+Ludhiana,Jun-2023,119.55
+Meerut,Jun-2023,117.83
+Mira Bhayander,Jun-2023,127.27
+Mumbai,Jun-2023,104.02
+Nagpur,Jun-2023,119.66
+Nashik,Jun-2023,112.71
+Navi Mumbai,Jun-2023,128.61
+New Town Kolkata,Jun-2023,164.45
+Noida,Jun-2023,139.97
+Panvel,Jun-2023,102.29
+Patna,Jun-2023,188.17
+Pimpri Chinchwad,Jun-2023,104.52
+Pune,Jun-2023,112.21
+Raipur,Jun-2023,133.91
+Rajkot,Jun-2023,100.71
+Ranchi,Jun-2023,111.78
+Surat,Jun-2023,109.45
+Thane,Jun-2023,108.41
+Thiruvananthapuram,Jun-2023,117.33
+Vadodara,Jun-2023,123.82
+Vasai Virar,Jun-2023,124.0
+Vijayawada,Jun-2023,115.19
+Vizag,Jun-2023,157.98
+Ahmedabad,Sep-2023,122.43
+Bengaluru,Sep-2023,143.18
+Bhiwadi,Sep-2023,139.08
+Bhopal,Sep-2023,147.48
+Bhubaneswar,Sep-2023,195.82
+Bidhan Nagar (Excluding Rajarhat),Sep-2023,125.36
+Chakan,Sep-2023,105.05
+Chandigarh (Tricity),Sep-2023,145.53
+Chennai,Sep-2023,105.91
+Coimbatore,Sep-2023,118.26
+Dehradun,Sep-2023,122.94
+Delhi,Sep-2023,125.45
+Faridabad,Sep-2023,101.8
+Gandhinagar,Sep-2023,133.2
+Ghaziabad,Sep-2023,171.17
+Greater Noida,Sep-2023,169.3
+Gurugram,Sep-2023,144.86
+Guwahati,Sep-2023,148.08
+Howrah,Sep-2023,125.28
+Hyderabad,Sep-2023,162.25
+Indore,Sep-2023,130.44
+Jaipur,Sep-2023,118.42
+Kalyan Dombivali,Sep-2023,120.9
+Kanpur,Sep-2023,116.8
+Kochi,Sep-2023,104.58
+Kolkata,Sep-2023,146.95
+Lucknow,Sep-2023,161.57
+Ludhiana,Sep-2023,122.64
+Meerut,Sep-2023,136.53
+Mira Bhayander,Sep-2023,128.84
+Mumbai,Sep-2023,105.46
+Nagpur,Sep-2023,121.95
+Nashik,Sep-2023,113.02
+Navi Mumbai,Sep-2023,131.86
+New Town Kolkata,Sep-2023,168.54
+Noida,Sep-2023,144.35
+Panvel,Sep-2023,106.32
+Patna,Sep-2023,191.41
+Pimpri Chinchwad,Sep-2023,106.19
+Pune,Sep-2023,115.15
+Raipur,Sep-2023,140.12
+Rajkot,Sep-2023,102.29
+Ranchi,Sep-2023,114.4
+Surat,Sep-2023,110.63
+Thane,Sep-2023,110.04
+Thiruvananthapuram,Sep-2023,117.21
+Vadodara,Sep-2023,127.08
+Vasai Virar,Sep-2023,125.82
+Vijayawada,Sep-2023,117.22
+Vizag,Sep-2023,159.76
+Ahmedabad,Dec-2023,122.88
+Bengaluru,Dec-2023,153.24
+Bhiwadi,Dec-2023,132.54
+Bhopal,Dec-2023,152.24
+Bhubaneswar,Dec-2023,208.08
+Bidhan Nagar (Excluding Rajarhat),Dec-2023,130.46
+Chakan,Dec-2023,106.45
+Chandigarh (Tricity),Dec-2023,149.79
+Chennai,Dec-2023,105.26
+Coimbatore,Dec-2023,119.93
+Dehradun,Dec-2023,138.41
+Delhi,Dec-2023,126.71
+Faridabad,Dec-2023,106.19
+Gandhinagar,Dec-2023,130.77
+Ghaziabad,Dec-2023,178.82
+Greater Noida,Dec-2023,178.28
+Gurugram,Dec-2023,153.63
+Guwahati,Dec-2023,150.56
+Howrah,Dec-2023,126.45
+Hyderabad,Dec-2023,165.23
+Indore,Dec-2023,136.85
+Jaipur,Dec-2023,122.81
+Kalyan Dombivali,Dec-2023,122.73
+Kanpur,Dec-2023,137.73
+Kochi,Dec-2023,102.36
+Kolkata,Dec-2023,149.87
+Lucknow,Dec-2023,157.0
+Ludhiana,Dec-2023,126.38
+Meerut,Dec-2023,142.36
+Mira Bhayander,Dec-2023,130.99
+Mumbai,Dec-2023,108.14
+Nagpur,Dec-2023,123.71
+Nashik,Dec-2023,113.3
+Navi Mumbai,Dec-2023,135.38
+New Town Kolkata,Dec-2023,173.16
+Noida,Dec-2023,153.37
+Panvel,Dec-2023,109.95
+Patna,Dec-2023,199.82
+Pimpri Chinchwad,Dec-2023,107.34
+Pune,Dec-2023,116.64
+Raipur,Dec-2023,144.48
+Rajkot,Dec-2023,102.97
+Ranchi,Dec-2023,117.23
+Surat,Dec-2023,112.5
+Thane,Dec-2023,113.3
+Thiruvananthapuram,Dec-2023,116.96
+Vadodara,Dec-2023,130.42
+Vasai Virar,Dec-2023,127.17
+Vijayawada,Dec-2023,116.85
+Vizag,Dec-2023,162.8
+Ahmedabad,Mar-2024,125.2
+Bengaluru,Mar-2024,162.46
+Bhiwadi,Mar-2024,123.79
+Bhopal,Mar-2024,156.45
+Bhubaneswar,Mar-2024,214.67
+Bidhan Nagar (Excluding Rajarhat),Mar-2024,133.96
+Chakan,Mar-2024,106.95
+Chandigarh (Tricity),Mar-2024,153.53
+Chennai,Mar-2024,104.53
+Coimbatore,Mar-2024,122.05
+Dehradun,Mar-2024,164.2
+Delhi,Mar-2024,128.15
+Faridabad,Mar-2024,109.83
+Gandhinagar,Mar-2024,131.99
+Ghaziabad,Mar-2024,193.26
+Greater Noida,Mar-2024,189.86
+Gurugram,Mar-2024,169.11
+Guwahati,Mar-2024,152.23
+Howrah,Mar-2024,127.45
+Hyderabad,Mar-2024,167.86
+Indore,Mar-2024,140.82
+Jaipur,Mar-2024,134.6
+Kalyan Dombivali,Mar-2024,124.05
+Kanpur,Mar-2024,142.93
+Kochi,Mar-2024,102.98
+Kolkata,Mar-2024,151.13
+Lucknow,Mar-2024,156.43
+Ludhiana,Mar-2024,129.28
+Meerut,Mar-2024,145.09
+Mira Bhayander,Mar-2024,132.99
+Mumbai,Mar-2024,110.33
+Nagpur,Mar-2024,124.66
+Nashik,Mar-2024,114.63
+Navi Mumbai,Mar-2024,139.55
+New Town Kolkata,Mar-2024,174.32
+Noida,Mar-2024,166.94
+Panvel,Mar-2024,114.4
+Patna,Mar-2024,206.63
+Pimpri Chinchwad,Mar-2024,109.19
+Pune,Mar-2024,118.29
+Raipur,Mar-2024,148.34
+Rajkot,Mar-2024,107.66
+Ranchi,Mar-2024,122.95
+Surat,Mar-2024,114.46
+Thane,Mar-2024,116.73
+Thiruvananthapuram,Mar-2024,117.86
+Vadodara,Mar-2024,133.96
+Vasai Virar,Mar-2024,127.86
+Vijayawada,Mar-2024,116.7
+Vizag,Mar-2024,164.73
+Ahmedabad,Jun-2024,129.5
+Bengaluru,Jun-2024,173.89
+Bhiwadi,Jun-2024,120.8
+Bhopal,Jun-2024,159.78
+Bhubaneswar,Jun-2024,218.42
+Bidhan Nagar (Excluding Rajarhat),Jun-2024,136.21
+Chakan,Jun-2024,109.18
+Chandigarh (Tricity),Jun-2024,156.69
+Chennai,Jun-2024,102.88
+Coimbatore,Jun-2024,123.87
+Dehradun,Jun-2024,180.53
+Delhi,Jun-2024,131.08
+Faridabad,Jun-2024,113.3
+Gandhinagar,Jun-2024,132.52
+Ghaziabad,Jun-2024,211.08
+Greater Noida,Jun-2024,204.88
+Gurugram,Jun-2024,194.57
+Guwahati,Jun-2024,149.8
+Howrah,Jun-2024,127.38
+Hyderabad,Jun-2024,169.07
+Indore,Jun-2024,149.36
+Jaipur,Jun-2024,144.77
+Kalyan Dombivali,Jun-2024,125.03
+Kanpur,Jun-2024,151.11
+Kochi,Jun-2024,105.38
+Kolkata,Jun-2024,151.26
+Lucknow,Jun-2024,156.08
+Ludhiana,Jun-2024,125.55
+Meerut,Jun-2024,145.23
+Mira Bhayander,Jun-2024,135.05
+Mumbai,Jun-2024,112.47
+Nagpur,Jun-2024,126.05
+Nashik,Jun-2024,115.97
+Navi Mumbai,Jun-2024,143.0
+New Town Kolkata,Jun-2024,173.69
+Noida,Jun-2024,180.1
+Panvel,Jun-2024,118.73
+Patna,Jun-2024,218.04
+Pimpri Chinchwad,Jun-2024,111.04
+Pune,Jun-2024,119.51
+Raipur,Jun-2024,151.21
+Rajkot,Jun-2024,111.44
+Ranchi,Jun-2024,136.68
+Surat,Jun-2024,116.21
+Thane,Jun-2024,120.67
+Thiruvananthapuram,Jun-2024,120.11
+Vadodara,Jun-2024,138.53
+Vasai Virar,Jun-2024,129.22
+Vijayawada,Jun-2024,103.52
+Vizag,Jun-2024,166.79
+Ahmedabad,Sep-2024,133.26
+Bengaluru,Sep-2024,184.55
+Bhiwadi,Sep-2024,114.96
+Bhopal,Sep-2024,160.57
+Bhubaneswar,Sep-2024,217.18
+Bidhan Nagar (Excluding Rajarhat),Sep-2024,137.09
+Chakan,Sep-2024,111.71
+Chandigarh (Tricity),Sep-2024,158.4
+Chennai,Sep-2024,102.27
+Coimbatore,Sep-2024,124.85
+Dehradun,Sep-2024,212.96
+Delhi,Sep-2024,134.06
+Faridabad,Sep-2024,116.34
+Gandhinagar,Sep-2024,137.32
+Ghaziabad,Sep-2024,227.98
+Greater Noida,Sep-2024,219.75
+Gurugram,Sep-2024,216.04
+Guwahati,Sep-2024,152.89
+Howrah,Sep-2024,126.68
+Hyderabad,Sep-2024,168.2
+Indore,Sep-2024,151.14
+Jaipur,Sep-2024,157.75
+Kalyan Dombivali,Sep-2024,125.4
+Kanpur,Sep-2024,157.37
+Kochi,Sep-2024,108.18
+Kolkata,Sep-2024,150.21
+Lucknow,Sep-2024,173.0
+Ludhiana,Sep-2024,143.89
+Meerut,Sep-2024,144.52
+Mira Bhayander,Sep-2024,136.55
+Mumbai,Sep-2024,113.5
+Nagpur,Sep-2024,129.77
+Nashik,Sep-2024,117.81
+Navi Mumbai,Sep-2024,146.84
+New Town Kolkata,Sep-2024,173.95
+Noida,Sep-2024,194.82
+Panvel,Sep-2024,121.34
+Patna,Sep-2024,226.38
+Pimpri Chinchwad,Sep-2024,112.16
+Pune,Sep-2024,118.93
+Raipur,Sep-2024,153.6
+Rajkot,Sep-2024,113.48
+Ranchi,Sep-2024,143.03
+Surat,Sep-2024,118.58
+Thane,Sep-2024,123.89
+Thiruvananthapuram,Sep-2024,122.55
+Vadodara,Sep-2024,143.42
+Vasai Virar,Sep-2024,130.05
+Vijayawada,Sep-2024,98.92
+Vizag,Sep-2024,164.59
