@@ -17,9 +17,11 @@ import streamlit as st
 
 from app.components.theme import setup, kicker, callout, footnote
 from app.components import terrain_hero
+from app.components import home_theme
 
 
 setup("Home")
+home_theme.inject_home_css()
 
 with st.sidebar:
     st.markdown("## India Economic Intelligence Lab")
@@ -28,78 +30,99 @@ with st.sidebar:
     st.caption("Author: Nathaniel Zegenbal")
     st.caption("Version: 0.1 (MVP)")
 
-kicker("Computational Economics Research")
-st.title("India Economic Intelligence Lab")
+# ---------- Hero ------------------------------------------------------------
+home_theme.hero_micro(["IEIL / 2026", "COMPUTATIONAL ECONOMICS", "DATA · MODELS · SIMULATIONS"])
+home_theme.hero_title([("INDIA,", False), ("MEASURED.", True)])
 st.markdown(
-    "**An interactive computational economics research portfolio.**  \n"
-    "An exploration of how economic theory can be translated into quantitative "
-    "models, simulations and empirical analysis using Indian economic and "
-    "financial data."
+    '<div class="ieil-hero-sub">An experimental laboratory for understanding '
+    "India's economy through data, models and interactive simulations.</div>",
+    unsafe_allow_html=True,
 )
 
 terrain_hero.render()
 st.caption(
-    "Hover or tab through the terrain above to find each Lab — the labelled "
-    "rises are navigation, not data. On a touch device, tap a rise."
+    "Hover or tab through the terrain — each rise is a Lab, not a data point. "
+    "On a touch device, tap a rise."
 )
 
-st.markdown("---")
+# ---------- Numbers ----------------------------------------------------------
+st.markdown('<div class="ieil-numbers">', unsafe_allow_html=True)
+n1, n2, n3, n4 = st.columns(4)
+with n1:
+    home_theme.number_stat("04", "Research Labs", home_theme.VERMILLION)
+with n2:
+    home_theme.number_stat("06", "Data Series", home_theme.COBALT)
+with n3:
+    home_theme.number_stat("07", "Models", home_theme.LEAF)
+with n4:
+    home_theme.number_stat("∞", "Questions", home_theme.TURQUOISE)
+st.markdown("</div>", unsafe_allow_html=True)
+st.caption(
+    "Counts reflect what's actually wired up: 6 real data series loaded from "
+    "RBI/PLFS/NHB sources, 7 named models (iBFPI, sigma & beta convergence, "
+    "composition-effect, SIP Monte Carlo, r−g, EMI/affordability) — see the Data page."
+)
 
-col1, col2, col3 = st.columns(3, gap="large")
-with col1:
-    kicker("01 · Wealth")
-    st.markdown("### Income → Saving → Ownership → Asset Accumulation")
-    st.markdown(
-        "How income, ownership, asset composition and returns on capital "
-        "shape wealth accumulation and economic mobility in India."
-    )
-    st.page_link("pages/1_Wealth_Inequality_Lab.py", label="Open the Wealth Lab →")
+st.markdown("<br>", unsafe_allow_html=True)
 
-with col2:
-    kicker("02 · Banking")
-    st.markdown("### Interest Rates → Financial Conditions → Bank Performance")
-    st.markdown(
-        "Adapting the BFPI robust z-score methodology from my JP Morgan "
-        "research to a five-bank Indian panel — the iBFPI."
-    )
-    st.page_link("pages/2_Banking_Monetary_Policy_Lab.py", label="Open the Banking Lab →")
+# ---------- Research index ----------------------------------------------------
+st.subheader("Research Index")
+home_theme.index_row_header(
+    "01", "WHO OWNS INDIA?", "Wealth Inequality Lab · 2026",
+    "How income, ownership, asset composition and returns on capital shape wealth accumulation.",
+    home_theme.VERMILLION,
+)
+st.page_link("pages/1_Wealth_Inequality_Lab.py", label="Open the Wealth Lab →")
 
-with col3:
-    kicker("03 · Regional Development")
-    st.markdown("### Are States Converging or Diverging?")
-    st.markdown(
-        "Sigma and beta convergence on real per-capita income by state, "
-        "2004-05 to 2022-23 — from the RBI Handbook of Statistics on Indian States."
-    )
-    st.page_link("pages/3_State_Economic_Divergence_Lab.py", label="Open the State Divergence Lab →")
+home_theme.index_row_header(
+    "02", "HOW DOES MONEY MOVE?", "Banking & Monetary Policy Lab · 2026",
+    "The iBFPI robust z-score methodology, adapted from my JP Morgan research, "
+    "applied to a five-bank Indian panel against the RBI repo rate.",
+    home_theme.COBALT,
+)
+st.page_link("pages/2_Banking_Monetary_Policy_Lab.py", label="Open the Banking Lab →")
 
-col4, col5, col6 = st.columns(3, gap="large")
-with col4:
-    kicker("04 · Housing")
-    st.markdown("### Is Housing Outpacing Income?")
-    st.markdown(
-        "Real NHB RESIDEX price data for 50 cities, against a documented "
-        "state-income proxy — price-to-income, EMI, and an honest caveat."
-    )
-    st.page_link("pages/4_Housing_Intelligence_Lab.py", label="Open the Housing Lab →")
+home_theme.index_row_header(
+    "03", "ONE COUNTRY. UNEQUAL TRAJECTORIES.", "State Economic Divergence Lab · 2026",
+    "Sigma and beta convergence on real per-capita income by state, 2004-05 to 2022-23, "
+    "from the RBI Handbook of Statistics on Indian States.",
+    home_theme.LEAF,
+)
+st.page_link("pages/3_State_Economic_Divergence_Lab.py", label="Open the State Divergence Lab →")
 
-with col5:
-    kicker("05 · Research")
-    st.markdown("### The Papers Behind the Labs")
-    st.markdown(
-        "The underlying research — wealth accumulation in India, and the "
-        "BFPI methodology adapted from my JP Morgan study."
-    )
-    st.page_link("pages/5_Research.py", label="Read the Research →")
+home_theme.index_row_header(
+    "04", "WHERE DOES INDIA'S WEALTH LIVE?", "Housing Intelligence Lab · 2026",
+    "Real NHB RESIDEX price data for 50 cities against a documented state-income "
+    "proxy — price-to-income, EMI, and an honest caveat about what the proxy distorts.",
+    home_theme.GOLD,
+)
+st.page_link("pages/4_Housing_Intelligence_Lab.py", label="Open the Housing Lab →")
 
-with col6:
-    kicker("06 · Method")
-    st.markdown("### Economics + Mathematics + Statistics + Python")
-    st.markdown(
-        "Every figure is generated from code with the underlying data, "
-        "assumptions and formulae documented in-line."
-    )
-    st.page_link("pages/6_Methodology.py", label="Read the Methodology →")
+st.markdown("<br>", unsafe_allow_html=True)
+
+# ---------- Process -----------------------------------------------------------
+st.subheader("From Question to Model")
+home_theme.flow(["Question", "Data", "Model", "Simulation", "Interpretation"])
+st.caption(
+    "This site doesn't just show visualisations — it shows how an economic "
+    "question becomes a computational one, at each step, with the data and "
+    "assumptions left visible rather than hidden behind the chart."
+)
+
+st.markdown("<br>", unsafe_allow_html=True)
+st.markdown('<div class="ieil-secondary-links">', unsafe_allow_html=True)
+sl1, sl2, sl3, sl4, sl5 = st.columns(5)
+with sl1:
+    st.page_link("pages/5_Research.py", label="05 Research")
+with sl2:
+    st.page_link("pages/6_Methodology.py", label="06 Methodology")
+with sl3:
+    st.page_link("pages/7_Data.py", label="07 Data")
+with sl4:
+    st.page_link("pages/8_About.py", label="08 About")
+with sl5:
+    st.page_link("pages/9_Limitations.py", label="09 Limitations")
+st.markdown("</div>", unsafe_allow_html=True)
 
 st.markdown("---")
 
