@@ -23,16 +23,6 @@ setup("Home")
 with st.sidebar:
     st.markdown("## India Economic Intelligence Lab")
     st.caption("Computational economics research portfolio")
-    st.markdown(
-        "- **Home**\n"
-        "- Wealth & Inequality Lab\n"
-        "- Banking & Monetary Policy Lab\n"
-        "- Research\n"
-        "- Methodology\n"
-        "- Data\n"
-        "- About\n"
-        "- Limitations"
-    )
     st.markdown("---")
     st.caption("Author: Nathaniel Zegenbal")
     st.caption("Version: 0.1 (MVP)")
