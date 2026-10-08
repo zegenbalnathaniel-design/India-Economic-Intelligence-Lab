@@ -2,109 +2,54 @@
 
 Every real dataset in this repository, with full provenance. Status values:
 
-- **VERIFIED** — real source data, source confirmed (either self-stated in the file or confirmed against an independently-matched official table).
-- **PARTIAL** — looks like real data; exact source release/URL/retrieval date not yet independently confirmed, or coverage is too limited (too few years/points) for the analysis it would power.
-- **ESTIMATED** — explicitly not reported/observed data; modelled or interpolated. Must never be displayed as VERIFIED or DERIVED.
+- **VERIFIED** — real source data, source confirmed.
+- **PARTIAL** — real-looking data; source or coverage not fully confirmed.
+- **ESTIMATED** — explicitly modelled/interpolated, not reported. Never shown as VERIFIED or DERIVED.
+- **SPLICED** — a derived series built by linking two real but methodologically different source series; the exact linking method is documented, not hidden.
 
 ---
 
-## State / regional economic data
+## Methodology decisions made directly (not left open)
 
-### `data/raw/rbi_handbook/percapita_nsdp_constant_prices_2004_05_to_2022_23.csv`
+These three were explicitly delegated back to me rather than asked as open questions. Here's what was decided and why — all reversible, all documented:
 
-| Field | Value |
-|---|---|
-| Variable | Per-capita Net State Domestic Product (NSDP), constant prices |
-| Geography | 37 states/UTs |
-| Frequency | Annual |
-| Coverage | 2004-05 to 2022-23 — **but two different base years**: 2004-05 base (2004-05 → 2014-15) and 2011-12 base (2011-12 → 2022-23), with a 4-year overlap (2011-12 to 2014-15) |
-| Units | ₹ |
-| Source | RBI Handbook of Statistics on Indian States, Table 26 — confirmed from the uploaded workbook's own sheet titles/headers (`T_26(i)`–`(iv)`, "TABLE 26: PER CAPITA NET STATE DOMESTIC PRODUCT (Constant Prices)") |
-| Status | **VERIFIED** (source self-identifies in the file) |
-| Transformation | Wide-to-long reshape of 4 sheets (one per base-year/period block) into one tidy table; `-` cells (no data published for that state/year) converted to null. Script: `data_sources/ingest_uploaded_sources.py` |
-| ⚠️ Known issue | **The two base-year series are not directly comparable without rebasing.** A naive concatenation would imply a false continuous trend across 2011-12. The 4-year overlap (2011-12–2014-15) is present in *both* series, which means a standard overlap-linking (splice) factor *can* be computed if you want one continuous series — but this hasn't been done yet; right now the two eras are kept distinct via the `base_year` column. Tell me if you want them spliced, and I'll compute and document the linking factor rather than silently merging them. |
+**1. NSDP base-year splice (2004-05 base vs. 2011-12 base series).** Computed via **overlap-year linking**: both series publish values for 2011-12 through 2014-15, so for each state I took `link_factor = mean(new_base_value / old_base_value)` across those 4 overlap years, then multiplied every pre-2011-12 old-base value by that state's factor. This is the standard technique statistical agencies use to splice a rebased series (not an invented method). Link factors ranged ~1.3x–2.2x across states (expected — base-year price-level differences, not an error). Output: `percapita_nsdp_constant_prices_SPLICED_2004_05_to_2022_23.csv`, with a `method` column on every row stating whether that value is "as published" or "old-base × link factor." Factors themselves are in `nsdp_splice_link_factors.csv` for audit.
 
-### `data/raw/state_gsdp_nsdp_percapita.csv` (from your earlier upload)
+**2. City income proxy for the Housing Lab.** No city-level household income data exists anywhere in what's been provided. Decision: **use the city's state per-capita NSDP** (now available 2004-05→2024-25, current and constant prices) as the income denominator, with each of the 50 RESIDEX cities mapped to its state. This will be stated as an explicit modelling assumption everywhere it's used in the Housing Lab (methodology page, chart captions, "how was this calculated" expansions) — never presented as true city-level income, since it will systematically overstate affordability in expensive metros relative to their state average.
 
-Unchanged from before, now **upgraded to VERIFIED**: the exact figures (Bihar ₹76,490; Telangana ₹4,27,730; Karnataka ₹4,21,858 for 2024-25) match the dbie.rbihub.in screenshot you sent, which is itself sourced from the same RBI Handbook of Statistics on Indian States, confirming this file's provenance. Covers 2023-24 and 2024-25 only — the file above now extends the same metric (constant-price NSDP per capita) back to 2004-05, closing most of the gap.
-
-### `data/raw/plfs_unemployment_rate_by_state_2023_24.csv`, `data/raw/real_percapita_nni_timeseries.csv`, `data/raw/india_gdp_growth_cagr.csv`, `data/raw/indicator_summary_hpi_nni.csv`
-
-Unchanged — see prior registry entries below.
+**3. NHB RESIDEX base quarter.** Inferred directly from the data you supplied, not assumed: in the 2013-2024 composite-index file, **35 of 50 cities read exactly 100, and 41 read 99-101, at Mar-2018** — no other quarter comes remotely close (next-highest is Jun-2018 with 12 cities at exactly 100). The base is therefore **Mar-2018 (Q4 FY2017-18) = 100**, stated with this evidence in the index files' documentation rather than asserted from memory.
 
 ---
 
-## Housing — NHB RESIDEX (National Housing Bank Residential Price Index)
+## New from your screenshots (transcribed, not re-derived from the CSVs)
 
-### `data/raw/nhb_residex/city_composite_index_2013_2024.csv`
+### `data/raw/rbi_handbook/nsdp_current_prices_by_state_2011_12_to_2024_25.csv`
 
-| Field | Value |
-|---|---|
-| Variable | Composite housing price index |
-| Geography | 50 cities (Ahmedabad, Bengaluru, Mumbai, Delhi, Chennai, Pune, Hyderabad, Kolkata + 42 others — full list in the file) |
-| Frequency | Quarterly |
-| Coverage | Jun-2013 to Sep-2024 (46 quarters) |
-| Units | Index (base period not stated in the uploaded file — index values cross 100 around 2018-19 for most cities, consistent with NHB RESIDEX's known 2017-18 base, but **not confirmed from the file itself** — flag this to NHB RESIDEX's published base-year documentation before treating "100" as a specific base quarter) |
-| Source | National Housing Bank RESIDEX — confirmed from the uploaded file's own column structure (city × quarter composite index), matching NHB RESIDEX's published format |
-| Status | **PARTIAL** (real NHB data, base-year/methodology note needs confirming) |
-| Transformation | HTML table (file was `.xls` but is actually an HTML export) parsed with `pandas.read_html`, de-duplicated (source file repeats the table twice), wide-to-long reshape |
+Per-capita NSDP, **current** prices (distinct from the constant-price series above), 32 states, 2011-12→2024-25. Transcribed directly from your `dbie.rbihub.in/handbook/per-capita-net-state-domestic-product-state-wise-at-current-prices` screenshot. Status: **PARTIAL** (AI-vision transcription of a screenshot, not a machine-read file — treat as a close approximation, not pixel-perfect).
 
-### `data/raw/nhb_residex/city_composite_index_2025_2026.csv`
+**⚠️ Important finding, not resolved automatically:** cross-checking this against the `state_gsdp_nsdp_percapita.csv` file from your earlier upload turned up a *systematic* discrepancy, not random transcription noise: for ~20 states both 2024-25 and 2023-24 values differ by a small, consistent margin (e.g. Telangana 2024-25: 3,87,623 in the old file vs. 3,79,751 here, Tamil Nadu: 3,61,619 vs. 3,58,027) — about 1-2% apart, not wildly off. For 6 states (Bihar, Jharkhand, UP, Kerala, Arunachal Pradesh, Tripura) the old file has a 2024-25 value where this transcription shows a blank/dash. That pattern (small consistent offset + a cluster of newly-blank cells) looks like **two different release vintages of the same published series** (e.g. Provisional vs. First Revised Estimates), not an error in either source. I'm treating this screenshot — directly observed, dated, URL-confirmed — as the current record going forward; the older file is kept, not deleted, with this conflict flagged in both places. If you know which vintage is authoritative, say so and I'll mark the other superseded.
 
-Same series, most recent 5 quarters (Jun-2025 to Jun-2026), 50 cities. Same status/caveats as above.
+Two states (**Delhi, Puducherry**) had ambiguous column counts in the screenshot (13 values where 14 were expected) — rather than guess which column was missing, these are in a separate `nsdp_current_prices_delhi_puducherry_UNALIGNED.csv` file, unmerged, needing a re-check against the source.
 
-### `data/raw/nhb_residex/city_price_levels_by_unit_size_2013_2024.csv`
+**Also fixed**: the Delhi row in `state_gsdp_nsdp_percapita.csv` was genuinely malformed CSV (9 values crammed into 8 columns — a pre-existing bug from how that file was originally built, not something introduced today). Blanked rather than guessed at realignment; same caveat applies.
 
-| Field | Value |
-|---|---|
-| Variables | Actual price level in ₹/sq.m. — composite, and by three unit-size tiers (≤60 sq.m., 60–110 sq.m., >110 sq.m.) |
-| Geography | Same 50 cities |
-| Frequency | Quarterly, Jun-2013 to Sep-2024 |
-| Source | NHB RESIDEX |
-| Status | **PARTIAL** (real data; same base-year caveat doesn't apply here since these are absolute price levels, not an index — this file is actually stronger evidence-wise than the index files) |
-| **This is the single most valuable file for the Housing Intelligence Lab** — real, city-level, ₹/sq.m. price levels over an 11-year run. Pairing this with income data lets P/I be computed directly rather than proxied through an index. |
+### `data/raw/rbi_handbook/institutional_sector_gross_capital_formation_2011_12_to_2023_24.csv`
 
-**Still needed for Housing Lab**: city-level (not state-level) household income. NSDP per capita by state is a usable proxy but will overstate affordability in expensive metros (where incomes concentrate) relative to the state average — this needs to be stated explicitly as a modelling assumption in the Housing methodology, never presented as true city-level income.
+Gross capital formation at current prices by institutional sector (public/private non-financial corporations, public/private financial corporations, general government, households incl. NPISH), ₹ crore, 2011-12→2023-24. Transcribed from your `dbie.rbihub.in/handbook/institutional-sector-wise-gross-capital-formation-at-current-prices` screenshot — this table was small and unambiguous (13 years × 7 columns, no gaps), low transcription risk. Status: **PARTIAL** (same AI-vision-transcription caveat, but high confidence given no missing/ambiguous cells).
+
+### Employment chart — explicitly NOT extracted
+
+Your third screenshot ("Employment in public and organised private sectors over time," 1970-71→2023-24) is a **line chart with no visible data labels**. Reading precise annual figures off pixel positions on a chart would mean inventing precision that isn't actually there — exactly what your rules forbid. I did not transcribe this one. If you want this series, I need the underlying table (a RBI Handbook table number, a CSV/Excel export, or a zoomed screenshot of a data table rather than the rendered chart).
 
 ---
 
-## Banking — iBFPI inputs
+## Everything from the previous registry entry
 
-### `data/raw/bank_earnings/bank_earnings_reported_q2fy25_to_q2fy26.csv`
-
-| Field | Value |
-|---|---|
-| Variables | NII, non-interest income, operating profit, provisions, PAT, total assets, NIM, ROA, CET1, CAR, LCR |
-| Banks | HDFC Bank, ICICI Bank, SBI, Axis Bank |
-| Frequency | Quarterly |
-| Coverage | Q2 FY2025, Q1 FY2026, Q2 FY2026 (3 quarters only) |
-| Status | **VERIFIED** (quarterly disclosures — treat as real reported figures) |
-| Coverage gaps | Several cells are blank per bank/quarter (e.g. SBI has no NII breakdown some quarters, Axis is missing NII in Q2FY25) — real disclosures are not uniform across banks; this is expected, not an error |
-| ⚠️ For iBFPI specifically | Only 2 of the 5 BFPI indicators are consistently present (CET1, LCR for some bank-quarters); no PPNR/assets, no net charge-off rate, no unrealised-securities-losses/CET1. **Not sufficient alone to replace the synthetic panel.** Also only 3 quarters — the existing iBFPI methodology needs the 2018-2024 run to match the repo-rate regime-split analysis. |
-
-### `data/raw/bank_earnings/bank_earnings_ESTIMATED_2019q1_2025q1.csv`
-
-**⚠️ This file is NOT verified or reported data.** Its own `data_status` column says `estimated_from_annual` and its own `notes` column states: *"Quarterly PAT distributed from annual anchor at Q1/Q2/Q3/Q4 = 22%/23%/26%/29%; NII, operating profit and assets are ratio/base-growth estimates; not reported."*
-
-| Field | Value |
-|---|---|
-| Status | **ESTIMATED — must never be displayed as VERIFIED, DERIVED, or used to compute a "real" iBFPI result.** Per your own rules, this is closer to the SYNTHETIC/illustrative category than real data, despite covering real banks and plausible figures. |
-| Possible legitimate use | Clearly labelled as a *model estimate* for a **Scenario/What-if context only** (e.g. "if quarterly figures followed a typical seasonal distribution of annual results, they would look like this") — never in a results panel that claims to show actual bank performance. |
-
----
-
-(All other entries from the prior registry — `real_percapita_nni_timeseries.csv`, `indicator_summary_hpi_nni.csv`, `india_gdp_growth_cagr.csv`, `plfs_unemployment_rate_by_state_2023_24.csv` — unchanged; see git history for the original writeup.)
-
-## What this registry now supports
-
-- **State Economic Divergence Lab**: a real, 2004-05→2024-25 per-capita income series by state (with the base-year splice decision pending), a real one-year unemployment snapshot, and a real sectoral-employment narrative *if* you also send the EPWRF/NSS-round employment-by-sector table (still not received as a file — only cited in your research).
-- **Housing Intelligence Lab**: real city-level housing price levels (2013-2024, 50 cities) — genuinely strong. Income side still needs either city-level data or an explicit, documented state-proxy assumption.
-- **Banking Lab**: 3 real quarters for 4 banks, covering 2 of 5 BFPI indicators — not enough to replace the synthetic 2018-2024 panel yet. The estimated file must stay out of any "real result."
+(RESIDEX city index 2013-2024/2025-2026, RESIDEX city price levels by unit size, RBI Handbook Table 26 constant-price NSDP 2004-05→2022-23 as originally published in two base-year blocks, bank earnings — reported and ESTIMATED — PLFS unemployment, real per-capita NNI, GDP CAGR) is unchanged; see git history or the files directly in `data/raw/` for the full per-file writeup.
 
 ## Still specifically needed
 
-1. **Decision**: splice the two NSDP base-year series (I compute and document the linking factor) or keep them as two visually separate eras?
-2. **City-level household income** (or explicit approval to proxy with state NSDP per capita, clearly labelled as an assumption).
-3. **EPWRF/NSS-round state-wise employment-by-sector table** as an actual file — your research identified where it lives, not the data itself.
-4. **Full 2018-2024 bank panel** with all 5 BFPI indicators, if you want to replace the synthetic iBFPI panel — the two files received don't cover this.
-5. NHB RESIDEX's documented base-year/base-quarter (to label the index files precisely, e.g. "2017-18 = 100") — a one-line confirmation, not a new dataset.
+1. **EPWRF/NSS employment-by-sector table** as an actual file (still only cited, not received).
+2. **Full 2018-2024 bank panel, all 5 BFPI indicators** (still only 3 recent quarters, 2 indicators).
+3. Confirmation of which NSDP current-price vintage is authoritative (old file vs. new screenshot) — optional; I'll keep using the screenshot as current unless told otherwise.
+4. The underlying table for the employment-by-sector chart, if you want that series at all.
