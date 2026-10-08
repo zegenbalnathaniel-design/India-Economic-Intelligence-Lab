@@ -15,9 +15,11 @@ if str(ROOT) not in sys.path:
 
 import streamlit as st
 
+from analysis import regional
 from app.components.theme import setup, kicker, callout, footnote
 from app.components import terrain_hero
 from app.components import home_theme
+from data_sources import loaders
 
 
 setup("Home")
@@ -46,68 +48,95 @@ st.caption(
 )
 
 # ---------- Numbers ----------------------------------------------------------
-st.markdown('<div class="ieil-numbers">', unsafe_allow_html=True)
-n1, n2, n3, n4 = st.columns(4)
-with n1:
-    home_theme.number_stat("04", "Research Labs", home_theme.VERMILLION)
-with n2:
-    home_theme.number_stat("06", "Data Series", home_theme.COBALT)
-with n3:
-    home_theme.number_stat("07", "Models", home_theme.LEAF)
-with n4:
-    home_theme.number_stat("∞", "Questions", home_theme.TURQUOISE)
-st.markdown("</div>", unsafe_allow_html=True)
-st.caption(
-    "Counts reflect what's actually wired up: 6 real data series loaded from "
-    "RBI/PLFS/NHB sources, 7 named models (iBFPI, sigma & beta convergence, "
-    "composition-effect, SIP Monte Carlo, r−g, EMI/affordability) — see the Data page."
-)
+with st.container(key="reveal_numbers"):
+    st.markdown('<div class="ieil-numbers">', unsafe_allow_html=True)
+    n1, n2, n3, n4 = st.columns(4)
+    with n1:
+        home_theme.number_stat("04", "Research Labs", home_theme.VERMILLION)
+    with n2:
+        home_theme.number_stat("06", "Data Series", home_theme.COBALT)
+    with n3:
+        home_theme.number_stat("07", "Models", home_theme.LEAF)
+    with n4:
+        home_theme.number_stat("∞", "Questions", home_theme.TURQUOISE)
+    st.markdown("</div>", unsafe_allow_html=True)
+    st.caption(
+        "Counts reflect what's actually wired up: 6 real data series loaded from "
+        "RBI/PLFS/NHB sources, 7 named models (iBFPI, sigma & beta convergence, "
+        "composition-effect, SIP Monte Carlo, r−g, EMI/affordability) — see the Data page."
+    )
 
 st.markdown("<br>", unsafe_allow_html=True)
 
 # ---------- Research index ----------------------------------------------------
-st.subheader("Research Index")
-home_theme.index_row_header(
-    "01", "WHO OWNS INDIA?", "Wealth Inequality Lab · 2026",
-    "How income, ownership, asset composition and returns on capital shape wealth accumulation.",
-    home_theme.VERMILLION,
-)
-st.page_link("pages/1_Wealth_Inequality_Lab.py", label="Open the Wealth Lab →")
+with st.container(key="reveal_index"):
+    st.subheader("Research Index")
+    st.caption("Drag, scroll or swipe — the cards aren't stacked, they're a carousel.")
 
-home_theme.index_row_header(
-    "02", "HOW DOES MONEY MOVE?", "Banking & Monetary Policy Lab · 2026",
-    "The iBFPI robust z-score methodology, adapted from my JP Morgan research, "
-    "applied to a five-bank Indian panel against the RBI repo rate.",
-    home_theme.COBALT,
-)
-st.page_link("pages/2_Banking_Monetary_Policy_Lab.py", label="Open the Banking Lab →")
+    RESEARCH_CARDS = [
+        ("01", "WHO OWNS INDIA?", "Wealth Inequality Lab · 2026",
+         "How income, ownership, asset composition and returns on capital shape wealth accumulation.",
+         home_theme.VERMILLION, "pages/1_Wealth_Inequality_Lab.py", "Open the Wealth Lab →"),
+        ("02", "HOW DOES MONEY MOVE?", "Banking & Monetary Policy Lab · 2026",
+         "The iBFPI robust z-score methodology, adapted from my JP Morgan research, applied "
+         "to a five-bank Indian panel against the RBI repo rate.",
+         home_theme.COBALT, "pages/2_Banking_Monetary_Policy_Lab.py", "Open the Banking Lab →"),
+        ("03", "ONE COUNTRY. UNEQUAL TRAJECTORIES.", "State Economic Divergence Lab · 2026",
+         "Sigma and beta convergence on real per-capita income by state, 2004-05 to 2022-23, "
+         "from the RBI Handbook of Statistics on Indian States.",
+         home_theme.LEAF, "pages/3_State_Economic_Divergence_Lab.py", "Open the State Divergence Lab →"),
+        ("04", "WHERE DOES INDIA'S WEALTH LIVE?", "Housing Intelligence Lab · 2026",
+         "Real NHB RESIDEX price data for 50 cities against a documented state-income proxy "
+         "— price-to-income, EMI, and an honest caveat about what the proxy distorts.",
+         home_theme.GOLD, "pages/4_Housing_Intelligence_Lab.py", "Open the Housing Lab →"),
+    ]
 
-home_theme.index_row_header(
-    "03", "ONE COUNTRY. UNEQUAL TRAJECTORIES.", "State Economic Divergence Lab · 2026",
-    "Sigma and beta convergence on real per-capita income by state, 2004-05 to 2022-23, "
-    "from the RBI Handbook of Statistics on Indian States.",
-    home_theme.LEAF,
-)
-st.page_link("pages/3_State_Economic_Divergence_Lab.py", label="Open the State Divergence Lab →")
+    with st.container(key="research_carousel", horizontal=True, gap="medium"):
+        for num, headline, meta, desc, color, page, link_label in RESEARCH_CARDS:
+            with st.container(border=True):
+                home_theme.index_card(num, headline, meta, desc, color)
+                st.page_link(page, label=link_label)
 
-home_theme.index_row_header(
-    "04", "WHERE DOES INDIA'S WEALTH LIVE?", "Housing Intelligence Lab · 2026",
-    "Real NHB RESIDEX price data for 50 cities against a documented state-income "
-    "proxy — price-to-income, EMI, and an honest caveat about what the proxy distorts.",
-    home_theme.GOLD,
-)
-st.page_link("pages/4_Housing_Intelligence_Lab.py", label="Open the Housing Lab →")
+    home_theme.carousel_drag_script("research_carousel")
+
+st.markdown("<br>", unsafe_allow_html=True)
+
+# ---------- A real series, drawn on scroll -----------------------------------
+with st.container(key="reveal_graph"):
+    st.subheader("States Converging — Drawn, Not Just Charted")
+    sigma = regional.sigma_convergence(loaders.load_nsdp_spliced())
+    gcol1, gcol2 = st.columns([3, 2])
+    with gcol1:
+        st.markdown(
+            home_theme.sigma_convergence_svg(sigma.by_year, home_theme.LEAF),
+            unsafe_allow_html=True,
+        )
+    with gcol2:
+        st.markdown(
+            f"**{sigma.direction.upper()}** · {sigma.trend_slope_pct_per_year:+.3f} pp CV/year  \n"
+            "Cross-state coefficient of variation of real per-capita NSDP, "
+            f"{sigma.by_year['financial_year'].iloc[0]} to {sigma.by_year['financial_year'].iloc[-1]} "
+            "— the same real RBI Handbook series behind the State Divergence Lab, here as a line "
+            "that draws itself in as you scroll to it, not a static picture."
+        )
+        st.page_link(
+            "pages/3_State_Economic_Divergence_Lab.py",
+            label="See the full convergence analysis →",
+        )
 
 st.markdown("<br>", unsafe_allow_html=True)
 
 # ---------- Process -----------------------------------------------------------
-st.subheader("From Question to Model")
-home_theme.flow(["Question", "Data", "Model", "Simulation", "Interpretation"])
-st.caption(
-    "This site doesn't just show visualisations — it shows how an economic "
-    "question becomes a computational one, at each step, with the data and "
-    "assumptions left visible rather than hidden behind the chart."
-)
+with st.container(key="reveal_process"):
+    st.subheader("From Question to Model")
+    home_theme.flow(["Question", "Data", "Model", "Simulation", "Interpretation"])
+    st.caption(
+        "This site doesn't just show visualisations — it shows how an economic "
+        "question becomes a computational one, at each step, with the data and "
+        "assumptions left visible rather than hidden behind the chart."
+    )
+
+home_theme.scroll_reveal_script()
 
 st.markdown("<br>", unsafe_allow_html=True)
 st.markdown('<div class="ieil-secondary-links">', unsafe_allow_html=True)

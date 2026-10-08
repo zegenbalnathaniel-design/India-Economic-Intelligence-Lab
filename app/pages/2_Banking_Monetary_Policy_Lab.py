@@ -25,11 +25,11 @@ from data_sources.loaders import (
 )
 from app.components.theme import (
     setup, kicker, callout, source_badge, stat_card, footnote,
-    GOLD, CRIMSON, MUTED, PARCHMENT,
+    GOLD, CRIMSON, MUTED, PARCHMENT, COBALT,
 )
 
 
-setup("Banking & Monetary Policy Lab")
+setup("Banking & Monetary Policy Lab", accent=COBALT)
 
 
 with st.sidebar:

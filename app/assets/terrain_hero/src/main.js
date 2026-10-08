@@ -151,6 +151,14 @@ function mountTerrainHero(root) {
     caption.textContent = idx === null ? REST_CAPTION : `${REGIONS[idx].name} — ${REGIONS[idx].descriptor}`;
   };
 
+  // Live pointer position in viewBox units (400x320), recovered the same
+  // way as the region-matching above (onRead -> cell -> cellScreenPos),
+  // since Hairline doesn't expose raw pointer coordinates itself. null
+  // when the pointer is off the field. Read by the annotation-nudge loop
+  // below; not used under reduced-motion (that loop never starts).
+  const pointerVB = { x: null, y: null };
+  let wakeAnnotations = null;
+
   const figure = terrain(stage, {
     intensity: reduceMotion ? 0.15 : 0.55,
     theme: "auto",
@@ -159,11 +167,17 @@ function mountTerrainHero(root) {
     // hotspots -- so the whole field answers, matched to the nearest Lab via
     // the projection math above. "rest" is Hairline's own idle caption.
     onRead: (text) => {
-      if (text === "rest" || !text) { setActive(null); return; }
+      if (text === "rest" || !text) {
+        setActive(null); pointerVB.x = null; pointerVB.y = null;
+        if (wakeAnnotations) wakeAnnotations();
+        return;
+      }
       const m = CELL_RE.exec(text);
       if (!m) return;
       const [sx, sy] = cellScreenPos(Number(m[1]), Number(m[2]));
+      pointerVB.x = sx; pointerVB.y = sy;
       setActive(nearestRegionIndex(sx, sy));
+      if (wakeAnnotations) wakeAnnotations();
     },
   });
 
@@ -206,15 +220,56 @@ function mountTerrainHero(root) {
     { text: "DISTRIBUTION", x: 0.06, y: 0.84 },
     { text: "HOUSING", x: 0.94, y: 0.84 },
   ];
-  ANNOTATIONS.forEach((a) => {
+  const annotEls = ANNOTATIONS.map((a) => {
     const el = document.createElement("div");
     el.className = "th-annot";
     el.style.left = `${a.x * 100}%`;
     el.style.top = `${a.y * 100}%`;
-    el.style.transform = `translate(${a.x > 0.5 ? "-100%" : "0"}, -50%)`;
     el.textContent = a.text;
     overlay.appendChild(el);
+    return { el, base: a, vb: [a.x * 400, a.y * 320], dx: 0, dy: 0 };
   });
+
+  // Live pointer-tracking: each annotation eases away from the pointer
+  // when it's nearby, lerping toward a target offset every frame -- a
+  // small, physical-feeling reaction (not literally following the cursor,
+  // which would read as clutter) built on the same recovered pointer
+  // position the caption uses. Off entirely under reduced-motion.
+  if (!reduceMotion) {
+    const REACH = 110; // viewBox units
+    const MAX_PUSH = 9; // px
+    let raf = 0;
+    const tick = () => {
+      let moving = false;
+      for (const a of annotEls) {
+        let tx = 0, ty = 0;
+        if (pointerVB.x !== null) {
+          const ddx = a.vb[0] - pointerVB.x, ddy = a.vb[1] - pointerVB.y;
+          const dist = Math.hypot(ddx, ddy);
+          if (dist < REACH && dist > 0.01) {
+            const push = (1 - dist / REACH) * MAX_PUSH;
+            tx = (ddx / dist) * push;
+            ty = (ddy / dist) * push;
+          }
+        }
+        a.dx += (tx - a.dx) * 0.12;
+        a.dy += (ty - a.dy) * 0.12;
+        if (Math.abs(a.dx) > 0.05 || Math.abs(a.dy) > 0.05 || tx || ty) moving = true;
+        const justify = a.base.x > 0.5 ? "-100%" : "0%";
+        a.el.style.transform = `translate(calc(${justify} + ${a.dx.toFixed(2)}px), calc(-50% + ${a.dy.toFixed(2)}px))`;
+      }
+      raf = moving ? requestAnimationFrame(tick) : 0;
+    };
+    const wake = () => { if (!raf) raf = requestAnimationFrame(tick); };
+    overlay.addEventListener("pointermove", wake);
+    overlay.addEventListener("pointerleave", wake);
+    wakeAnnotations = wake;
+    wake();
+  } else {
+    annotEls.forEach((a) => {
+      a.el.style.transform = `translate(${a.base.x > 0.5 ? "-100%" : "0"}, -50%)`;
+    });
+  }
 
   return figure;
 }

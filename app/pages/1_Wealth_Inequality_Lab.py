@@ -24,11 +24,11 @@ import streamlit as st
 
 from analysis import wealth
 from app.components.theme import (
-    setup, kicker, callout, source_badge, stat_card, footnote, GOLD, CRIMSON, MUTED,
+    setup, kicker, callout, source_badge, stat_card, footnote, GOLD, CRIMSON, MUTED, VERMILLION,
 )
 
 
-setup("Wealth & Inequality Lab")
+setup("Wealth & Inequality Lab", accent=VERMILLION)
 
 
 # ---------- Sidebar -----------------------------------------------------------
