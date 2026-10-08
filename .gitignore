@@ -10,3 +10,4 @@ data/cache/*
 .DS_Store
 app/assets/terrain_hero/node_modules/
 streamlit.log
+.claude/worktrees/

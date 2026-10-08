@@ -99,3 +99,32 @@ def load_residex_index() -> pd.DataFrame:
 
 def residex_cities() -> list[str]:
     return sorted(load_residex_price_levels()["city"].unique().tolist())
+
+
+@lru_cache(maxsize=8)
+def load_residex_usable_records() -> pd.DataFrame:
+    """NHB RESIDEX data-quality coverage: how many phase-1 city residential
+    apartment records existed each quarter (Jun-2017 to Jun-2026) vs. how
+    many were "usable" for the Assessment Prices HPI (68-93% of records).
+
+    This is **data-quality coverage of the underlying RESIDEX series**, not
+    a city HPI index or price value — the source file states this verbatim
+    on every row: "This is data-quality coverage, not city HPI index
+    values." See DATA_REGISTRY.md. Status: VERIFIED (directly supplied
+    primary statistic)."""
+    return pd.read_csv(RAW_DIR / "nhb_residex" / "assessment_price_usable_records_quarterly.csv")
+
+
+@lru_cache(maxsize=8)
+def load_hces_urban_mpce() -> pd.DataFrame:
+    """MoSPI HCES 2023-24 Statement 7: average monthly per-capita
+    consumption expenditure (MPCE), urban sector, by state/UT — a single
+    cross-section for survey year 2023-24.
+
+    This is **consumption expenditure, not income**, and **state/UT-level,
+    not city-level** — the source file states this verbatim on every row:
+    "Use only as an urban state/UT consumption proxy; do not label as city
+    household income." See DATA_REGISTRY.md and analysis/housing.py (the
+    `income_source='mpce'` path on `city_affordability`). Status: VERIFIED
+    (directly supplied primary statistic)."""
+    return pd.read_csv(RAW_DIR / "hces" / "state_ut_urban_mpce_2023_24.csv")

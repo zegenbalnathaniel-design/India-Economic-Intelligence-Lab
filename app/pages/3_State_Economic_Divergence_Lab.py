@@ -16,10 +16,10 @@ import plotly.graph_objects as go
 import streamlit as st
 
 from analysis import regional
-from app.components.theme import setup, kicker, callout, source_badge, stat_card, footnote
+from app.components.theme import setup, kicker, callout, source_badge, stat_card, footnote, LEAF
 from data_sources import loaders
 
-setup("State Economic Divergence Lab")
+setup("State Economic Divergence Lab", accent=LEAF)
 
 with st.sidebar:
     st.markdown("## State Divergence Lab")
