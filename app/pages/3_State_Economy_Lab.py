@@ -40,6 +40,7 @@ from app.components.theme import (
     setup, set_chart_source, chart_source, kicker, callout, source_badge, stat_card, footnote, GOLD, LEAF, MUTED,
 )
 from app.components.glossary import indicator_note
+from app.components.provenance import sources_panel
 from app.components import hairline_display
 from data_sources import loaders
 
@@ -871,3 +872,5 @@ footnote(
     "differences from the national figure, percentage changes and CAGRs are computed on this page "
     "from those values; nothing is estimated or interpolated. See DATA_REGISTRY.md for provenance."
 )
+
+sources_panel("rbi_nsdp_constant", "rbi_nsdp_spliced", "rbi_nsdp_current", "state_gsdp_nsdp_pc", "plfs_unemployment", "hces_mpce")

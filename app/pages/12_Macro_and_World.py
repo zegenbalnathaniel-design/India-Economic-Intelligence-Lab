@@ -32,6 +32,7 @@ from app.components.theme import (
     setup, set_chart_source, chart_source, kicker, callout, source_badge, stat_card, footnote, COBALT, SERIES, MUTED,
 )
 from app.components.glossary import indicator_note
+from app.components.provenance import sources_panel
 
 setup("India Macro & World", accent=COBALT)
 set_chart_source("MoSPI and RBI releases; World Bank WDI API")
@@ -202,6 +203,7 @@ with st.expander("All monthly figures, with status and source"):
     st.download_button("Download (CSV)", mm.to_csv(index=False).encode("utf-8"),
                        file_name="india_macro_monthly.csv", mime="text/csv", key="now_dl")
 
+sources_panel("macro_monthly", "rbi_policy_decisions", "worldbank_wdi")
 st.markdown("---")
 st.header("India vs the world · annual series")
 source_badge("World Bank WDI · API v2", "Annual", "No API key")

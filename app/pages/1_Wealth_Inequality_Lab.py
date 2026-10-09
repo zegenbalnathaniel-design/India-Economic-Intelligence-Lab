@@ -36,6 +36,7 @@ from app.components.theme import (
     TURQUOISE, WARM_WHITE, COBALT,
 )
 from app.components.glossary import indicator_note
+from app.components.provenance import sources_panel
 from app.components import hairline_display
 from data_sources import loaders
 
@@ -1355,3 +1356,5 @@ footnote(
     "and wealth inequality in India; returns are its 1991–2021 nominal averages (Wahengbam 2023, CSEP) and "
     "asset shares RBI (2017). r − g framing draws on Piketty (2014). Nothing here is a forecast or advice."
 )
+
+sources_panel("wil_india", "paper_a")

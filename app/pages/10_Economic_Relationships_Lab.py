@@ -40,6 +40,7 @@ from app.components.theme import (
     TURQUOISE, GOLD, MUTED, VERMILLION,
 )
 from app.components.glossary import indicator_note
+from app.components.provenance import sources_panel
 from data_sources import loaders
 
 setup("Economic Relationships Lab", accent=TURQUOISE)
@@ -1146,3 +1147,5 @@ footnote(
     "(VERIFIED / PARTIAL / SPLICED / DERIVED / ILLUSTRATIVE) follow DATA_REGISTRY.md. Results are descriptive "
     "statistics of these specific samples, not causal claims."
 )
+
+sources_panel("wil_india", "rbi_nsdp_constant", "rbi_nsdp_spliced", "rbi_nsdp_current", "plfs_unemployment", "hces_mpce", "nhb_residex", "real_pc_nni", "rbi_gcf_sector", "bank_panel_illustrative")

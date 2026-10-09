@@ -18,7 +18,9 @@ import pandas as pd
 import streamlit as st
 
 from data_sources.loaders import load_bank_panel, load_repo_rate
-from app.components.theme import setup, kicker, callout, source_badge, footnote
+from app.components.theme import setup, kicker, callout, source_badge, footnote, stat_card
+from app.components.provenance import sources_panel
+from data_sources import registry, validation
 
 
 setup("Data")
@@ -32,12 +34,67 @@ with st.sidebar:
 kicker("Data transparency")
 st.title("Sources, dates, units, provenance")
 st.markdown(
-    "Every number surfaced by the labs originates from one of the "
-    "following. Where a value is illustrative it is labelled as such."
+    "Every number on this site comes from one of the datasets below. Each has a status, a "
+    "publisher and link, the period and units it covers, when it was added, how this project "
+    "transformed it, how missing values are treated, and its known limitations."
+)
+
+# ---------- Evidence ledger --------------------------------------------------
+st.header("Evidence ledger")
+ledger = registry.as_frame()
+status_counts = ledger["status"].value_counts()
+lc = st.columns(min(len(status_counts), 6))
+for col, (stt, n) in zip(lc, status_counts.items()):
+    with col:
+        stat_card(stt, f"{n}", "dataset(s)")
+show_cols = {"name": "Dataset", "publisher": "Publisher", "status": "Status", "period": "Period",
+             "units": "Units", "frequency": "Frequency", "added": "Added", "used_on": "Used on"}
+st.dataframe(ledger[list(show_cols)].rename(columns=show_cols), hide_index=True, use_container_width=True)
+pick = st.selectbox("Full record for", ledger["id"], format_func=lambda i: registry.get(i).name, key="ledger_pick")
+sources_panel(pick, title="Selected dataset — full record")
+st.download_button("Download the evidence ledger (CSV)", ledger.to_csv(index=False).encode("utf-8"),
+                   file_name="ieil_evidence_ledger.csv", mime="text/csv", key="dl_ledger")
+problems = registry.registry_problems()
+if problems:
+    st.error("Ledger problems: " + "; ".join(problems))
+else:
+    st.caption("Ledger check: every data file in the repository has a record, every record has a known "
+               "status and stated limitations, and every listed file exists.")
+
+# ---------- Validation report -------------------------------------------------
+st.header("Validation report")
+st.markdown(
+    "Automatic checks on every file: duplicate rows and keys, missing cells, period labels that "
+    "are not valid years / financial years / quarters / months, names with stray spaces or "
+    "inconsistent spellings, impossible values (negative prices or levels, shares above 100%) and "
+    "suspicious period-on-period jumps. **Checks never change the data** — findings are listed for "
+    "review."
 )
 
 
-st.header("Source registry")
+@st.cache_data(show_spinner="Running checks on every data file…")
+def _validation():
+    return validation.validate_all()
+
+
+report = _validation()
+sev = report["severity"].value_counts()
+vc = st.columns(4)
+for col, k, sub in zip(vc, ["ERROR", "WARN", "INFO", "OK"],
+                       ["unreadable files", "need a look", "noted, by design", "files with no findings"]):
+    with col:
+        stat_card(k, f"{int(sev.get(k, 0))}", sub)
+level = st.multiselect("Show", ["ERROR", "WARN", "INFO", "OK"], default=["ERROR", "WARN", "INFO"], key="val_levels")
+st.dataframe(report[report["severity"].isin(level)], hide_index=True, use_container_width=True)
+st.download_button("Download the validation report (CSV)", report.to_csv(index=False).encode("utf-8"),
+                   file_name="ieil_validation_report.csv", mime="text/csv", key="dl_validation")
+callout(
+    "Two flags worth knowing about, both kept as published: Sikkim's per-capita NSDP rises 72% in "
+    "2009-10 in the RBI table, and Bhiwadi's RESIDEX price level rises 36% in the Sep-2023 quarter.",
+    kind="note",
+)
+
+st.header("Sources to replace the illustrative bank panel")
 registry = pd.DataFrame([
     {"Source": "RBI — Database on Indian Economy (DBIE)", "Url": "https://dbie.rbi.org.in",
      "Used for": "Repo rate, banking aggregates", "Frequency": "Daily / Monthly / Qtr", "Access": "Open (portal)"},
@@ -100,8 +157,8 @@ st.markdown(
     "and Basel III Pillar 3 report; align to the fiscal-quarter end.\n"
     "- **Unrealised losses**: use the AFS reserve on the balance-sheet OCI "
     "line, divided by CET1 capital.\n"
-    "- **Frequency**: quarterly; any indicator that is disclosed only "
-    "half-yearly should be linearly interpolated with a flag."
+    "- **Frequency**: quarterly; an indicator disclosed only half-yearly stays "
+    "half-yearly — quarters without a disclosure are left missing, never interpolated."
 )
 
 footnote(

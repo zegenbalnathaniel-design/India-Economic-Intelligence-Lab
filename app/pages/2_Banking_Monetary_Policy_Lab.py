@@ -37,6 +37,7 @@ from app.components import hairline_display
 from analysis.macro_monthly import latest_decision
 from data_sources.loaders import load_rbi_policy_decisions
 from app.components.glossary import indicator_note
+from app.components.provenance import sources_panel
 
 
 setup("Banking & Monetary Policy Lab", accent=COBALT)
@@ -609,3 +610,5 @@ footnote(
     "JP Morgan / Fed-rate research paper. See the Methodology page for the "
     "full formal specification, and Data for provenance conventions."
 )
+
+sources_panel("bank_panel_illustrative", "rbi_policy_decisions", "macro_monthly", "bank_earnings")

@@ -26,6 +26,7 @@ import streamlit as st
 from analysis import housing
 from app.components.theme import setup, set_chart_source, chart_source, kicker, callout, source_badge, stat_card, footnote, GOLD
 from app.components.glossary import indicator_note
+from app.components.provenance import sources_panel
 from app.components import hairline_display
 from data_sources import loaders
 
@@ -583,3 +584,5 @@ footnote(
     "NHB RESIDEX price data is real. Income is a documented state-level proxy, not measured city income — "
     "see the warning banner above before drawing conclusions from any single city's numbers."
 )
+
+sources_panel("nhb_residex", "rbi_nsdp_current", "hces_mpce")
