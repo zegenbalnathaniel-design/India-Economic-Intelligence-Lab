@@ -313,27 +313,101 @@ st.caption(
     "since the series begins in 1922."
 )
 
-indicator_note(
-    "these estimates",
-    "**Where they come from.** Bharti, Chancel, Piketty & Somanchi (2024), *Income and "
-    "Wealth Inequality in India, 1922-2023: The Rise of the Billionaire Raj*, World "
-    "Inequality Lab Working Paper 2024/09. They combine national accounts, income-tax "
-    "tabulations, household surveys (AIDIS for wealth) and rich lists into one "
-    "consistent series. All numbers here were extracted from the paper's tables by "
-    "`scripts/extract_wil_tables.py` — none retyped by hand.\n\n"
-    "**Likely understated at the top.** Rich households under-report assets and are "
-    "under-sampled in surveys; the authors say their estimates may understate true "
-    "inequality and that India's data quality has deteriorated.\n\n"
-    "**Checks run here.** Bottom 50% + Middle 40% + Top 10% sum to 100% (±0.1 from "
-    "rounding) in every year of both series. In Table 2, each group's average income "
-    "implies its printed share to within 0.2 pp — except the Middle 40%, where "
-    "40% × ₹1,65,273 ÷ ₹2,34,551 = 28.2% against the printed 27.3%. That 0.9 pp gap is "
-    "in the paper itself.\n\n"
-    "**Wealth quirks the paper notes.** The Bottom 50% wealth threshold of −₹4.1 crore "
-    "comes from one AIDIS household with enormous debt; without it, the bottom half's "
-    "average wealth is ₹1,93,031 rather than ₹1,73,184. The 2023 wealth row is tentative.",
-    kind="method",
-)
+kicker("Reading these numbers")
+st.subheader("What each group means, how we got here, and the caveats")
+st.caption("Everything below is from the paper, with the table or section it comes from. Statements that "
+           "are not in the paper have been left out.")
+
+inc_t = wil_income.set_index("group")
+wt_t = wil_wealth22.set_index("group")
+c1 = wil_wealth_series.set_index("year")
+crossover = int(b1[b1["top_10"] > b1["middle_40"]].index[b1[b1["top_10"] > b1["middle_40"]].index > 1990].min())
+F = lambda metric, period: facts[(metric, period)]
+
+
+def tier(name: str) -> str:
+    r = wil_table.set_index("group").loc[name]
+    if r["income_share_status"] == inequality.REQUIRED:
+        return (f"**{name} ({r['percentile_range']}).** The paper does not split the bottom half, so there "
+                "is no figure for this group — DATA REQUIRED.")
+    entry = ""
+    if name in inc_t.index and inc_t.loc[name, "threshold_inr"] > 0:
+        entry = (f" Entry takes an income of **{inequality.fmt_inr(inc_t.loc[name, 'threshold_inr'])}** a year "
+                 f"(wealth: {inequality.fmt_inr(wt_t.loc[name, 'threshold_inr'])}).")
+    star = " (calculated: Top 10% minus Top 1%)" if r["income_share_status"] == inequality.DERIVED else ""
+    return (f"**{name} ({r['percentile_range']}){star}.** {r['income_share']:.1f}% of income and "
+            f"{r['wealth_share']:.1f}% of wealth. Average income {inequality.fmt_inr(r['avg_income'])} a year "
+            f"(≈ {inequality.fmt_inr(r['avg_income'] / 12)} a month), {r['multiple_of_average']:.1f}× the "
+            f"national average; average wealth {inequality.fmt_inr(r['avg_wealth'])}.{entry}")
+
+
+with st.expander("What each group means, 2022-23 (Tables 2 and 3)", expanded=True):
+    st.markdown("\n\n".join(tier(g) for g in inequality.GROUPS))
+    st.caption(
+        "Monthly figures are the yearly average ÷ 12, per adult. The paper describes the Middle 40% as "
+        "having 'lost out significantly' since liberalisation and links this to India's 'missing middle "
+        "class' (Sections 4.2 and 7.2)."
+    )
+
+with st.expander("The long-run pattern (Sections 1, 3, 4 and 7; Tables B.1, C.1, C.2)"):
+    st.markdown(
+        f"- **1922 to independence.** The top 1% income share went from **{F('Top 1% income share', '1922'):.0f}%** "
+        f"in 1922 to **over {F('Top 1% income share', 'inter-war period'):.0f}%** between the wars, then fell "
+        f"back to about **{F('Top 1% income share', '1947'):.0f}%** by independence.\n"
+        f"- **1950s to early 1980s — inequality fell.** Top 1%: {b1.loc[1951, 'top_1']:.1f}% (1951) → "
+        f"**{b1.loc[1982, 'top_1']:.1f}%** (1982). Top 10%: {b1.loc[1951, 'top_10']:.1f}% → "
+        f"{b1.loc[1982, 'top_10']:.1f}%. The paper links this to nationalisation (rail, air, banking, oil), "
+        f"strong market regulation and high tax progressivity — a top marginal rate of "
+        f"**{F('Top marginal income tax rate', '1973'):.1f}%** in 1973 (Section 3.1). An inheritance tax ran from 1953 to "
+        "1985 and a wealth tax from 1957 to 2016, though with a very low base (Section 1.2).\n"
+        f"- **1980s–1990s — the decline stops.** From the early-1980s reforms and the 1991 liberalisation, top "
+        f"shares rose: Top 1% {b1.loc[1990, 'top_1']:.1f}% (1990) → {b1.loc[2000, 'top_1']:.1f}% (2000).\n"
+        f"- **2000s onward — sharp rise.** The Top 10% overtook the Middle 40% in **{crossover}** "
+        f"({b1.loc[crossover, 'top_10']:.1f}% vs {b1.loc[crossover, 'middle_40']:.1f}%). USD billionaires: "
+        f"{vhy.loc[1991, 'forbes_count']:.0f} (1991) → {vhy.loc[2011, 'forbes_count']:.0f} (2011) → "
+        f"{vhy.loc[2022, 'forbes_count']:.0f} (2022); their wealth {vhy.loc[1991, 'forbes_wealth_pct_nni']:.1f}% → "
+        f"{vhy.loc[2022, 'forbes_wealth_pct_nni']:.1f}% of national income.\n"
+        f"- **2014-15 to 2022-23 — 'particularly pronounced' in wealth.** Billionaire net wealth grew "
+        f"**over {F('Billionaire net wealth growth (real)', '2014-2022'):.0f}%** in real terms, against "
+        f"{F('National income growth (real)', '2014-2022'):.1f}% for national income. The Middle 40% grew more "
+        "slowly than the Bottom 50% in both income and wealth over 2014-2022 (Section 7.2).\n"
+        f"- **Wealth: the middle squeezed.** Middle 40% and Top 10% were both 40–45% of wealth in 1961–1981. "
+        f"The Middle 40% then fell to {c1.loc[2012, 'middle_40']:.1f}% (2012), {c1.loc[2018, 'middle_40']:.1f}% "
+        f"(2018) and {c1.loc[2022, 'middle_40']:.1f}% (2022), while the Top 10% reached "
+        f"{c1.loc[2022, 'top_10']:.1f}%. The Bottom 50% already held only {c1.loc[1991, 'bottom_50']:.1f}% "
+        "in 1991.\n"
+        f"- **2022-23:** Top 1% income share {b1.loc[2022, 'top_1']:.1f}% and wealth share "
+        f"{c1.loc[2022, 'top_1']:.1f}% — the highest in each series. The wealth-to-income ratio rose from "
+        f"{F('Wealth-to-income ratio', '1995'):.2f} (1995) to {F('Wealth-to-income ratio', '2022'):.2f} (2022)."
+    )
+
+with st.expander("Caveats the paper itself states"):
+    st.markdown(
+        "- **Probably a lower bound.** The authors say India's economic data are 'notably poor' and have "
+        "declined recently, so their results 'likely represent a lower bound to actual inequality levels' "
+        "(Abstract).\n"
+        "- **No comparable consumption survey after 2011-12.** The absence of a comparable NSSO consumption "
+        "survey is a key challenge for the last decade, so recent bottom and middle shares are the least "
+        "certain (Section 7.3).\n"
+        "- **Same under-reporting at every level.** The method assumes the same fraction of income is hidden "
+        "across the whole distribution, in surveys and tax data alike. If the very rich hide more — for "
+        "example through income shifting — top incomes may be 'severely' underestimated (Section 7.5).\n"
+        "- **Early wealth figures are lower bounds.** Wealth inequality up to 1991 rests on surveys alone and "
+        "is likely understated; changes between 1991 and 2002 should be read with caution (Section 2.3). "
+        "Before 2002 there is only one point per survey (1961, 1971, 1981, 1991).\n"
+        "- **2023 wealth is tentative** — it uses Hurun's 2023 list truncated at the top 100 (Table C.1 note).\n"
+        "- **Scaled to national accounts.** Averages are scaled to WID national-income and national-wealth "
+        "totals, which differ marginally from official figures (Table 2–3 notes).\n"
+        "- **One extreme debtor.** The Bottom 50% wealth threshold of −₹4.1 crore comes from a single AIDIS "
+        "household with enormous debt; without it, the Bottom 50% average is ₹1,93,031 instead of "
+        f"{inequality.fmt_inr(wt_t.loc['Bottom 50%', 'avg_wealth_inr'])} (Table 3 note)."
+    )
+    st.markdown(
+        "**Checks run on this site.** Bottom 50% + Middle 40% + Top 10% add to 100% (±0.1 from rounding) in "
+        "every year of both series, and the 2022 rows match Tables 2 and 3. In Table 2, each group's average "
+        "income implies its printed share to within 0.2 pp, except the Middle 40%: 40% × ₹1,65,273 ÷ "
+        "₹2,34,551 = 28.2% against the printed 27.3%. That 0.9 pp gap is in the paper."
+    )
 
 with st.expander("What changed from the earlier summary you supplied"):
     st.markdown(
@@ -349,7 +423,12 @@ with st.expander("What changed from the earlier summary you supplied"):
         "| Top 1% income share 'up ~180% since 1980' | 7.3% → 22.6%: **+210%** | B.1 |\n"
         "| Top 1% 'under 21%' in the late 1930s | 'over 20% in the inter-war period' | Section 3.1 |\n"
         "| Billionaire wealth '25%' of NNI, 2022 | **24.6%** (Forbes) | C.2 |\n"
-        "| Average income ₹2.35 lakh | **₹2,34,551** | Table 2 |"
+        "| Average income ₹2.35 lakh | **₹2,34,551** | Table 2 |\n"
+        "| Middle 40% ≈ ₹13,750 a month | **₹13,773** (₹1,65,273 ÷ 12) | Table 2 |\n"
+        "| Upper middle 'in the middle 40% or the top 10%' | Defined here as **P90–P99** (Top 10% − Top 1%) | Tables 2–3 |\n"
+        "| Government puts the middle class at ~31% | **Not in the paper** — removed | — |\n"
+        "| Who each tier is (informal workers, salaried professionals…) | **Not in the paper** — replaced by its figures | — |\n"
+        "| Post-independence decline from land reforms, wealth & inheritance taxes | Paper: nationalisation, regulation, 97.5% top tax rate; inheritance tax 1953–85, wealth tax 1957–2016 (low base); land redistribution in a footnote | 1.2, 3.1 |"
     )
 
 
