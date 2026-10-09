@@ -1,6 +1,0 @@
-group,percentile_range,wealth_share_1961_pct,wealth_share_2022_23_pct,note
-Bottom 50%,P0-P50,11.4,6.4,
-Middle 40%,P50-P90,,,"Stated only as 'About 43-44%' (1961) and 'About 29%' (2022-23); also 'about 35%' in 2012. Left blank; implied values are derived in analysis/inequality.py."
-Top 10%,P90-P100,44.9,64.6,
-Top 1%,P99-P100,,40.1,1961 value stated only as 'About 13-15%'.
-Top 0.1%,P99.9-P100,3.2,29.0,

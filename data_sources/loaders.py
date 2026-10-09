@@ -165,32 +165,51 @@ def load_nsdp_constant_as_published() -> pd.DataFrame:
 
 
 # ---------------------------------------------------------------------------
-# Real data: World Inequality Lab (WIL) distributional estimates for India,
-# as supplied by the author (a summary of Bharti, Chancel, Piketty &
-# Somanchi, "Income and Wealth Inequality in India, 1922-2023: The Rise of
-# the Billionaire Raj", WIL Working Paper 2024/09). Status: PARTIAL -- the
-# values are transcribed from that summary and have not yet been checked
-# against the paper's own tables. Approximate statements ("about 29%") are
-# kept as notes, never as numbers. Derived values live in
-# analysis/inequality.py.
+# Real data: World Inequality Lab (WIL) estimates for India, extracted from
+# Bharti, Chancel, Piketty & Somanchi (2024), "Income and Wealth Inequality
+# in India, 1922-2023: The Rise of the Billionaire Raj", WIL Working Paper
+# 2024/09, by scripts/extract_wil_tables.py (no number retyped by hand).
+# Status: VERIFIED (transcribed from the paper's own tables).
 # ---------------------------------------------------------------------------
 
 @lru_cache(maxsize=8)
-def load_wil_distribution() -> pd.DataFrame:
-    """Income and wealth by group, 2022-23 (Bottom 50% ... Top 0.1%)."""
-    return pd.read_csv(RAW_DIR / "wil" / "distribution_2022_23.csv")
+def load_wil_income_2022() -> pd.DataFrame:
+    """Table 2: income by group, 2022-23 (Average ... Top 0.001%)."""
+    return pd.read_csv(RAW_DIR / "wil" / "table2_income_2022_23.csv")
+
+
+@lru_cache(maxsize=8)
+def load_wil_wealth_2022() -> pd.DataFrame:
+    """Table 3: wealth by group, 2022-23 (Average ... Top 0.001%)."""
+    return pd.read_csv(RAW_DIR / "wil" / "table3_wealth_2022_23.csv")
+
+
+@lru_cache(maxsize=8)
+def load_wil_income_shares() -> pd.DataFrame:
+    """Table B.1: pre-tax national income shares (%), annual 1951-2022."""
+    return pd.read_csv(RAW_DIR / "wil" / "tableB1_income_shares_1951_2022.csv")
 
 
 @lru_cache(maxsize=8)
 def load_wil_wealth_shares() -> pd.DataFrame:
-    """Wealth shares by group, 1961 vs 2022-23."""
-    return pd.read_csv(RAW_DIR / "wil" / "wealth_shares_1961_2022_23.csv")
+    """Table C.1: national wealth shares (%), 1961-2023. Survey years only
+    before 2002 (1961, 1971, 1981, 1991); 2023 is flagged tentative by the
+    authors (`tentative` column)."""
+    return pd.read_csv(RAW_DIR / "wil" / "tableC1_wealth_shares_1961_2023.csv")
+
+
+@lru_cache(maxsize=8)
+def load_wil_vhnwi() -> pd.DataFrame:
+    """Table C.2: Forbes billionaires and Hurun rich-list counts and net
+    wealth as % of NNI, 1988-2022 (blank where the list was not published)."""
+    return pd.read_csv(RAW_DIR / "wil" / "tableC2_vhnwi_1988_2022.csv")
 
 
 @lru_cache(maxsize=8)
 def load_wil_facts() -> pd.DataFrame:
-    """Long-run headline figures (growth, wealth-income ratio, billionaires).
-    `qualifier` is "stated", "approximate" or "upper bound"."""
+    """Figures stated in the paper's text (growth rates, wealth-income
+    ratio, pre-1951 top shares). `qualifier`: stated / approximate / lower
+    bound; `source` gives the section."""
     return pd.read_csv(RAW_DIR / "wil" / "long_run_facts.csv")
 
 

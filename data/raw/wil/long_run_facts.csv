@@ -1,15 +1,12 @@
-metric,period,value,unit,qualifier,note
-Average adult income,2022-23,235000,INR per year,stated,Stated as 'Rs 2.35 lakh'.
-Real average income growth,1960-2022,2.6,% per year,stated,
-Real average income growth,before 1990,1.6,% per year,stated,Start year not stated in the summary.
-Real average income growth,1990-2022,3.6,% per year,stated,Fastest in 2005-10 and 2010-15.
-Wealth-to-income ratio,1995,3.83,ratio,stated,
-Wealth-to-income ratio,2022,5.75,ratio,stated,
-USD billionaires,1991,1,count,stated,
-USD billionaires,2022,162,count,stated,
-Billionaire wealth,1991,1,% of net national income,upper bound,Stated as 'under 1%'.
-Billionaire wealth,2022,25,% of net national income,stated,
-Top 1% income share,late 1930s,21,% of national income,upper bound,Stated as 'under 21%'.
-Top 1% income share,early 1980s,6,% of national income,approximate,Stated as 'about 6%'.
-Top 1% income share,2022-23,22.6,% of national income,stated,Highest in the WIL series since 1922.
-Top 1% average wealth,2022-23,54000000,INR,approximate,Stated as 'about Rs 54 million'; ~40x the average.
+metric,period,value,unit,qualifier,source,note
+Real average income growth,1960-2022,2.6,% per year,stated,"Introduction (Figure 1a)",
+Real average income growth,1960-1990,1.6,% per year,stated,Introduction,
+Real average income growth,1990-2022,3.6,% per year,stated,Introduction,
+Real average income growth,2005-2010,4.3,% per year,stated,Introduction (Appendix Figure A.2),Fastest period with 2010-2015.
+Real average income growth,2010-2015,4.9,% per year,stated,Introduction (Appendix Figure A.2),
+Wealth-to-income ratio,1995,3.83,ratio,stated,Introduction (Figure 2a),
+Wealth-to-income ratio,2022,5.75,ratio,stated,Introduction (Figure 2a),
+Top 1% income share,1922,13,% of national income,stated,Section 3.1 (Figure 5a),
+Top 1% income share,inter-war period,20,% of national income,lower bound,Section 3.1 (Figure 5a),"Stated as 'over 20%'."
+Top 1% income share,1947,13,% of national income,approximate,Section 3.1 (Figure 5a),"Stated as '13% by the time of India's independence'."
+Top 1% average wealth,2022-23,54000000,INR,stated,Section 4 / Table 3,"'INR 54 million, 40 times the average Indian' (Table 3: 5,41,41,525)."

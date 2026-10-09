@@ -134,31 +134,35 @@ behaviour against an injected extreme outlier, and insufficient-data handling).
 
 ---
 
-## New: World Inequality Lab distribution for India (`data/raw/wil/`, Wealth Lab section W)
+## World Inequality Lab, India (`data/raw/wil/`, Wealth Lab section W) — VERIFIED
 
-Three files transcribed from the author's summary of Bharti, Chancel, Piketty & Somanchi (2024),
-*Income and Wealth Inequality in India, 1922-2023: The Rise of the Billionaire Raj*, WIL Working Paper
-2024/09. **Status: PARTIAL** — not yet checked against the paper's own tables.
+Source: Bharti, Chancel, Piketty & Somanchi (2024), *Income and Wealth Inequality in India, 1922-2023:
+The Rise of the Billionaire Raj*, WIL Working Paper 2024/09 (PDF supplied by the author). Tables were
+extracted from the PDF's text layer by `scripts/extract_wil_tables.py` — no number retyped by hand — and
+Tables 2–3 were compared against the rendered page (printed p. 40).
 
-- `distribution_2022_23.csv` — Bottom 50%, Middle 40%, Top 10%, Top 1%, Top 0.1%: average income,
-  income share, wealth share.
-- `wealth_shares_1961_2022_23.csv` — wealth shares in 1961 and 2022-23.
-- `long_run_facts.csv` — growth rates, wealth-to-income ratio, billionaire counts and wealth; each row
-  has a `qualifier` (stated / approximate / upper bound).
+| File | Paper table | Coverage |
+|---|---|---|
+| `table2_income_2022_23.csv` | Table 2 (p. 40) | adults, income share, threshold, average income, ratio to average — Average … Top 0.001% |
+| `table3_wealth_2022_23.csv` | Table 3 (p. 40) | same for net wealth |
+| `tableB1_income_shares_1951_2022.csv` | Table B.1 (pp. 70–71) | Bottom 50 / Middle 40 / Top 10 / Top 1 / Top 0.1 income shares, every year |
+| `tableC1_wealth_shares_1961_2023.csv` | Table C.1 (p. 76) | wealth shares: 1961, 1971, 1981, 1991 (survey years), 2002–2023; `tentative` = 2023 (authors' note) |
+| `tableC2_vhnwi_1988_2022.csv` | Table C.2 (p. 77) | Forbes billionaire count and wealth % NNI; Hurun count and % NNI (blank where '*') |
+| `long_run_facts.csv` | text | growth rates, wealth-income ratio, pre-1951 top 1% shares; each row has a qualifier and section |
 
-Rules applied: approximate statements ("about 29%", "about 13–15%") are kept as notes and **never
-stored as numbers**. `analysis/inequality.py` derives only by arithmetic on stated values, with the
-formula shown on the page (Middle 40% = 100 − Bottom 50% − Top 10%; Upper middle P90–P99 = Top 10% −
-Top 1%; Top 0.1% income share from its average income). **Bottom 10% and Lower middle (P10–P50) are
-DATA REQUIRED.**
+Derived in `analysis/inequality.py` (formula shown on the page): Upper middle P90–P99 = Top 10% − Top 1%.
+**Bottom 10% and Lower middle (P10–P50) are DATA REQUIRED** — the paper does not split the bottom half.
 
-Checks run (`tests/test_inequality.py`): shares of the three side-by-side groups sum to 100.0 for income
-and wealth; each stated average income implies its stated share within 0.2 pp. **Known inconsistency:**
-the Middle 40% average implies ≈28.1% of income, against the 27.3% remainder (0.8 pp). Web search
-(9 Oct 2026) found coverage reproducing the paper's table with **27.3%** and an average of **₹1,65,273**, so
-27.3% is the paper's figure and the gap is in the source's averages, not rounding here. The summary's "about
-29–30%" is wrong and is not used. Also confirmed against the paper's abstract: Top 1% = 22.6% of income,
-40.1% of wealth. The full PDF (wid.world) was not reachable from the build sandbox.
+Checks (`tests/test_inequality.py`): Bottom 50 + Middle 40 + Top 10 = 100 ± 0.1 in every year of B.1 and
+C.1; Top 0.1 ≤ Top 1 ≤ Top 10 everywhere; the 2022 rows of B.1/C.1 equal Tables 2/3. **In-paper
+inconsistency:** Middle 40% average income ₹1,65,273 implies 28.2% of income against the printed 27.3%
+(0.9 pp); other groups agree within 0.2 pp. The Bottom 50% wealth threshold (−₹4.1 crore) is a single AIDIS
+outlier, per the paper's note.
+
+The earlier user-supplied summary (`distribution_2022_23.csv`, `wealth_shares_1961_2022_23.csv`) was
+removed. It mixed Table 3 with the tentative 2023 row of C.1 (Top 10% wealth 64.6% and Top 0.1% 29.0% are
+2023 values; 2022-23 is 65.0% and 29.7%) and had several approximate or wrong figures — listed on the page
+under "What changed from the earlier summary".
 
 ## New: latest monthly releases (`data/raw/macro_monthly/`, Macro & World "Now" section)
 

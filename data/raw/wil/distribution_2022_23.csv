@@ -1,6 +1,0 @@
-group,percentile_range,population_share_pct,avg_annual_income_inr,income_share_pct,wealth_share_pct,note
-Bottom 50%,P0-P50,50,71163,15.0,6.4,
-Middle 40%,P50-P90,40,165000,,,"Avg income stated as 'Rs 1.65 lakh'. Income share stated only as 'About 29-30%' and wealth share as 'About 29%' -- left blank here; see analysis/inequality.py for the shares implied by the other groups."
-Top 10%,P90-P100,10,1353000,57.7,64.6,Avg income stated as 'Rs 13.53 lakh'.
-Top 1%,P99-P100,1,5300000,22.6,40.1,Avg income stated as 'Rs 53 lakh'.
-Top 0.1%,P99.9-P100,0.1,22500000,,29.0,Avg income stated as 'Rs 2.25 crore'. Income share not stated.
