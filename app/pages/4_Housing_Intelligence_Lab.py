@@ -221,44 +221,104 @@ indicator_note(
 st.markdown("---")
 
 # ---------- C. EMI calculator ---------------------------------------------
-st.header("C · EMI calculator — single city")
-col1, col2 = st.columns(2)
-with col1:
-    city = st.selectbox("City", cities, index=cities.index("Mumbai") if "Mumbai" in cities else 0)
-with col2:
-    custom_income = st.number_input(
-        "Annual household income (₹) — override the income proxy", min_value=0, value=0, step=50_000,
-        help="Leave at 0 to use the income proxy selected in section B.",
-    )
+st.header("C · EMI calculator")
+compare_mode = st.toggle(
+    "Compare two cities side-by-side", value=False,
+    help="Reuses the exact same EMI / price-to-income calculation as the "
+         "single-city view below, run twice — once per city — using the "
+         "mortgage rate, tenure, down payment, unit size and income proxy "
+         "already set above.",
+)
 
-try:
-    result = housing.city_affordability(
-        price_levels, nsdp_current, city, unit_size_sqm=unit_size,
-        down_payment_pct=down_payment_pct, annual_interest_rate=rate, loan_years=tenure,
-        income_source=income_source, mpce_urban=mpce_urban,
-    )
-    income_used = custom_income if custom_income > 0 else result.annual_income_proxy
-    emi_monthly = housing.emi(result.unit_price * (1 - down_payment_pct), rate, tenure)
-    pi = housing.price_to_income_ratio(result.unit_price, income_used)
-    emi_pct = housing.mortgage_payment_to_income_ratio(emi_monthly, income_used / 12) * 100
+if not compare_mode:
+    st.subheader("Single city")
+    col1, col2 = st.columns(2)
+    with col1:
+        city = st.selectbox("City", cities, index=cities.index("Mumbai") if "Mumbai" in cities else 0)
+    with col2:
+        custom_income = st.number_input(
+            "Annual household income (₹) — override the income proxy", min_value=0, value=0, step=50_000,
+            help="Leave at 0 to use the income proxy selected in section B.",
+        )
 
-    c1, c2, c3, c4 = st.columns(4)
-    with c1:
-        stat_card("Unit price", f"₹{result.unit_price:,.0f}", f"{unit_size:.0f} sq.m. @ ₹{result.price_per_sqm:,.0f}/sq.m.")
-    with c2:
-        stat_card("Monthly EMI", f"₹{emi_monthly:,.0f}", f"{rate*100:.1f}% · {tenure}y")
-    with c3:
-        stat_card("Price-to-income", f"{pi:.2f}×", income_source.upper() + " proxy" if custom_income == 0 else "your input")
-    with c4:
-        stat_card("EMI / income", f"{emi_pct:.1f}%", income_source.upper() + " proxy" if custom_income == 0 else "your input")
+    try:
+        result = housing.city_affordability(
+            price_levels, nsdp_current, city, unit_size_sqm=unit_size,
+            down_payment_pct=down_payment_pct, annual_interest_rate=rate, loan_years=tenure,
+            income_source=income_source, mpce_urban=mpce_urban,
+        )
+        income_used = custom_income if custom_income > 0 else result.annual_income_proxy
+        emi_monthly = housing.emi(result.unit_price * (1 - down_payment_pct), rate, tenure)
+        pi = housing.price_to_income_ratio(result.unit_price, income_used)
+        emi_pct = housing.mortgage_payment_to_income_ratio(emi_monthly, income_used / 12) * 100
 
-    if custom_income == 0:
-        if income_source == "nsdp":
-            st.caption(f"Using {result.state}'s per-capita NSDP (₹{result.annual_income_proxy:,.0f}/yr) as the income proxy for {city}. Enter your own household income above to override.")
-        else:
-            st.caption(f"Using {result.state}'s urban per-capita MPCE annualised (₹{result.annual_income_proxy:,.0f}/yr — consumption, not income) as the proxy for {city}. Enter your own household income above to override.")
-except (KeyError, ValueError) as exc:
-    st.error(str(exc))
+        c1, c2, c3, c4 = st.columns(4)
+        with c1:
+            stat_card("Unit price", f"₹{result.unit_price:,.0f}", f"{unit_size:.0f} sq.m. @ ₹{result.price_per_sqm:,.0f}/sq.m.")
+        with c2:
+            stat_card("Monthly EMI", f"₹{emi_monthly:,.0f}", f"{rate*100:.1f}% · {tenure}y")
+        with c3:
+            stat_card("Price-to-income", f"{pi:.2f}×", income_source.upper() + " proxy" if custom_income == 0 else "your input")
+        with c4:
+            stat_card("EMI / income", f"{emi_pct:.1f}%", income_source.upper() + " proxy" if custom_income == 0 else "your input")
+
+        if custom_income == 0:
+            if income_source == "nsdp":
+                st.caption(f"Using {result.state}'s per-capita NSDP (₹{result.annual_income_proxy:,.0f}/yr) as the income proxy for {city}. Enter your own household income above to override.")
+            else:
+                st.caption(f"Using {result.state}'s urban per-capita MPCE annualised (₹{result.annual_income_proxy:,.0f}/yr — consumption, not income) as the proxy for {city}. Enter your own household income above to override.")
+    except (KeyError, ValueError) as exc:
+        st.error(str(exc))
+else:
+    st.subheader("Two-city comparison")
+    default_a = "Mumbai" if "Mumbai" in cities else cities[0]
+    default_b = "Bengaluru" if "Bengaluru" in cities else (cities[1] if len(cities) > 1 else cities[0])
+    colA, colB = st.columns(2)
+    with colA:
+        city_a = st.selectbox("City A", cities, index=cities.index(default_a), key="city_a")
+    with colB:
+        city_b = st.selectbox("City B", cities, index=cities.index(default_b), key="city_b")
+
+    def _compute_city(name):
+        try:
+            return housing.city_affordability(
+                price_levels, nsdp_current, name, unit_size_sqm=unit_size,
+                down_payment_pct=down_payment_pct, annual_interest_rate=rate, loan_years=tenure,
+                income_source=income_source, mpce_urban=mpce_urban,
+            ), None
+        except (KeyError, ValueError) as exc:
+            return None, str(exc)
+
+    res_a, err_a = _compute_city(city_a)
+    res_b, err_b = _compute_city(city_b)
+
+    cc1, cc2 = st.columns(2)
+    for col, name, res, err in ((cc1, city_a, res_a, err_a), (cc2, city_b, res_b, err_b)):
+        with col:
+            if res is None:
+                st.error(err)
+                continue
+            st.markdown(f"**{name}** ({res.state})")
+            stat_card("Unit price", f"₹{res.unit_price:,.0f}", f"{unit_size:.0f} sq.m. @ ₹{res.price_per_sqm:,.0f}/sq.m.")
+            stat_card("Monthly EMI", f"₹{res.emi_monthly:,.0f}", f"{rate*100:.1f}% · {tenure}y")
+            stat_card("Price-to-income", f"{res.price_to_income:.2f}×", f"{income_source.upper()} proxy")
+            stat_card("EMI / income", f"{res.emi_to_income_pct:.1f}%", f"{income_source.upper()} proxy")
+
+    if res_a is not None and res_b is not None:
+        cmp_fig = go.Figure()
+        cmp_fig.add_bar(name=city_a, x=["Price-to-income (×)", "EMI / income (%)"],
+                         y=[res_a.price_to_income, res_a.emi_to_income_pct])
+        cmp_fig.add_bar(name=city_b, x=["Price-to-income (×)", "EMI / income (%)"],
+                         y=[res_b.price_to_income, res_b.emi_to_income_pct])
+        cmp_fig.update_layout(barmode="group", title=f"{city_a} vs. {city_b}", height=360)
+        st.plotly_chart(cmp_fig, use_container_width=True)
+
+        if res_a.state == res_b.state:
+            st.caption(
+                f"{city_a} and {city_b} are both mapped to {res_a.state}'s state-average "
+                "income proxy, so any difference above is driven entirely by the real "
+                "RESIDEX price difference between the two cities, not by income."
+            )
 
 st.markdown("---")
 
@@ -393,10 +453,28 @@ indicator_note(
     "robust-statistics logic used for iBFPI in the Banking Lab.",
 )
 
+clip_c1, clip_c2 = st.columns(2)
+with clip_c1:
+    low_pctile = st.slider(
+        "Low percentile clip", 0.0, 20.0, 5.0, 1.0,
+        help="User-set assumption — the ICHASI spec's default is the 5th percentile. "
+             "Lowering it clips fewer cities at the bottom; raising it clips more.",
+    )
+with clip_c2:
+    high_pctile = st.slider(
+        "High percentile clip", 80.0, 100.0, 95.0, 1.0,
+        help="User-set assumption — the ICHASI spec's default is the 95th percentile. "
+             "Raising it clips fewer cities at the top; lowering it clips more.",
+    )
+if low_pctile >= high_pctile:
+    st.warning("Low percentile must be below high percentile — using the defaults (5th/95th) instead.")
+    low_pctile, high_pctile = 5.0, 95.0
+
 try:
     stress_result = housing.stress_index_cross_section(
         price_levels, nsdp_current, unit_size_sqm=unit_size, down_payment_pct=down_payment_pct,
         annual_interest_rate=rate, loan_years=tenure, income_source=income_source, mpce_urban=mpce_urban,
+        low_pctile=low_pctile, high_pctile=high_pctile,
     )
     fig_stress = go.Figure(go.Bar(x=stress_result.scores["city"], y=stress_result.scores["stress_score_0_100"]))
     fig_stress.update_layout(

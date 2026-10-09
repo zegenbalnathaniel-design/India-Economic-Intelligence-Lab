@@ -130,8 +130,42 @@ if not selected:
     st.warning("Select at least one bank.")
     st.stop()
 
+st.markdown("**Indicator weighting inside iBFPI**")
+st.caption(
+    "User-set assumption — the BFPI methodology this adapts gives all five "
+    "indicators equal weight (1/5 each). The toggle below lets you explore "
+    "'what if one indicator mattered more to the composite', re-running the "
+    "same real z-scores with a different combining weight. It is not an "
+    "alternative published methodology."
+)
+indicator_weight_mode = st.radio(
+    "Indicator weights",
+    ["Equal-weighted (BFPI default)", "Custom weighting"],
+    index=0, horizontal=True,
+)
+indicator_weights = None
+if indicator_weight_mode == "Custom weighting":
+    wcols = st.columns(5)
+    raw_weights = {}
+    for idx, k in enumerate(banking.INDICATOR_DIRECTION):
+        with wcols[idx]:
+            raw_weights[k] = st.slider(
+                banking.INDICATOR_LABELS[k], 0.0, 1.0, 0.20, 0.05,
+                key=f"indw_{k}",
+            )
+    total_w = sum(raw_weights.values())
+    if total_w <= 0:
+        st.warning("At least one indicator weight must be positive — using equal weights instead.")
+    else:
+        indicator_weights = raw_weights
+        st.caption(
+            "Normalised: " + ", ".join(
+                f"{banking.INDICATOR_LABELS[k]} {v/total_w:.0%}" for k, v in raw_weights.items()
+            )
+        )
+
 sub = panel[panel["bank"].isin(selected)].copy()
-scored = banking.compute_ibfpi(sub)
+scored = banking.compute_ibfpi(sub, indicator_weights=indicator_weights)
 
 if weighting == "Equal-weighted":
     agg = banking.cross_bank_aggregate(scored)
@@ -161,6 +195,42 @@ st.markdown(
 )
 st.latex(r"Z^*_{it} = D \cdot \frac{X_{it} - \mathrm{median}_i(X)}{1.4826 \cdot \mathrm{MAD}_i(X)}")
 st.latex(r"iBFPI_{it} = \frac{1}{5} \sum_{k=1}^{5} Z^*_{k,it}")
+st.caption(
+    "The 1/5 equal weight above is the BFPI default. If you selected "
+    "'Custom weighting' in the controls above, the iBFPI charts below use "
+    "your weights instead of 1/5 each — a user-set assumption, not a "
+    "change to the published methodology."
+)
+
+indicator_note(
+    "custom indicator weighting",
+    "**What it changes.** Each bank's iBFPI is ordinarily the plain "
+    "average of five robust z-scores (profitability, capital, credit "
+    "quality, liquidity, interest-rate risk), each getting exactly 1/5 of "
+    "the say. Moving the sliders above replaces that plain average with a "
+    "weighted sum of the *same five, already-computed* z-scores — nothing "
+    "about how any individual indicator is standardised changes, only how "
+    "much influence each one has on the single composite number.\n\n"
+    "**How to read it.** If you weight, say, the net charge-off rate "
+    "heavily, the resulting iBFPI will swing further whenever that one "
+    "indicator moves unusually relative to a bank's own history, and will "
+    "swing less in response to the other four — this is a genuine "
+    "re-aggregation of real data, visible immediately in every chart below "
+    "(aggregate iBFPI, per-bank iBFPI, the repo-rate comparison and the "
+    "regime split all recompute from the reweighted composite).\n\n"
+    "**What this is NOT.** This is not a claim that one indicator truly "
+    "matters more to bank soundness than another — it is a 'what if' lens "
+    "on the same five real series. The BFPI paper's own choice (equal "
+    "weighting) remains the default and the one with any methodological "
+    "backing here; a custom weighting is exactly as arbitrary as the "
+    "slider positions you chose it with.\n\n"
+    "**Caveat.** Extreme weightings (e.g. 100% on one indicator) make the "
+    "composite collapse to that single z-score's own series, which can "
+    "look noisier or smoother than the blended iBFPI purely because "
+    "averaging across five uncorrelated-ish series damps noise — a "
+    "mechanical property of averaging, not evidence about which indicator "
+    "is 'right'.",
+)
 
 indicator_note(
     "a robust z-score (vs. a plain average)",
