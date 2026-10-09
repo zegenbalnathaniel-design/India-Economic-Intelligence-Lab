@@ -40,7 +40,7 @@ st.markdown(
 
 fig_col, text_col = st.columns([2, 3])
 with fig_col:
-    hairline_display.render("elevator", height=330)
+    hairline_display.render("elevator")
 with text_col:
     st.markdown(
         "**From question to model, one floor at a time.** Move the pointer "

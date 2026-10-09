@@ -13,6 +13,38 @@ import streamlit as st
 
 from app.components.theme import setup, kicker, callout, footnote
 
+PAPERS_DIR = ROOT / "app" / "static" / "papers"
+
+
+def paper_viewer(filename: str, title: str, key: str) -> None:
+    """Download button + optional inline viewer for one paper.
+
+    Served via Streamlit's built-in static serving
+    (.streamlit/config.toml: server.enableStaticServing), so no extra
+    dependency is needed to show a PDF in the page.
+    """
+    path = PAPERS_DIR / filename
+    if not path.exists():
+        st.error(f"{title}: PDF not found at app/static/papers/{filename}.")
+        return
+    c1, c2 = st.columns([1, 1])
+    with c1:
+        st.download_button(
+            f"Download the full paper (PDF, {path.stat().st_size / 1e6:.1f} MB)",
+            data=path.read_bytes(), file_name=filename, mime="application/pdf",
+            key=f"dl_{key}", use_container_width=True,
+        )
+    with c2:
+        st.link_button(
+            "Open in a new tab", f"app/static/papers/{filename}", use_container_width=True,
+        )
+    if st.toggle("Read it here", key=f"view_{key}"):
+        st.markdown(
+            f'<iframe src="app/static/papers/{filename}" title="{title}" '
+            'style="width:100%;height:820px;border:1px solid #2A2E3C;border-radius:4px;"></iframe>',
+            unsafe_allow_html=True,
+        )
+
 
 setup("Research")
 
@@ -51,6 +83,7 @@ st.markdown(
     "showing that outcomes diverge sharply not because of savings but "
     "because of composition."
 )
+paper_viewer("Income_Wealth_Inequality_India.pdf", "Paper A — Income & wealth inequality in India", "paper_a")
 st.page_link("pages/1_Wealth_Inequality_Lab.py", label="Explore Paper A interactively →")
 
 
@@ -72,6 +105,7 @@ st.markdown(
     "five-bank Indian panel (the iBFPI) and compared to the RBI repo "
     "rate. See the Banking Lab."
 )
+paper_viewer("BFPI_Fed_Rates_JP_Morgan_2018_2024.pdf", "Paper B — Fed rates and JP Morgan, 2018-2024", "paper_b")
 st.page_link("pages/2_Banking_Monetary_Policy_Lab.py", label="Explore Paper B / iBFPI interactively →")
 
 

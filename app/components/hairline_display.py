@@ -18,6 +18,10 @@ import streamlit.components.v1 as components
 
 _DIST_DIR = Path(__file__).resolve().parents[1] / "assets" / "hairline_figures" / "dist"
 
+# Figure (max 330px wide at 5:4 -> 264px tall) + the boxed caption (up to
+# three lines at 15px) must fit inside the iframe, or the caption is clipped.
+FRAME_HEIGHT = 400
+
 
 @lru_cache(maxsize=8)
 def _bundle(name: str) -> tuple[str, str] | None:
@@ -28,7 +32,7 @@ def _bundle(name: str) -> tuple[str, str] | None:
     return css_path.read_text(encoding="utf-8"), js_path.read_text(encoding="utf-8")
 
 
-def render(name: str, height: int = 360, **params: str) -> None:
+def render(name: str, height: int = FRAME_HEIGHT, **params: str) -> None:
     """Render a built Hairline figure (name = "slow" | "elevator" | "vault").
 
     Extra keyword args become URL query params the figure's own JS reads

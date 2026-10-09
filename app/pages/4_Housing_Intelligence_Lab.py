@@ -171,10 +171,21 @@ aff = housing.affordability_across_cities(
 
 income_col_label = "annual_income (STATE PROXY, NSDP)" if income_source == "nsdp" else "annual_income (STATE/UT PROXY, MPCE x12 — consumption, not income)"
 
-fig2 = go.Figure(go.Bar(x=aff["city"], y=aff["price_to_income"]))
-fig2.add_hline(y=5, line_dash="dash", annotation_text="P/I = 5 (commonly cited stress threshold)", annotation_position="top left")
+# Long RESIDEX names (e.g. "Bidhan Nagar (Excluding Rajarhat)") were being
+# clipped at the plot edge; shorten the tick label only -- hover keeps the
+# full official name.
+short_city = aff["city"].str.replace("(Excluding ", "(excl. ", regex=False)
+fig2 = go.Figure(go.Bar(
+    x=short_city, y=aff["price_to_income"], customdata=aff["city"],
+    hovertemplate="%{customdata}<br>Price / income: %{y:.2f}×<extra></extra>",
+))
+fig2.add_hline(
+    y=5, line_dash="dash", annotation_text="P/I = 5 (commonly cited stress threshold)",
+    annotation_position="top right", annotation=dict(bgcolor="rgba(17,19,26,0.85)"),
+)
 fig2.update_layout(title=f"Price-to-income ratio by city ({unit_size:.0f} sq.m. reference unit, {income_source.upper()} income proxy)", xaxis_title="",
-                    yaxis_title="Price / annual income (proxy)", height=500)
+                    yaxis_title="Price / annual income (proxy)", height=600,
+                    xaxis=dict(tickangle=-60, automargin=True))
 st.plotly_chart(fig2, use_container_width=True)
 
 st.dataframe(

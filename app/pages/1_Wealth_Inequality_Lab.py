@@ -63,7 +63,7 @@ st.markdown(
 
 fig_col, text_col = st.columns([2, 3])
 with fig_col:
-    hairline_display.render("riffle", height=330)
+    hairline_display.render("riffle")
 with text_col:
     st.markdown(
         "**Who gets what?** Eight cards, one per population percentile "

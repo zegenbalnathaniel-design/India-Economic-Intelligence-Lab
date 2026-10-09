@@ -37,7 +37,7 @@ st.markdown(
 
 fig_col, text_col = st.columns([2, 3])
 with fig_col:
-    hairline_display.render("vault", height=330)
+    hairline_display.render("vault")
 with text_col:
     st.markdown(
         "**Six kinds of limits, not one.** Turn the dial — then read them "

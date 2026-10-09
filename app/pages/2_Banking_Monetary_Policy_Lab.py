@@ -375,7 +375,7 @@ st.header("RBI repo rate vs iBFPI")
 latest_repo_rate = float(repo.sort_values("period")["repo_rate"].iloc[-1])
 fig_col, text_col = st.columns([2, 3])
 with fig_col:
-    hairline_display.render("slow", height=330, repoRate=f"{latest_repo_rate:.2f}")
+    hairline_display.render("slow", repoRate=f"{latest_repo_rate:.2f}")
 with text_col:
     st.markdown(
         "Tighter monetary policy is meant to slow credit growth and economic "

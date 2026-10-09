@@ -214,10 +214,37 @@ else:
         stat_card("R²", f"{beta.r_squared:.3f}")
 
     fig_beta = go.Figure()
+    # Clusters of near-identical states (e.g. Tamil Nadu/Uttarakhand/
+    # Telangana) made labels overprint; place each label at the first of
+    # top/bottom/right/left whose rough box doesn't hit one already placed
+    # (in normalised log-x / y space). Hover always gives exact values.
+    pts = beta.per_state.sort_values("avg_annual_growth_pct", ascending=False).reset_index(drop=True)
+    lx = np.log(pts["initial_value"].to_numpy(dtype=float))
+    gy = pts["avg_annual_growth_pct"].to_numpy(dtype=float)
+    nx = (lx - lx.min()) / max(np.ptp(lx), 1e-9)
+    ny = (gy - gy.min()) / max(np.ptp(gy), 1e-9)
+    h = 0.055
+    offsets = {"top center": (0, h), "bottom center": (0, -h), "middle right": (1, 0), "middle left": (-1, 0)}
+    placed, label_pos = [], []
+    for i, name in enumerate(pts["state"]):
+        w = 0.0095 * len(str(name))
+        best = "top center"
+        for pos, (dx, dy) in offsets.items():
+            cx = nx[i] + dx * (w / 2 + 0.012)
+            cy = ny[i] + dy
+            box = (cx - w / 2, cy - h / 2, cx + w / 2, cy + h / 2)
+            if not any(box[0] < b[2] and b[0] < box[2] and box[1] < b[3] and b[1] < box[3] for b in placed):
+                best = pos
+                break
+        dx, dy = offsets[best]
+        cx, cy = nx[i] + dx * (w / 2 + 0.012), ny[i] + dy
+        placed.append((cx - w / 2, cy - h / 2, cx + w / 2, cy + h / 2))
+        label_pos.append(best)
     fig_beta.add_trace(go.Scatter(
-        x=beta.per_state["initial_value"], y=beta.per_state["avg_annual_growth_pct"],
-        mode="markers+text", text=beta.per_state["state"], textposition="top center",
-        marker=dict(size=9),
+        x=pts["initial_value"], y=pts["avg_annual_growth_pct"],
+        mode="markers+text", text=pts["state"], textposition=label_pos,
+        name="States", marker=dict(size=9),
+        hovertemplate="%{text}<br>Initial: ₹%{x:,.0f}<br>Avg growth: %{y:.2f}%<extra></extra>",
     ))
     x_range = np.linspace(beta.per_state["initial_value"].min(), beta.per_state["initial_value"].max(), 50)
     y_fit = beta.slope * np.log(x_range) + beta.intercept
@@ -291,7 +318,7 @@ feature_states = (
 fig_col, text_col = st.columns([2, 3])
 with fig_col:
     hairline_display.render(
-        "branches", height=330,
+        "branches",
         main=json.dumps(main_states), feature=json.dumps(feature_states),
     )
 with text_col:
