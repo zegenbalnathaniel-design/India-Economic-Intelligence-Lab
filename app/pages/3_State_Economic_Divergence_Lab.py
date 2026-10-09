@@ -13,6 +13,12 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+# Reload data_sources/ and analysis/ if a redeploy changed them (Streamlit
+# only watches app/); must run before those packages are imported below.
+from app.components.freshness import reload_stale_modules  # noqa: E402
+
+reload_stale_modules()
+
 import plotly.graph_objects as go
 import streamlit as st
 
