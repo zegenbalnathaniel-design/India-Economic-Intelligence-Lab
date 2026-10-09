@@ -158,7 +158,7 @@ def load_hces_urban_mpce() -> pd.DataFrame:
 
 # ---------------------------------------------------------------------------
 # Real data: state-level files that had no loader yet (added for the State
-# Economy Explorer, analysis/states.py). Both return the file exactly as
+# Economy Lab explorer tabs, analysis/states.py). Both return the file exactly as
 # read -- no cleaning, realignment or renaming happens here.
 # ---------------------------------------------------------------------------
 

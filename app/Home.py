@@ -88,10 +88,11 @@ with st.container(key="reveal_index"):
          "The iBFPI robust z-score methodology, adapted from my JP Morgan research, applied "
          "to a five-bank Indian panel against the RBI repo rate.",
          home_theme.COBALT, "pages/2_Banking_Monetary_Policy_Lab.py", "Open the Banking Lab →"),
-        ("03", "ONE COUNTRY. UNEQUAL TRAJECTORIES.", "State Economic Divergence Lab · 2026",
+        ("03", "ONE COUNTRY. UNEQUAL TRAJECTORIES.", "State Economy Lab · 2026",
          "Sigma and beta convergence on real per-capita income by state, 2004-05 to 2022-23, "
-         "from the RBI Handbook of Statistics on Indian States.",
-         home_theme.LEAF, "pages/3_State_Economic_Divergence_Lab.py", "Open the State Divergence Lab →"),
+         "from the RBI Handbook of Statistics on Indian States — plus look-up, compare, rank "
+         "and change-over-time for every real state indicator.",
+         home_theme.LEAF, "pages/3_State_Economy_Lab.py", "Open the State Economy Lab →"),
         ("04", "WHERE DOES INDIA'S WEALTH LIVE?", "Housing Intelligence Lab · 2026",
          "Real NHB RESIDEX price data for 50 cities against a documented state-income proxy "
          "— price-to-income, EMI, and an honest caveat about what the proxy distorts.",
@@ -139,11 +140,11 @@ with st.container(key="reveal_graph"):
             f"**{sigma.direction.upper()}** · {sigma.trend_slope_pct_per_year:+.3f} pp CV/year  \n"
             "Cross-state coefficient of variation of real per-capita NSDP, "
             f"{sigma.by_year['financial_year'].iloc[0]} to {sigma.by_year['financial_year'].iloc[-1]} "
-            "— the same real RBI Handbook series behind the State Divergence Lab, here as a line "
+            "— the same real RBI Handbook series behind the State Economy Lab, here as a line "
             "that draws itself in as you scroll to it, not a static picture."
         )
         st.page_link(
-            "pages/3_State_Economic_Divergence_Lab.py",
+            "pages/3_State_Economy_Lab.py",
             label="See the full convergence analysis →",
         )
 
@@ -174,12 +175,10 @@ with sl4:
     st.page_link("pages/8_About.py", label="08 About")
 with sl5:
     st.page_link("pages/9_Limitations.py", label="09 Limitations")
-tl1, tl2, tl3 = st.columns(3)
+tl1, tl2 = st.columns(2)
 with tl1:
     st.page_link("pages/10_Economic_Relationships_Lab.py", label="10 Economic Relationships")
 with tl2:
-    st.page_link("pages/11_State_Economy_Explorer.py", label="11 State Economy Explorer")
-with tl3:
     st.page_link("pages/12_Macro_and_World.py", label="12 India Macro & World")
 st.markdown("</div>", unsafe_allow_html=True)
 

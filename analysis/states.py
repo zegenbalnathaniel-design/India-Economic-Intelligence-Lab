@@ -1,4 +1,4 @@
-"""State Economy Explorer -- one long-format panel of every real
+"""State Economy Lab (explorer tabs) -- one long-format panel of every real
 state-level indicator in `data/raw/`.
 
 Nothing here estimates, interpolates or fills a value. The module does

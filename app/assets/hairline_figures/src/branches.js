@@ -1,4 +1,4 @@
-// "Branches" on the State Economic Divergence Lab: a commit graph, main
+// "Branches" on the State Economy Lab: a commit graph, main
 // line plus a feature branch that forks and merges back. Used here with
 // REAL labels -- the 8 main-line commits are the 8 states with the
 // highest latest per-capita NSDP (the "main" growth path), and the 3

@@ -19,7 +19,9 @@ _DIST_DIR = Path(__file__).resolve().parents[1] / "assets" / "turntable_home" / 
 PAGE_FOR_SLUG = {
     "Banking_Monetary_Policy_Lab": "pages/2_Banking_Monetary_Policy_Lab.py",
     "Wealth_Inequality_Lab": "pages/1_Wealth_Inequality_Lab.py",
-    "State_Economic_Divergence_Lab": "pages/3_State_Economic_Divergence_Lab.py",
+    # Slug kept from the built JS bundle (page was renamed to State Economy Lab
+    # when the State Economy Explorer was merged into it); only the target changed.
+    "State_Economic_Divergence_Lab": "pages/3_State_Economy_Lab.py",
     "Data": "pages/7_Data.py",
 }
 
