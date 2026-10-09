@@ -395,11 +395,32 @@ with mc_c1:
 with mc_c2:
     mc_seed = st.number_input("Seed (for reproducibility)", value=7, step=1)
 
+st.markdown("**Assumed annualised volatility (std. dev., decimal)**")
+st.caption(
+    "User-set assumption, not measured risk — these default to the same "
+    "illustrative reference points used elsewhere on this page "
+    "(`wealth.DEFAULT_VOLATILITY`), only used here to communicate that "
+    "assets differ in risk, not for a VaR model. Edit to see how the "
+    "5th-95th percentile band below widens or narrows."
+)
+vol_inputs = {}
+vcols = st.columns(3)
+for idx, k in enumerate(keys):
+    with vcols[idx % 3]:
+        vol_inputs[k] = st.number_input(
+            wealth.ASSET_LABELS[k],
+            min_value=0.0, max_value=0.60,
+            value=float(wealth.DEFAULT_VOLATILITY[k]),
+            step=0.005, format="%.3f",
+            key=f"vol_{k}",
+        )
+
 mc = wealth.monte_carlo(
     annual_contribution=annual,
     years=years,
     allocation=alloc_inputs,
     returns=ret_inputs,
+    volatilities=vol_inputs,
     inflation=inflation,
     n_paths=int(n_paths),
     seed=int(mc_seed),
@@ -507,7 +528,7 @@ for k in wealth.ASSET_KEYS:
         Asset=wealth.ASSET_LABELS[k],
         **{"Nominal return": r, "Real return": wealth.real_return(r, inflation)},
         **{"Final nominal": proj["final_nominal"], "Final real": proj["final_real"]},
-        Volatility=wealth.DEFAULT_VOLATILITY[k],
+        Volatility=vol_inputs[k],
         Liquidity=wealth.LIQUIDITY[k],
     ))
 compare = pd.DataFrame(rows)

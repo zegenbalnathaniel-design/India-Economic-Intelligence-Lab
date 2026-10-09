@@ -49,6 +49,64 @@ st.markdown("---")
 
 nsdp = loaders.load_nsdp_spliced()
 
+# ---------- Scope controls: states + year range --------------------------
+st.subheader("Scope")
+st.caption(
+    "These two controls re-run the real sigma/beta convergence tests and the "
+    "ranking table below on whichever states and years you choose — not a "
+    "cosmetic filter. Defaults are every state and the full available window "
+    "(unchanged from the page's original behaviour)."
+)
+all_states = sorted(nsdp["state"].unique())
+years_list = sorted(nsdp["financial_year"].unique())
+
+scope_c1, scope_c2 = st.columns([1.4, 1])
+with scope_c1:
+    selected_states = st.multiselect(
+        "States included (sigma/beta convergence & ranking)",
+        all_states, default=all_states,
+    )
+with scope_c2:
+    year_range = st.select_slider(
+        "Financial year range (sigma/beta convergence & ranking)",
+        options=years_list, value=(years_list[0], years_list[-1]),
+    )
+
+indicator_note(
+    "the state and year-range scope controls",
+    "**What they change.** Sigma and beta convergence are both computed "
+    "directly from whichever rows are handed to them — they don't assume "
+    "one fixed panel of states or one fixed window of years. Narrowing the "
+    "state list re-runs both tests on only that subset (e.g. just the "
+    "southern states, or just the largest economies); narrowing the year "
+    "range re-runs them on a sub-period you choose (e.g. only the years "
+    "since 2015-16) instead of the full 2004-05→2022-23 window. The ranking "
+    "table in section C also respects both: it shows the latest year "
+    "*within your chosen range*, for only the states you selected.\n\n"
+    "**Why this is useful.** The headline sigma/beta results on the full "
+    "panel can mask sub-period or sub-group patterns — a sub-period "
+    "slider lets you check, say, whether convergence looks different "
+    "before vs. after a particular year, and a state subset lets you ask "
+    "the question for a specific group of states rather than all of "
+    "India at once.\n\n"
+    "**Caveat.** Sigma convergence needs at least 5 states reporting in a "
+    "year to compute a coefficient of variation for that year, and beta "
+    "convergence needs at least 5 states with valid first/last values "
+    "overall — pick too few states or too narrow a year range and the "
+    "page will honestly report 'insufficient data' rather than a "
+    "fabricated result.",
+)
+
+if not selected_states:
+    st.warning("Select at least one state.")
+    st.stop()
+
+i0, i1 = years_list.index(year_range[0]), years_list.index(year_range[1])
+years_in_scope = set(years_list[i0:i1 + 1])
+nsdp_scoped = nsdp[nsdp["state"].isin(selected_states) & nsdp["financial_year"].isin(years_in_scope)]
+
+st.markdown("---")
+
 # ---------- A. Sigma convergence ----------------------------------------
 st.header("A · Sigma (σ) convergence — is dispersion falling?")
 st.markdown(
@@ -94,22 +152,29 @@ indicator_note(
     "literature, and none is tested here).",
 )
 
-sigma = regional.sigma_convergence(nsdp)
-c1, c2, c3 = st.columns(3)
-with c1:
-    stat_card("Direction (whole period)", sigma.direction.upper())
-with c2:
-    stat_card("Trend", f"{sigma.trend_slope_pct_per_year:+.3f} pp CV / year")
-with c3:
-    first_cv = sigma.by_year.iloc[0]["cv_pct"]
-    last_cv = sigma.by_year.iloc[-1]["cv_pct"]
-    stat_card(f"{sigma.by_year.iloc[0]['financial_year']} → {sigma.by_year.iloc[-1]['financial_year']}", f"{first_cv:.1f}% → {last_cv:.1f}%")
+sigma = regional.sigma_convergence(nsdp_scoped)
+if sigma.by_year.empty or sigma.by_year["cv_pct"].notna().sum() < 2:
+    st.warning(
+        "Insufficient data for sigma convergence with this state/year selection "
+        "(needs at least 5 reporting states in at least 2 years). Widen the "
+        "scope above."
+    )
+else:
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        stat_card("Direction (selected scope)", sigma.direction.upper())
+    with c2:
+        stat_card("Trend", f"{sigma.trend_slope_pct_per_year:+.3f} pp CV / year")
+    with c3:
+        first_cv = sigma.by_year.iloc[0]["cv_pct"]
+        last_cv = sigma.by_year.iloc[-1]["cv_pct"]
+        stat_card(f"{sigma.by_year.iloc[0]['financial_year']} → {sigma.by_year.iloc[-1]['financial_year']}", f"{first_cv:.1f}% → {last_cv:.1f}%")
 
-fig_sigma = go.Figure()
-fig_sigma.add_trace(go.Scatter(x=sigma.by_year["financial_year"], y=sigma.by_year["cv_pct"], mode="lines+markers", name="CV (%)"))
-fig_sigma.update_layout(title="Cross-state coefficient of variation of per-capita NSDP", xaxis_title="Financial year",
-                         yaxis_title="CV (%)", height=420)
-st.plotly_chart(fig_sigma, use_container_width=True)
+    fig_sigma = go.Figure()
+    fig_sigma.add_trace(go.Scatter(x=sigma.by_year["financial_year"], y=sigma.by_year["cv_pct"], mode="lines+markers", name="CV (%)"))
+    fig_sigma.update_layout(title=f"Cross-state coefficient of variation of per-capita NSDP ({len(selected_states)} state(s) selected)", xaxis_title="Financial year",
+                             yaxis_title="CV (%)", height=420)
+    st.plotly_chart(fig_sigma, use_container_width=True)
 
 callout(
     "Read this carefully: the trend is mild and non-monotonic (dispersion rises and falls "
@@ -130,40 +195,48 @@ st.markdown(
     "variables**. A negative slope is consistent with (unconditional) convergence."
 )
 
-beta = regional.beta_convergence(nsdp)
-c1, c2, c3 = st.columns(3)
-with c1:
-    stat_card("Direction", beta.direction.upper())
-with c2:
-    stat_card("Slope", f"{beta.slope:+.3f}")
-with c3:
-    stat_card("R²", f"{beta.r_squared:.3f}")
-
-fig_beta = go.Figure()
-fig_beta.add_trace(go.Scatter(
-    x=beta.per_state["initial_value"], y=beta.per_state["avg_annual_growth_pct"],
-    mode="markers+text", text=beta.per_state["state"], textposition="top center",
-    marker=dict(size=9),
-))
 import numpy as np
-x_range = np.linspace(beta.per_state["initial_value"].min(), beta.per_state["initial_value"].max(), 50)
-y_fit = beta.slope * np.log(x_range) + beta.intercept
-fig_beta.add_trace(go.Scatter(x=x_range, y=y_fit, mode="lines", name="OLS fit", line=dict(dash="dash")))
-fig_beta.update_layout(title="Average annual growth vs. initial per-capita income (log scale)", xaxis_title="Initial per-capita NSDP (₹, log scale)",
-                        xaxis_type="log", yaxis_title="Average annual growth (%)", height=460)
-st.plotly_chart(fig_beta, use_container_width=True)
 
-if beta.direction != sigma.direction.replace("ing", "ing") and "insufficient" not in (beta.direction, sigma.direction):
-    callout(
-        f"**Sigma says '{sigma.direction}', beta says '{beta.direction}'** — and that's not a "
-        "contradiction in the method. Beta convergence is a *necessary but not sufficient* "
-        "condition for sigma convergence: a few fast-growing poor states and a few slow "
-        "rich states can coexist with the *overall* dispersion barely moving, especially "
-        f"with an R² this low ({beta.r_squared:.2f} — most of the variation in growth "
-        "rates is *not* explained by initial income level). Treat both results as weak, "
-        "and don't average them into one verdict.",
-        kind="warn",
+beta = regional.beta_convergence(nsdp_scoped)
+if beta.direction == "insufficient data" or beta.per_state.empty:
+    st.warning(
+        "Insufficient data for beta convergence with this state/year selection "
+        "(needs at least 5 states with valid first/last values). Widen the "
+        "scope above."
     )
+else:
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        stat_card("Direction", beta.direction.upper())
+    with c2:
+        stat_card("Slope", f"{beta.slope:+.3f}")
+    with c3:
+        stat_card("R²", f"{beta.r_squared:.3f}")
+
+    fig_beta = go.Figure()
+    fig_beta.add_trace(go.Scatter(
+        x=beta.per_state["initial_value"], y=beta.per_state["avg_annual_growth_pct"],
+        mode="markers+text", text=beta.per_state["state"], textposition="top center",
+        marker=dict(size=9),
+    ))
+    x_range = np.linspace(beta.per_state["initial_value"].min(), beta.per_state["initial_value"].max(), 50)
+    y_fit = beta.slope * np.log(x_range) + beta.intercept
+    fig_beta.add_trace(go.Scatter(x=x_range, y=y_fit, mode="lines", name="OLS fit", line=dict(dash="dash")))
+    fig_beta.update_layout(title=f"Average annual growth vs. initial per-capita income, log scale ({len(selected_states)} state(s) selected)", xaxis_title="Initial per-capita NSDP (₹, log scale)",
+                            xaxis_type="log", yaxis_title="Average annual growth (%)", height=460)
+    st.plotly_chart(fig_beta, use_container_width=True)
+
+    if beta.direction != sigma.direction.replace("ing", "ing") and "insufficient" not in (beta.direction, sigma.direction):
+        callout(
+            f"**Sigma says '{sigma.direction}', beta says '{beta.direction}'** — and that's not a "
+            "contradiction in the method. Beta convergence is a *necessary but not sufficient* "
+            "condition for sigma convergence: a few fast-growing poor states and a few slow "
+            "rich states can coexist with the *overall* dispersion barely moving, especially "
+            f"with an R² this low ({beta.r_squared:.2f} — most of the variation in growth "
+            "rates is *not* explained by initial income level). Treat both results as weak, "
+            "and don't average them into one verdict.",
+            kind="warn",
+        )
 
 st.markdown("---")
 
@@ -200,10 +273,16 @@ indicator_note(
     "vintages were linked).",
 )
 
-ranked = regional.rank_states_latest(nsdp)
-latest_year = nsdp["financial_year"].max()
-st.caption(f"Per-capita NSDP (constant prices, spliced series), {latest_year}")
-st.dataframe(ranked, use_container_width=True, hide_index=True)
+if nsdp_scoped.empty:
+    st.warning("No data for this state/year selection. Widen the scope above.")
+else:
+    ranked = regional.rank_states_latest(nsdp_scoped)
+    latest_year = nsdp_scoped["financial_year"].max()
+    st.caption(
+        f"Per-capita NSDP (constant prices, spliced series), {latest_year} — "
+        f"{len(selected_states)} of {len(all_states)} state(s) shown per the scope controls above."
+    )
+    st.dataframe(ranked, use_container_width=True, hide_index=True)
 
 main_states = ranked.sort_values("rank")["state"].head(8).tolist()
 feature_states = (

@@ -62,6 +62,7 @@ def robust_zscore(x: pd.Series, direction: int = 1) -> pd.Series:
 def compute_ibfpi(
     panel: pd.DataFrame,
     indicator_cols: Iterable[str] = tuple(INDICATOR_DIRECTION),
+    indicator_weights: Dict[str, float] | None = None,
 ) -> pd.DataFrame:
     """Compute iBFPI for every (bank, period) row.
 
@@ -71,14 +72,28 @@ def compute_ibfpi(
         Long-form: columns include `bank`, `period` (date) and the five
         indicators. Values are decimal fractions or ratios in native
         units (they are standardised internally, so scales don't matter).
+    indicator_weights : optional mapping indicator_col -> weight.
+        The published BFPI methodology this adapts gives every indicator
+        equal weight (1/5 each) when combining the five robust z-scores —
+        that is exactly what happens when this is left as `None` (the
+        default, matching all prior behaviour exactly: a plain mean of the
+        Z-columns). Passing a mapping instead computes a weighted sum of
+        the Z-columns, with weights normalised to sum to 1 across
+        `indicator_cols`. This is a **user-set exploration** ("what if
+        this indicator mattered more to the composite") layered on the
+        same real, already-computed z-scores — not an alternative
+        published methodology or a claim that any weighting is more
+        correct than equal-weighting.
 
     Returns
     -------
     DataFrame
         Original columns plus one Z-column per indicator and an
-        `ibfpi` column equal to the equal-weight mean of the Z-columns.
+        `ibfpi` column (equal-weight mean of the Z-columns by default,
+        or the weighted sum if `indicator_weights` is given).
     """
     df = panel.copy()
+    indicator_cols = list(indicator_cols)
     for col in indicator_cols:
         if col not in df.columns:
             raise KeyError(f"panel missing indicator column: {col}")
@@ -90,7 +105,15 @@ def compute_ibfpi(
             .apply(lambda s: robust_zscore(s, direction=direction))
         )
     z_cols = [f"z_{c}" for c in indicator_cols]
-    df["ibfpi"] = df[z_cols].mean(axis=1)
+    if indicator_weights is None:
+        df["ibfpi"] = df[z_cols].mean(axis=1)
+    else:
+        total = sum(indicator_weights.get(c, 0.0) for c in indicator_cols)
+        if total <= 0:
+            raise ValueError("indicator_weights must sum to a positive value.")
+        w = {c: indicator_weights.get(c, 0.0) / total for c in indicator_cols}
+        weighted = sum(df[f"z_{c}"] * w[c] for c in indicator_cols)
+        df["ibfpi"] = weighted
     return df
 
 
