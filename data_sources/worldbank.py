@@ -165,7 +165,7 @@ INDICATORS: dict[str, Indicator] = {i.code: i for i in [
         "seeking employment -- an ILO modelled estimate, harmonised across "
         "countries.",
         "ILO modelled estimates via WDI. This is NOT the PLFS rate published by "
-        "MOSPI (shown on the State Divergence Lab); modelled estimates are "
+        "MOSPI (shown on the State Economy Lab); modelled estimates are "
         "revised and can differ materially from national survey figures.",
     ),
     Indicator(

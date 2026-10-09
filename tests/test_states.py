@@ -1,4 +1,4 @@
-"""Unit tests for analysis.states (State Economy Explorer)."""
+"""Unit tests for analysis.states (State Economy Lab — the state explorer tabs)."""
 from __future__ import annotations
 
 import math
