@@ -1,0 +1,7 @@
+asset,share_of_household_assets_pct,nominal_return_1991_2021_pct,return_basis,real_return_vs_cpi_text,real_return_minus_g_text,source,note
+Residential property,77,9.3,stated,2~3%,-3 to -5 pts,"Paper A, Table 1 (p. 14) and Figure 2; shares RBI (2017), returns Wahengbam (2023, CSEP)",Before costs and taxes.
+Gold,11,9.2,stated,2~4%,-2 to -5 pts,"Paper A, Table 1 (p. 14) and Figure 2",
+Durable goods,7,,negative,Negative,More negative than g,"Paper A, Table 1 (p. 14)",Excluded from Figure 2 (depreciates); paper renormalises over the other 93%.
+Financial assets: deposits,5,6.5,midpoint of stated range,~0% or slightly negative,-6 to -7 pts,"Paper A, Table 1 (p. 14)",Paper gives deposits 6-7%; 6.5% is the midpoint. Financial assets (deposits + equity) are 5% combined.
+Financial assets: listed equity,,13.5,stated,6~7%,-1 to +1 pts,"Paper A, Table 1 (p. 14) and Figure 2",Share included in the 5% financial assets.
+Representative household portfolio,,9.2,stated (weighted r in Figure 2),,,"Paper A, Figure 2 (p. 6)",Weighted over property/gold/financial assets renormalised to 93%.

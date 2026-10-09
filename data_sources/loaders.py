@@ -239,3 +239,20 @@ def load_release_calendar() -> pd.DataFrame:
     """Scheduled future releases -- never observed values."""
     return pd.read_csv(RAW_DIR / "macro_monthly" / "release_calendar.csv",
                        parse_dates=["scheduled_release_date"])
+
+
+# ---------------------------------------------------------------------------
+# The author's Paper A (Income & wealth inequality in India): Table 1 asset
+# returns and Figure 2 end values, transcribed from
+# app/static/papers/Income_Wealth_Inequality_India.pdf. Returns are the
+# paper's 1991-2021 nominal averages (Wahengbam 2023, CSEP); shares RBI 2017.
+# ---------------------------------------------------------------------------
+
+@lru_cache(maxsize=8)
+def load_paper_a_returns() -> pd.DataFrame:
+    return pd.read_csv(RAW_DIR / "author_paper" / "paperA_table1_asset_returns.csv")
+
+
+@lru_cache(maxsize=8)
+def load_paper_a_figure2() -> pd.DataFrame:
+    return pd.read_csv(RAW_DIR / "author_paper" / "paperA_figure2_endpoints.csv")

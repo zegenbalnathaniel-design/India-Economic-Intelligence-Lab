@@ -61,8 +61,11 @@ LIQUIDITY: Dict[str, str] = {
     "cash": "Immediate",
 }
 
-# Default allocation used in the research paper for the composition-effect
-# scenario. Rounds to 1.0.
+# Illustrative default allocation for the editable composition simulator
+# (module B). It is NOT the paper's Figure 2 mix: the paper uses RBI (2017)
+# shares -- 77% property, 11% gold, 5% financial assets, renormalised over
+# 93% -- with its own 1991-2021 returns; that exact exhibit is rebuilt in
+# section E from data/raw/author_paper/. Rounds to 1.0.
 DEFAULT_ALLOCATION: Dict[str, float] = {
     "property": 0.51,
     "gold": 0.15,
@@ -328,3 +331,52 @@ def rminusg_frame(
         "g_real": g_real,
         "r_minus_g": r_real - g_real,
     }
+
+
+# ---------------------------------------------------------------------------
+# Paper A, Figure 2 and the return-heterogeneity view of r - g
+# ---------------------------------------------------------------------------
+def annuity_path(contribution: float, rate: float, years: int) -> np.ndarray:
+    """Value at the end of each year 0..years when `contribution` is saved at
+    the END of every year and compounds at `rate` (the paper's Figure 2
+    future-value-of-annuity convention). Element 0 is 0."""
+    t = np.arange(years + 1)
+    if rate == 0:
+        return contribution * t.astype(float)
+    return contribution * ((1 + rate) ** t - 1) / rate
+
+
+def equity_mix_return(equity_share: float, equity_rate: float, rest_rate: float) -> float:
+    """Return of a portfolio rebalanced every year to `equity_share` in
+    equity and the rest in an asset earning `rest_rate`."""
+    if not 0 <= equity_share <= 1:
+        raise ValueError("equity_share must be between 0 and 1.")
+    return equity_share * equity_rate + (1 - equity_share) * rest_rate
+
+
+def allocation_ranking(options: Dict[str, float], contribution: float, years: int,
+                       inflation: float) -> pd.DataFrame:
+    """Final nominal and real (today's-rupee) value for each named
+    allocation's return, ranked highest first."""
+    rows = []
+    for name, rate in options.items():
+        final = float(annuity_path(contribution, rate, years)[-1])
+        rows.append({"allocation": name, "return": rate, "final_nominal": final,
+                     "final_real": final / (1 + inflation) ** years})
+    out = pd.DataFrame(rows).sort_values("final_nominal", ascending=False).reset_index(drop=True)
+    out["multiple_of_last"] = out["final_nominal"] / out["final_nominal"].iloc[-1]
+    return out
+
+
+def real_minus_g(nominal_returns: Dict[str, float], inflation: float, g_real: float) -> pd.DataFrame:
+    """Real return of each asset and its gap to real growth g (the paper's
+    Table 1 'real return - g' column, recomputed for chosen π and g)."""
+    rows = [{"asset": k, "nominal": v, "real": real_return(v, inflation),
+             "r_minus_g": real_return(v, inflation) - g_real} for k, v in nominal_returns.items()]
+    return pd.DataFrame(rows)
+
+
+def implied_excess_growth(ratio_start: float, ratio_end: float, years: int) -> float:
+    """Average yearly rate at which wealth outgrew income, from two
+    wealth-to-income ratios `years` apart: (end/start)^(1/years) - 1."""
+    return (ratio_end / ratio_start) ** (1 / years) - 1

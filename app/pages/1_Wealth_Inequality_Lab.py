@@ -33,7 +33,7 @@ import streamlit as st
 from analysis import inequality, wealth
 from app.components.theme import (
     setup, kicker, callout, source_badge, stat_card, footnote, GOLD, CRIMSON, MUTED, VERMILLION,
-    TURQUOISE, WARM_WHITE,
+    TURQUOISE, WARM_WHITE, COBALT,
 )
 from app.components.glossary import indicator_note
 from app.components import hairline_display
@@ -53,7 +53,8 @@ with st.sidebar:
         "- A · Framework\n"
         "- B · Composition effect\n"
         "- C · Asset allocation\n"
-        "- D · r − g explorer"
+        "- D · r − g explorer\n"
+        "- E · Which allocation built the most wealth"
     )
     st.markdown("---")
     st.caption(
@@ -501,9 +502,64 @@ kicker("A · Framework")
 st.header("From capability to intergenerational mobility")
 st.markdown(
     "The paper argues that wealth accumulation is not the outcome of income "
-    "alone — it is a chain of transitions. Click any stage below for the "
-    "argument as it appears in the paper."
+    "alone — it is a chain of transitions. **Figure 1** of the paper draws "
+    "it as a ladder with one weak rung: the step from *income* to "
+    "*ownership*. Everything above that line is about earning; everything "
+    "below it is about owning, and that is where Indian households get stuck."
 )
+
+FIG1 = [
+    ("CAPABILITY", "Education, skills, health, freedoms", True),
+    ("EMPLOYMENT", "Capability put to economic use", True),
+    ("INCOME", "A flow — earned, taxed, largely spent", True),
+    ("OWNERSHIP", "Equity, business, property, financial assets", False),
+    ("WEALTH", "A compounding, appreciating stock", False),
+    ("ECONOMIC FREEDOM", "Income independent of labour; optionality", False),
+    ("INTERGENERATIONAL MOBILITY", "Freedom transmitted across generations", False),
+]
+
+
+def _fig1_html() -> str:
+    boxes = []
+    for i, (title, sub, earn) in enumerate(FIG1):
+        colour = TURQUOISE if earn else VERMILLION
+        boxes.append(
+            f"<div style='border:2px solid {colour};border-radius:8px;padding:10px 14px;"
+            f"background:{colour}1A;text-align:center;max-width:460px;margin:0 auto;'>"
+            f"<div style='color:{colour};font-weight:800;letter-spacing:.06em;font-size:15px'>{title}</div>"
+            f"<div style='color:#C9C5BA;font-size:13px;margin-top:2px'>{sub}</div></div>"
+        )
+        if i == 2:
+            boxes.append(
+                "<div style='position:relative;max-width:560px;margin:6px auto;text-align:center;'>"
+                "<div style='border-top:2px dashed #F5F0E6;opacity:.6;'></div>"
+                f"<div style='color:{VERMILLION};font-weight:800;font-size:14px;margin-top:-11px;"
+                "display:inline-block;background:#11131A;padding:0 10px'>▼ Weak</div>"
+                "<div style='color:#F5F0E6;font-size:12px;font-weight:700;margin-top:2px'>"
+                "Binding constraint: income does not turn into ownership</div></div>"
+            )
+        elif i < len(FIG1) - 1:
+            boxes.append("<div style='text-align:center;color:#8B8D99;font-size:18px;line-height:20px'>▼</div>")
+    return "<div style='padding:6px 0 4px'>" + "".join(boxes) + "</div>"
+
+
+f1c1, f1c2 = st.columns([5, 4], vertical_alignment="center")
+with f1c1:
+    st.markdown(_fig1_html(), unsafe_allow_html=True)
+    st.caption("Figure 1 of the paper: Income & Wealth Framework, redrawn.")
+with f1c2:
+    st.markdown(
+        "**How to read it.** The three teal rungs are what most policy targets: "
+        "skills, jobs and incomes. The four red rungs are what actually builds "
+        "wealth. The dashed line is the paper's *binding constraint*: rising "
+        "incomes do not automatically become ownership of productive assets, "
+        "because most household saving goes into property and gold (Table 1).\n\n"
+        "**Why it matters for r − g.** Once wealth is held, it grows at the "
+        "return *r* of the assets owned. Section D below shows that those "
+        "returns differ hugely by asset, and section E shows what that does to "
+        "two identical savers."
+    )
+st.markdown("Open any stage for the argument as it appears in the paper:")
 
 stages = [
     ("Capability",
@@ -1038,13 +1094,33 @@ indicator_note(
     "in an inequality story, not the whole story.",
 )
 
+paper_ret = loaders.load_paper_a_returns().set_index("asset")
+PAPER_R = {
+    "Listed equity": paper_ret.loc["Financial assets: listed equity", "nominal_return_1991_2021_pct"] / 100,
+    "Residential property": paper_ret.loc["Residential property", "nominal_return_1991_2021_pct"] / 100,
+    "Gold": paper_ret.loc["Gold", "nominal_return_1991_2021_pct"] / 100,
+    "Typical household portfolio": paper_ret.loc["Representative household portfolio", "nominal_return_1991_2021_pct"] / 100,
+    "Bank deposits": paper_ret.loc["Financial assets: deposits", "nominal_return_1991_2021_pct"] / 100,
+}
+ASSET_COLOUR = {"Listed equity": TURQUOISE, "Residential property": VERMILLION, "Gold": GOLD,
+                "Typical household portfolio": COBALT, "Bank deposits": MUTED}
+
+st.markdown(
+    "**Defaults come from the paper.** Inflation 6.5% and growth 6.5% reproduce Table 1: at those values "
+    "property earns about 2.6% real, gold 2.5%, deposits about 0% and listed equity 6.6% — the paper's "
+    "'return heterogeneity'. Change any slider to test a different world."
+)
 cA, cB, cC = st.columns(3)
 with cA:
-    r_nom = st.slider("Nominal return on capital r (%)", 0.0, 20.0, 8.0, 0.25) / 100
+    r_nom = st.slider("Nominal return on capital r (%)", 0.0, 20.0,
+                      float(round(PAPER_R["Typical household portfolio"] * 100, 2)), 0.25,
+                      help="Default: the typical household portfolio's 9.2% (paper, Figure 2).") / 100
 with cB:
-    infl = st.slider("Inflation π (%)", 0.0, 15.0, 5.0, 0.25) / 100
+    infl = st.slider("Inflation π (%)", 0.0, 15.0, 6.5, 0.25,
+                     help="6.5% reproduces Table 1's real-return column.") / 100
 with cC:
-    g_real = st.slider("Real income / GDP growth g (%)", -5.0, 15.0, 6.0, 0.25) / 100
+    g_real = st.slider("Real income / GDP growth g (%)", -5.0, 15.0, 6.5, 0.25,
+                       help="Paper: real GDP growth of 6–7%.") / 100
 
 rg = wealth.rminusg_frame(r_nominal=r_nom, inflation=infl, g_real=g_real)
 c1, c2, c3, c4 = st.columns(4)
@@ -1053,19 +1129,228 @@ with c2: stat_card("Inflation π", f"{rg['inflation']*100:.2f}%")
 with c3: stat_card("r real", f"{rg['r_real']*100:.2f}%")
 with c4:
     diff = rg['r_minus_g']
-    stat_card("r − g (real)", f"{diff*100:+.2f}%",
-              "capital share tends to rise" if diff > 0 else "capital share tends to fall")
+    stat_card("r − g (real)", f"{diff*100:+.2f} pts",
+              "capital outgrows the economy" if diff > 0 else "the economy outgrows this capital")
 
 callout(
-    "Consistency check: r and g must be measured on the same basis. Here we "
-    "convert r to a real rate before comparing to real growth g. Comparing "
-    "nominal r with real g is a common error and inflates the apparent gap.",
+    "Consistency check: r and g must be on the same basis. r is converted to a real rate before it is "
+    "compared with real growth g. The paper's point: comparing equity's <b>nominal</b> 13.5% with "
+    "<b>real</b> growth of 6–7% makes r > g look obvious; in real terms equity earns about g.",
     kind="warn",
 )
 
+# 1. Return heterogeneity: each asset's real r against g.
+st.subheader("Which assets beat the economy?")
+rmg = wealth.real_minus_g(PAPER_R, infl, g_real)
+fig_rg = go.Figure(go.Bar(
+    y=rmg["asset"], x=rmg["real"] * 100, orientation="h",
+    marker_color=[ASSET_COLOUR[a] for a in rmg["asset"]],
+    text=[f"{r*100:.1f}% real  ({d*100:+.1f} pts vs g)" for r, d in zip(rmg["real"], rmg["r_minus_g"])],
+    textposition="outside", cliponaxis=False,
+    hovertemplate="%{y}: %{x:.2f}% real<extra></extra>",
+))
+fig_rg.add_vline(x=g_real * 100, line_color=WARM_WHITE, line_dash="dash", line_width=2,
+                 annotation_text=f"g = {g_real*100:.1f}%", annotation_position="top")
+fig_rg.update_layout(height=340, xaxis=dict(title="Real return, % a year (1991–2021 nominal returns, your π)",
+                                            range=[min(-2, rmg["real"].min() * 100 - 1), max(14, rmg["real"].max() * 100 + 6)]),
+                     yaxis=dict(autorange="reversed"), showlegend=False,
+                     title="Real return of each asset vs real growth g")
+st.plotly_chart(fig_rg, use_container_width=True, key="rg_assets")
+beats = rmg[rmg["r_minus_g"] > 0]["asset"].tolist()
+st.markdown(
+    f"**At these settings, {('only ' + ', '.join(beats)) if beats else 'no asset'} "
+    f"{'earns' if len(beats) == 1 else 'earn'} more than the economy grows.** "
+    f"The typical household portfolio — about 77% property and 11% gold — earns "
+    f"{rmg.set_index('asset').loc['Typical household portfolio', 'real']*100:.1f}% real, "
+    f"{abs(rmg.set_index('asset').loc['Typical household portfolio', 'r_minus_g'])*100:.1f} points "
+    f"{'below' if rmg.set_index('asset').loc['Typical household portfolio', 'r_minus_g'] < 0 else 'above'} g. "
+    "That is the paper's argument: India does not show a general r > g; it shows *return heterogeneity* — "
+    "the typical portfolio earns below g, broad equity earns roughly g, and the households who own the "
+    "highest-return assets are already the wealthiest."
+)
+
+# 2. What r - g does to capital vs the economy over time.
+st.subheader("What a gap does over time")
+horizon = st.slider("Years", 5, 50, 30, key="rg_years")
+t = np.arange(horizon + 1)
+fig_div = go.Figure()
+fig_div.add_trace(go.Scatter(x=t, y=(1 + g_real) ** t, name=f"Economy / average income (g = {g_real*100:.1f}%)",
+                             line=dict(color=WARM_WHITE, width=3, dash="dash")))
+for a in ("Listed equity", "Typical household portfolio", "Bank deposits"):
+    rr = rmg.set_index("asset").loc[a, "real"]
+    fig_div.add_trace(go.Scatter(x=t, y=(1 + rr) ** t, name=f"{a} ({rr*100:.1f}% real)",
+                                 line=dict(color=ASSET_COLOUR[a], width=3)))
+fig_div.update_layout(height=360, yaxis_title="Real value of ₹1 (×)", xaxis_title="Years",
+                      title="₹1 of capital vs ₹1 of national income, in real terms",
+                      legend=dict(orientation="h", y=-0.2), hovermode="x unified")
+st.plotly_chart(fig_div, use_container_width=True, key="rg_paths")
+hh_r = rmg.set_index("asset").loc["Typical household portfolio", "real"]
+st.caption(
+    f"After {horizon} years, national income has grown {(1+g_real)**horizon:.1f}× in real terms; the typical "
+    f"household portfolio {(1+hh_r)**horizon:.1f}×; listed equity "
+    f"{(1+rmg.set_index('asset').loc['Listed equity', 'real'])**horizon:.1f}×. Capital held in the typical "
+    "portfolio shrinks relative to the economy; capital in equity roughly keeps pace."
+)
+
+# 3. What India's data show for the economy as a whole.
+w95, w22 = facts[("Wealth-to-income ratio", "1995")], facts[("Wealth-to-income ratio", "2022")]
+excess = wealth.implied_excess_growth(w95, w22, 2022 - 1995)
+callout(
+    f"<b>What the data show for India as a whole.</b> National wealth rose from {w95:.2f}× to {w22:.2f}× "
+    f"national income between 1995 and 2022 (World Inequality Lab). That means wealth grew about "
+    f"<b>{excess*100:.1f}% a year faster</b> than income over 27 years — aggregate capital did outgrow the "
+    "economy. Combined with the asset view above, the gains went to whoever held the fast-growing assets: "
+    f"the Top 1%'s wealth share rose from {wil_wealth_series.set_index('year').loc[1991, 'top_1']:.1f}% (1991) "
+    f"to {wil_wealth_series.set_index('year').loc[2022, 'top_1']:.1f}% (2022).",
+    kind="note",
+)
+st.caption("The 1.5%-a-year figure is calculated here from the paper's two ratios: (5.75 ÷ 3.83)^(1/27) − 1.")
+
+
+# ---------- E. Which allocation built the most wealth (Paper Figure 2) -------------
+
+st.markdown("---")
+kicker("E · Composition effect, from the paper")
+st.header("Which allocation built the most wealth, 1991–2021?")
+st.markdown(
+    "**Figure 2 of the paper, rebuilt from its own numbers.** Two households each save **₹1 lakh at the end "
+    "of every year for 30 years** — ₹30 lakh in total. One holds listed equity; the other holds what the "
+    "typical Indian household holds. Each grows at the asset's observed nominal return over 1991–2021."
+)
+fig2_end = loaders.load_paper_a_figure2().set_index("series")
+FIG2_SERIES = {"Listed equity": "Equity capital", "Residential property": "Residential property",
+               "Gold": "Gold", "Typical household portfolio": "Representative household portfolio"}
+yrs = 30
+fig2 = go.Figure()
+paths = {
+    "Listed equity": wealth.annuity_path(100000, PAPER_R["Listed equity"], yrs),
+    "Residential property": wealth.annuity_path(100000, PAPER_R["Residential property"], yrs),
+    "Gold": wealth.annuity_path(100000, PAPER_R["Gold"], yrs),
+    "Typical household portfolio": wealth.annuity_path(100000, PAPER_R["Typical household portfolio"], yrs),
+}
+saving = wealth.annuity_path(100000, 0.0, yrs)
+fig2.add_trace(go.Scatter(x=np.arange(yrs + 1), y=paths["Typical household portfolio"] / 1e7, showlegend=False,
+                          line=dict(width=0), hoverinfo="skip"))
+fig2.add_trace(go.Scatter(x=np.arange(yrs + 1), y=paths["Listed equity"] / 1e7, fill="tonexty",
+                          fillcolor="rgba(36,166,161,0.15)", showlegend=False, line=dict(width=0), hoverinfo="skip"))
+for name, path in paths.items():
+    fig2.add_trace(go.Scatter(
+        x=np.arange(yrs + 1), y=path / 1e7, name=f"{name} — {PAPER_R[name]*100:.1f}% a year",
+        line=dict(color=ASSET_COLOUR[name], width=4 if name == "Listed equity" else 2.5,
+                  dash="dash" if name == "Typical household portfolio" else "solid"),
+        hovertemplate=f"{name}, year %{{x}}: ₹%{{y:.2f}} crore<extra></extra>",
+    ))
+fig2.add_trace(go.Scatter(x=np.arange(yrs + 1), y=saving / 1e7, name="Cumulative saving (r = 0)",
+                          line=dict(color=MUTED, width=1.5, dash="dot"),
+                          hovertemplate="Saved by year %{x}: ₹%{y:.2f} crore<extra></extra>"))
+eq_end, hh_end = paths["Listed equity"][-1] / 1e7, paths["Typical household portfolio"][-1] / 1e7
+gap = eq_end - hh_end
+low_ends = [paths[n][-1] / 1e7 for n in ("Residential property", "Gold", "Typical household portfolio")]
+fig2.add_annotation(x=yrs, y=eq_end, text=f"<b>₹{eq_end:.2f} cr</b>", showarrow=False, xanchor="left",
+                    xshift=8, font=dict(color=TURQUOISE, size=14))
+fig2.add_annotation(x=yrs, y=max(low_ends), text=f"₹{min(low_ends):.2f}–{max(low_ends):.2f} cr", showarrow=False,
+                    xanchor="left", xshift=8, yshift=-4, font=dict(color=WARM_WHITE, size=13))
+fig2.add_annotation(x=yrs, y=saving[-1] / 1e7, text=f"₹{saving[-1]/1e7:.2f} cr saved", showarrow=False,
+                    xanchor="left", xshift=8, font=dict(color=MUTED, size=12))
+fig2.add_shape(type="line", x0=yrs, x1=yrs, y0=hh_end, y1=eq_end, line=dict(color=WARM_WHITE, width=2))
+fig2.add_annotation(x=yrs - 0.5, y=hh_end + 0.2 * gap, text=f"<b>₹{gap:.2f} cr gap</b>",
+                    showarrow=False, xanchor="right", align="right", font=dict(color=WARM_WHITE, size=13))
+fig2.update_layout(height=520, xaxis=dict(title="Years of saving", range=[0, yrs + 4]),
+                   yaxis_title="Accumulated wealth (₹ crore, nominal)",
+                   title="The composition effect: why identical savers end up unequal",
+                   legend=dict(orientation="h", y=-0.18), hovermode="x unified")
+st.plotly_chart(fig2, use_container_width=True, key="paper_fig2")
+
+chk = pd.DataFrame([
+    {"Series": n, "Return (paper)": f"{PAPER_R[n]*100:.1f}%",
+     "Recomputed here": f"₹{paths[n][-1]/1e7:.2f} cr",
+     "Printed in Figure 2": f"₹{fig2_end.loc[FIG2_SERIES[n], 'final_value_crore_stated']:.2f} cr"}
+    for n in paths
+])
+with st.expander("Check against the paper's printed figure"):
+    st.dataframe(chk, hide_index=True, use_container_width=True)
+    st.caption("Future value of ₹1 lakh saved at the end of each year: FV = 1 lakh × ((1 + r)^30 − 1) ÷ r. "
+               "Equity recomputes to ₹3.23 crore against the printed ₹3.24 crore (rounding); the rest match. "
+               "Returns: Wahengbam (2023, CSEP), 1991–2021; household weights: RBI (2017) — 77% property, 11% "
+               "gold, 5% financial assets, renormalised over 93% (durables excluded). The paper reports the "
+               "weighted return as 9.2%.")
+
+st.subheader("Rank the options")
+st.caption("Same ₹1 lakh a year. Mixes are rebalanced every year between listed equity and the typical "
+           "household portfolio.")
+ec1, ec2, ec3 = st.columns(3)
+with ec1:
+    my_eq = st.slider("Your mix: share in listed equity (%)", 0, 100, 40, 5, key="fig2_eq") / 100
+with ec2:
+    e_years = st.slider("Years of saving", 5, 30, 30, key="fig2_years",
+                        help="Up to 30, the length of the 1991–2021 window the returns come from.")
+with ec3:
+    e_infl = st.slider("Inflation for today's-rupee values (%)", 0.0, 12.0, 6.5, 0.5, key="fig2_infl") / 100
+options = {
+    "100% listed equity": PAPER_R["Listed equity"],
+    "75% equity / 25% household mix": wealth.equity_mix_return(.75, PAPER_R["Listed equity"], PAPER_R["Typical household portfolio"]),
+    "50% equity / 50% household mix": wealth.equity_mix_return(.50, PAPER_R["Listed equity"], PAPER_R["Typical household portfolio"]),
+    f"Your mix: {my_eq:.0%} equity": wealth.equity_mix_return(my_eq, PAPER_R["Listed equity"], PAPER_R["Typical household portfolio"]),
+    "100% residential property": PAPER_R["Residential property"],
+    "100% gold": PAPER_R["Gold"],
+    "Typical household portfolio": PAPER_R["Typical household portfolio"],
+    "100% bank deposits (6.5%, midpoint of 6–7%)": PAPER_R["Bank deposits"],
+}
+rank = wealth.allocation_ranking(options, 100000, e_years, e_infl)
+best = rank.iloc[0]
+typical = rank.set_index("allocation").loc["Typical household portfolio"]
+b1c, b2c, b3c = st.columns(3)
+with b1c:
+    stat_card("Most wealth, 1991–2021 returns", best["allocation"], f"₹{best['final_nominal']/1e7:.2f} crore after {e_years} years")
+with b2c:
+    stat_card("vs the typical household", f"{best['final_nominal']/typical['final_nominal']:.1f}×",
+              f"₹{(best['final_nominal']-typical['final_nominal'])/1e7:.2f} crore more from the same saving")
+with b3c:
+    stat_card("In today's rupees", f"₹{best['final_real']/1e7:.2f} crore",
+              f"at {e_infl*100:.1f}% inflation · typical: ₹{typical['final_real']/1e7:.2f} crore")
+fig_rank = go.Figure(go.Bar(
+    y=rank["allocation"], x=rank["final_nominal"] / 1e7, orientation="h",
+    marker_color=[TURQUOISE if i == 0 else (COBALT if a.startswith("Your mix") else MUTED)
+                  for i, a in enumerate(rank["allocation"])],
+    text=[f"₹{v/1e7:.2f} cr · {r*100:.1f}%/yr" for v, r in zip(rank["final_nominal"], rank["return"])],
+    textposition="outside", cliponaxis=False,
+    hovertemplate="%{y}: ₹%{x:.2f} crore<extra></extra>",
+))
+fig_rank.add_vline(x=100000 * e_years / 1e7, line_dash="dot", line_color=MUTED,
+                   annotation_text=f"₹{100000*e_years/1e5:.0f} lakh saved", annotation_position="bottom")
+fig_rank.update_layout(height=420, yaxis=dict(autorange="reversed", automargin=True),
+                       xaxis=dict(title="Final wealth (₹ crore, nominal)",
+                                  range=[0, rank["final_nominal"].max() / 1e7 * 1.35]),
+                       showlegend=False, title=f"Final wealth after {e_years} years of saving ₹1 lakh a year")
+st.plotly_chart(fig_rank, use_container_width=True, key="fig2_rank")
+
+callout(
+    f"<b>The answer, on the paper's numbers: the more of the saving held in listed equity, the more wealth "
+    f"it built.</b> Over 1991–2021, an all-equity saver ended with {best['final_nominal']/typical['final_nominal']:.1f}× "
+    "the wealth of a saver holding the typical household mix — from the same ₹1 lakh a year. Nothing about "
+    "thrift differs; only what was owned.<br><br>"
+    "<b>Read this with its limits.</b> These are 30-year historical averages, not forecasts. Equity's higher "
+    "return came with large falls along the way (e.g. 2008, 2020) that this smooth calculation does not show "
+    "— the Monte Carlo above shows how wide the range gets once returns vary. Property also gives a home to "
+    "live in (no rent), which this comparison ignores; deposits and gold give liquidity and safety. Costs, "
+    "taxes and the order of good and bad years all change the result. This is the paper's evidence about "
+    "<i>why households diverge</i>, not personal financial advice.",
+    kind="note",
+)
+indicator_note(
+    "the composition effect",
+    "**What it shows.** Saving the same amount does not produce the same wealth: the asset decides the "
+    "growth rate, and compounding turns a few percentage points into a multiple over decades.\n\n"
+    "**Why the typical household is where it is.** About 77% of Indian household assets are property and "
+    "11% gold (RBI 2017); financial assets are 5%. The paper's Table 1 shows these are the assets with the "
+    "lowest real returns, and property is illiquid, so households cannot easily shift.\n\n"
+    "**Link to inequality.** Equity and business ownership are concentrated in the wealthiest households "
+    "(see section W). If they hold the assets that compound fastest, the composition effect alone widens "
+    "the wealth gap, even with identical saving.",
+)
+
 footnote(
-    "Framework and composition-effect exhibit adapted from the author’s "
-    "research paper on income and wealth inequality in India. r − g "
-    "framing draws on Piketty and subsequent literature — the module "
-    "reports the identity, not a causal claim."
+    "Framework (Figure 1) and composition effect (Figure 2) are from the author's research paper on income "
+    "and wealth inequality in India; returns are its 1991–2021 nominal averages (Wahengbam 2023, CSEP) and "
+    "asset shares RBI (2017). r − g framing draws on Piketty (2014). Nothing here is a forecast or advice."
 )

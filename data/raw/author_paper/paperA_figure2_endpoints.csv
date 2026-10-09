@@ -1,0 +1,6 @@
+series,annual_contribution_inr,years,nominal_return_pct,final_value_crore_stated,source
+Equity capital,100000,30,13.5,3.24,"Paper A, Figure 2 (p. 6)"
+Residential property,100000,30,9.3,1.44,"Paper A, Figure 2 (p. 6)"
+Gold,100000,30,9.2,1.41,"Paper A, Figure 2 (p. 6)"
+Representative household portfolio,100000,30,9.2,1.41,"Paper A, Figure 2 (p. 6); text gives ₹1.41-1.44 crore for gold and property"
+Cumulative saving contributed,100000,30,0,0.30,"Paper A, Figure 2 (p. 6)"
