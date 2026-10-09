@@ -49,6 +49,32 @@ st.markdown("---")
 
 nsdp = loaders.load_nsdp_spliced()
 
+# Hero: computed on the full series (all states, all years), so it does not
+# move with the scope controls below.
+_main_states = regional.rank_states_latest(nsdp).sort_values("rank")["state"].head(8).tolist()
+_feature_states = (
+    regional.beta_convergence(nsdp).per_state
+    .sort_values("avg_annual_growth_pct", ascending=False)["state"].head(3).tolist()
+)
+fig_col, text_col = st.columns([5, 4], vertical_alignment="center")
+with fig_col:
+    hairline_display.render(
+        "branches", hero=True, accent=LEAF,
+        main=json.dumps(_main_states), feature=json.dumps(_feature_states),
+    )
+with text_col:
+    st.markdown(
+        "### Economies do not follow one path\n"
+        "The main line is the **8 states with the highest latest per-capita "
+        "NSDP**; the branch is the **3 states that grew fastest on average** "
+        f"over {nsdp['financial_year'].min()} → {nsdp['financial_year'].max()}. "
+        "**Hover a commit** to see which state it is. Every name is a real "
+        "rank from the RBI Handbook series used throughout this page, across "
+        "all states and years (the scope controls below don't change it)."
+    )
+
+st.markdown("---")
+
 # ---------- Scope controls: states + year range --------------------------
 st.subheader("Scope")
 st.caption(
@@ -310,26 +336,6 @@ else:
         f"{len(selected_states)} of {len(all_states)} state(s) shown per the scope controls above."
     )
     st.dataframe(ranked, use_container_width=True, hide_index=True)
-
-main_states = ranked.sort_values("rank")["state"].head(8).tolist()
-feature_states = (
-    beta.per_state.sort_values("avg_annual_growth_pct", ascending=False)["state"].head(3).tolist()
-)
-fig_col, text_col = st.columns([2, 3])
-with fig_col:
-    hairline_display.render(
-        "branches",
-        main=json.dumps(main_states), feature=json.dumps(feature_states),
-    )
-with text_col:
-    st.markdown(
-        "**Economies do not follow one path.** The main line is the 8 "
-        "states with the highest latest per-capita NSDP, real-data-ranked "
-        "above; the branch is the 3 states growing fastest on average "
-        "over the same real series. Hover to see which state is which — "
-        "every name here is a real rank, computed from the same data as "
-        "the table above, not illustrative."
-    )
 
 st.markdown("---")
 

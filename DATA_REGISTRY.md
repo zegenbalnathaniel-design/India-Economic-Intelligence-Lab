@@ -134,6 +134,29 @@ behaviour against an injected extreme outlier, and insufficient-data handling).
 
 ---
 
+## New: World Inequality Lab distribution for India (`data/raw/wil/`, Wealth Lab section W)
+
+Three files transcribed from the author's summary of Bharti, Chancel, Piketty & Somanchi (2024),
+*Income and Wealth Inequality in India, 1922-2023: The Rise of the Billionaire Raj*, WIL Working Paper
+2024/09. **Status: PARTIAL** — not yet checked against the paper's own tables.
+
+- `distribution_2022_23.csv` — Bottom 50%, Middle 40%, Top 10%, Top 1%, Top 0.1%: average income,
+  income share, wealth share.
+- `wealth_shares_1961_2022_23.csv` — wealth shares in 1961 and 2022-23.
+- `long_run_facts.csv` — growth rates, wealth-to-income ratio, billionaire counts and wealth; each row
+  has a `qualifier` (stated / approximate / upper bound).
+
+Rules applied: approximate statements ("about 29%", "about 13–15%") are kept as notes and **never
+stored as numbers**. `analysis/inequality.py` derives only by arithmetic on stated values, with the
+formula shown on the page (Middle 40% = 100 − Bottom 50% − Top 10%; Upper middle P90–P99 = Top 10% −
+Top 1%; Top 0.1% income share from its average income). **Bottom 10% and Lower middle (P10–P50) are
+DATA REQUIRED.**
+
+Checks run (`tests/test_inequality.py`): shares of the three side-by-side groups sum to 100.0 for income
+and wealth; each stated average income implies its stated share within 0.2 pp. **Known inconsistency:**
+the Middle 40% average of ₹1.65 lakh implies ≈28.1% of income, against the 27.3% remainder (0.8 pp,
+most likely rounding of the average); the summary's "about 29–30%" matches neither and is not used.
+
 ## New: live World Bank WDI provider (`data_sources/worldbank.py`, page 12)
 
 Nothing is stored in the repository. The India Macro & World page calls the World Bank API v2

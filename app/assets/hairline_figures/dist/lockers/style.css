@@ -1,0 +1,46 @@
+/* Shared chrome for the small, display-only Hairline figures (Slow,
+   Elevator, Vault, Riffle, Branches). Colours are the site's existing
+   theme tokens (app/components/theme.py): ESPRESSO #181B26, RULE #2A2E3C,
+   GOLD #F3C542, WARM_WHITE #F5F0E6 -- nothing new. */
+html, body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Capped so figure + caption always fit inside the fixed iframe height
+   the Python wrapper requests (hairline_display.FRAME_HEIGHT); before
+   this the caption fell below the frame and was clipped. */
+.hf-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 5 / 4;
+  max-width: 330px;
+  margin: 0 auto;
+  background: transparent;
+
+  --hairline-plate: #181B26;
+  --hairline-hi: #D4AF37;
+  --hairline-edge: #6B5E4A;
+  --hairline-mid: #3A3026;
+  --hairline-lo: #22262F;
+}
+
+.hf-caption {
+  box-sizing: border-box;
+  max-width: 400px;
+  margin: 10px auto 0;
+  padding: 10px 14px;
+  min-height: 3.6em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #F5F0E6;
+  background: #181B26;
+  border: 1px solid #2A2E3C;
+  border-left: 3px solid #F3C542;
+  border-radius: 4px;
+}

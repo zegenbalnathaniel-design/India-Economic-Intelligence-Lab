@@ -12,12 +12,15 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+import json
+
 import plotly.graph_objects as go
 import streamlit as st
 
 from analysis import housing
 from app.components.theme import setup, kicker, callout, source_badge, stat_card, footnote, GOLD
 from app.components.glossary import indicator_note
+from app.components import hairline_display
 from data_sources import loaders
 
 setup("Housing Intelligence Lab", accent=GOLD)
@@ -45,6 +48,33 @@ st.markdown(
     "proxy is labelled as such below; none of it should be read as true city-level income."
 )
 source_badge("NHB RESIDEX (city prices)", "RBI Handbook (state income, proxy)")
+
+# Hero: the 12 cities with the highest price-to-income ratio at the page's
+# default settings (70 sq.m. home, state per-capita NSDP as income proxy).
+_hero = housing.affordability_across_cities(
+    loaders.load_residex_price_levels(), loaders.load_nsdp_current(),
+    mpce_urban=loaders.load_hces_urban_mpce(),
+).head(12)
+_hero_caps = [
+    f"#{i} {r.city} ({r.state}, {r.quarter})\nPrice of a {housing.DEFAULT_UNIT_SIZE_SQM:.0f} sq.m. home = "
+    f"{r.price_to_income:.1f} years of state per-capita income*"
+    for i, r in enumerate(_hero.itertuples(), start=1)
+]
+fig_col, text_col = st.columns([5, 4], vertical_alignment="center")
+with fig_col:
+    hairline_display.render("lockers", hero=True, accent=GOLD, cities=json.dumps(_hero_caps))
+with text_col:
+    st.markdown(
+        "### Twelve cities under the most price pressure\n"
+        "Each locker is one of the 12 RESIDEX cities where a "
+        f"{housing.DEFAULT_UNIT_SIZE_SQM:.0f} sq.m. home costs the most years of income. "
+        "**Hover a locker** to open it.\n\n"
+        "\\* Income here is the **state's** per-capita NSDP, not city household "
+        "income. That overstates stress in cities richer than their state (Noida, "
+        "Ghaziabad, Greater Noida use Uttar Pradesh's average), so read the ranking "
+        "as price pressure against a state benchmark. Section B lets you change the "
+        "home size and the income measure."
+    )
 
 callout(
     "⚠️ **No city-level household income exists in this dataset.** Price-to-income and "

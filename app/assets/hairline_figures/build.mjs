@@ -6,7 +6,7 @@
 import { build } from "esbuild";
 import { copyFileSync, mkdirSync, writeFileSync } from "node:fs";
 
-const FIGURES = ["slow", "elevator", "vault", "riffle", "branches"];
+const FIGURES = ["slow", "elevator", "vault", "riffle", "branches", "lockers"];
 
 for (const name of FIGURES) {
   mkdirSync(`dist/${name}`, { recursive: true });

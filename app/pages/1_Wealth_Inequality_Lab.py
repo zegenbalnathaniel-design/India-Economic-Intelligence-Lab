@@ -3,6 +3,7 @@
 Interactive extension of the research paper on income and wealth
 inequality in India. Contents:
 
+    W. Who gets what -- income & wealth shares by group (WIL, 2022-23)
     A. Income → Wealth framework (clickable stage explanations)
     B. Composition-effect simulator
     C. Asset-allocation comparison
@@ -10,6 +11,7 @@ inequality in India. Contents:
 """
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
@@ -22,12 +24,13 @@ import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 
-from analysis import wealth
+from analysis import inequality, wealth
 from app.components.theme import (
     setup, kicker, callout, source_badge, stat_card, footnote, GOLD, CRIMSON, MUTED, VERMILLION,
 )
 from app.components.glossary import indicator_note
 from app.components import hairline_display
+from data_sources import loaders
 
 
 setup("Wealth & Inequality Lab", accent=VERMILLION)
@@ -39,6 +42,7 @@ with st.sidebar:
     st.markdown("## Wealth Lab")
     st.caption("Sections")
     st.markdown(
+        "- Who gets what (WIL data)\n"
         "- A · Framework\n"
         "- B · Composition effect\n"
         "- C · Asset allocation\n"
@@ -61,38 +65,201 @@ st.markdown(
     "static paper as a live model you can re-run under your own assumptions."
 )
 
-fig_col, text_col = st.columns([2, 3])
+wil_dist = loaders.load_wil_distribution()
+wil_facts = loaders.load_wil_facts()
+wil_table = inequality.group_table(wil_dist, wil_facts)
+wil_wealth = inequality.wealth_change(loaders.load_wil_wealth_shares())
+
+fig_col, text_col = st.columns([5, 4], vertical_alignment="center")
 with fig_col:
-    hairline_display.render("riffle")
+    hairline_display.render(
+        "riffle", hero=True, accent=VERMILLION,
+        bands=json.dumps(inequality.riffle_captions(wil_table)),
+    )
 with text_col:
     st.markdown(
-        "**Who gets what?** Eight cards, one per population percentile "
-        "band — hover one, or tab in and use the arrow keys. These are "
-        "the standard bracket definitions used in distributional "
-        "economics (bottom 10%, top 1%, and so on), **not a chart of "
-        "India-specific wealth shares** — no percentile-level Indian "
-        "wealth or income dataset is in this project yet, so no number "
-        "is attached to any card. See 'What data would expand this?' "
-        "below."
+        "### Who gets what?\n"
+        "Eight cards, one per population group, from the poorest 10% "
+        "(bottom card) to the richest 0.1% (top card). **Hover a card**, or "
+        "tab in and use the arrow keys, to read that group's share of "
+        "India's income and wealth in 2022-23.\n\n"
+        "Figures are World Inequality Lab estimates. A **\\*** marks a "
+        "value calculated here from the published ones (for example, "
+        "Upper middle = Top 10% − Top 1%). The two lowest cards say "
+        "**DATA REQUIRED** because the source gives no figure for them, "
+        "and none is invented."
     )
+    source_badge("World Inequality Lab · 2022-23", "PARTIAL — not yet checked against the paper's tables")
 
 indicator_note(
     "percentile bands",
     "**What they are.** Economists split a population into bands by "
-    "where each person or household sits in the income or wealth "
-    "distribution — not by income *level*, but by *rank*. 'Top 1%' means "
-    "the richest 1% of the population, whatever income that takes in a "
-    "given year and place, not a fixed rupee threshold.\n\n"
-    "**Why they matter for inequality.** A single summary number (like a "
-    "Gini coefficient) can hide *where* in the distribution change is "
-    "happening — two populations with the same Gini can have very "
-    "different top-1% shares. Percentile bands let you ask 'who, "
-    "specifically' instead of just 'how unequal, overall.'\n\n"
-    "**What would make this real for India.** India-specific percentile "
-    "shares of income or wealth — sources like the World Inequality "
-    "Database's India series, or a micro-data-based estimate from the "
-    "All-India Debt & Investment Survey, would let this module show "
-    "actual measured shares per band instead of just naming them.",
+    "where each person sits in the income or wealth distribution — by "
+    "*rank*, not by income *level*. 'Top 1%' means the richest 1% of "
+    "adults, whatever income that takes in a given year, not a fixed "
+    "rupee threshold.\n\n"
+    "**Nested vs side-by-side groups.** Bottom 50% + Middle 40% + Top 10% "
+    "cover everyone exactly once, so their shares add to 100%. Top 1% and "
+    "Top 0.1% sit *inside* the Top 10%; Upper middle (P90–P99) is the Top "
+    "10% with the Top 1% taken out.\n\n"
+    "**Why they matter.** A single summary number (like a Gini "
+    "coefficient) can hide *where* change is happening. Bands let you ask "
+    "'who, specifically' instead of just 'how unequal, overall.'",
+)
+
+
+# ---------- W. Who gets what ---------------------------------------------------
+
+st.markdown("---")
+kicker("W · Distribution")
+st.header("India's income and wealth, by group")
+st.markdown(
+    "The average Indian adult earned **₹2.35 lakh** in 2022-23. The bottom "
+    "half earned about **0.3×** that average; the top 1%, about **22.6×**. "
+    "Wealth is more concentrated than income because land, housing, "
+    "businesses and financial assets are concentrated and compound over time."
+)
+
+
+def _cell(v, status, fmt):
+    if pd.isna(v):
+        return "DATA REQUIRED"
+    return fmt(v) + (" *" if status == inequality.DERIVED else "")
+
+
+view = pd.DataFrame({
+    "Group": wil_table["group"],
+    "Percentiles": wil_table["percentile_range"],
+    "Share of adults": wil_table["population_share_pct"].map(lambda v: f"{v:g}%"),
+    "Average income / yr": [_cell(v, s, inequality.fmt_inr) for v, s in
+                            zip(wil_table["avg_income_inr"], wil_table["avg_income_status"])],
+    "× national average": [("—" if pd.isna(v) else f"{v:.2f}×") for v in wil_table["multiple_of_average"]],
+    "Share of income": [_cell(v, s, lambda x: f"{x:.1f}%") for v, s in
+                        zip(wil_table["income_share_pct"], wil_table["income_share_status"])],
+    "Share of wealth": [_cell(v, s, lambda x: f"{x:.1f}%") for v, s in
+                        zip(wil_table["wealth_share_pct"], wil_table["wealth_share_status"])],
+})
+st.dataframe(view, hide_index=True, use_container_width=True)
+derived_notes = []
+for _, r in wil_table.iterrows():
+    for what, col in (("income share", "income_share"), ("wealth share", "wealth_share"),
+                      ("average income", "avg_income")):
+        if r[f"{col}_status"] == inequality.DERIVED:
+            derived_notes.append(f"- **{r['group']} {what}** = {r[f'{col}_formula']}")
+with st.expander("\\* How the starred values are calculated"):
+    st.markdown("\n".join(derived_notes))
+
+# Side-by-side groups only, so the bars are comparable (they partition 100%).
+part = wil_table[wil_table["group"].isin(["Bottom 50%", "Middle 40%", "Top 10%"])]
+fig_share = go.Figure()
+for col, name, colour in (("population_share_pct", "Share of adults", MUTED),
+                          ("income_share_pct", "Share of income", GOLD),
+                          ("wealth_share_pct", "Share of wealth", VERMILLION)):
+    fig_share.add_trace(go.Bar(
+        x=part["group"], y=part[col], name=name, marker_color=colour,
+        text=[f"{v:.1f}%" for v in part[col]], textposition="outside", cliponaxis=False,
+        hovertemplate="%{x} · " + name + ": %{y:.1f}%<extra></extra>",
+    ))
+fig_share.update_layout(
+    barmode="group", height=430, yaxis=dict(title="% of total", range=[0, 75]),
+    title="Each group's share of adults, income and wealth, 2022-23",
+    legend=dict(orientation="h", y=-0.15),
+)
+st.plotly_chart(fig_share, use_container_width=True, key="wil_shares")
+st.caption(
+    "Read across each group: if income were shared equally, the gold and red bars would "
+    "match the grey one. The Top 10% are 10% of adults but hold 57.7% of income and 64.6% "
+    "of wealth; the Bottom 50% are half of adults but hold 15.0% and 6.4%. "
+    "Middle 40% shares are the remainder (100 − the other two)."
+)
+
+c1, c2 = st.columns(2)
+with c1:
+    mult = wil_table.dropna(subset=["multiple_of_average"])
+    fig_mult = go.Figure(go.Bar(
+        y=mult["group"], x=mult["multiple_of_average"], orientation="h",
+        marker_color=[VERMILLION if s == inequality.STATED else MUTED for s in mult["avg_income_status"]],
+        text=[f"{v:.1f}×" for v in mult["multiple_of_average"]], textposition="outside", cliponaxis=False,
+        hovertemplate="%{y}: %{x:.2f}× the national average<extra></extra>",
+    ))
+    fig_mult.update_layout(
+        height=380,
+        xaxis=dict(title="× national average income (log scale)", type="log", range=[-0.8, 2.45],
+                   tickvals=[0.3, 1, 3, 10, 30, 100], ticktext=["0.3×", "1×", "3×", "10×", "30×", "100×"]),
+        yaxis=dict(autorange="reversed"), title="Average income vs the national average", showlegend=False,
+    )
+    st.plotly_chart(fig_mult, use_container_width=True, key="wil_mult")
+    st.caption("Grey bar = calculated (Upper middle). Log scale, so the 0.3× and 95.7× bars both fit; 1× is the national average.")
+with c2:
+    w = wil_wealth.dropna(subset=["share_1961_pct", "share_2022_23_pct"])
+    fig_w = go.Figure()
+    for _, r in w.iterrows():
+        fig_w.add_trace(go.Scatter(
+            x=[r["share_1961_pct"], r["share_2022_23_pct"]], y=[r["group"], r["group"]],
+            mode="lines", line=dict(color=MUTED, width=3), showlegend=False, hoverinfo="skip",
+        ))
+    fig_w.add_trace(go.Scatter(x=w["share_1961_pct"], y=w["group"], mode="markers", name="1961",
+                               marker=dict(color=MUTED, size=13),
+                               hovertemplate="%{y} · 1961: %{x:.1f}%<extra></extra>"))
+    fig_w.add_trace(go.Scatter(x=w["share_2022_23_pct"], y=w["group"], mode="markers+text", name="2022-23",
+                               marker=dict(color=VERMILLION, size=15),
+                               text=[f"{v:.1f}%" for v in w["share_2022_23_pct"]], textposition="top center",
+                               hovertemplate="%{y} · 2022-23: %{x:.1f}%<extra></extra>"))
+    fig_w.update_layout(height=380, xaxis=dict(title="% of national wealth", range=[0, 75]),
+                        yaxis=dict(autorange="reversed"), title="Wealth share, 1961 → 2022-23",
+                        legend=dict(orientation="h", y=-0.2))
+    st.plotly_chart(fig_w, use_container_width=True, key="wil_wealth")
+    st.caption(
+        "Top 0.1%: 3.2% → 29.0%, a ninefold rise. Middle 40% is the remainder in each year "
+        "(43.7% → 29.0%). The Top 1% is not plotted: its 1961 share is given only as "
+        "'about 13–15%'."
+    )
+
+kicker("Long run")
+facts = wil_facts.set_index(["metric", "period"])["value"]
+f1, f2, f3, f4 = st.columns(4)
+with f1:
+    stat_card("Real income growth", f"{facts[('Real average income growth', '1990-2022')]:.1f}% / yr",
+              f"1990-2022 · vs {facts[('Real average income growth', 'before 1990')]:.1f}% before 1990")
+with f2:
+    stat_card("Wealth ÷ income", f"{facts[('Wealth-to-income ratio', '2022')]:.2f}×",
+              f"2022 · up from {facts[('Wealth-to-income ratio', '1995')]:.2f}× in 1995")
+with f3:
+    stat_card("USD billionaires", f"{facts[('USD billionaires', '2022')]:.0f}",
+              f"2022 · {facts[('USD billionaires', '1991')]:.0f} in 1991")
+with f4:
+    stat_card("Billionaire wealth", f"{facts[('Billionaire wealth', '2022')]:.0f}% of NNI",
+              "2022 · under 1% in 1991")
+st.caption(
+    "Top 1% income share: under 21% in the late 1930s, about 6% in the early 1980s, "
+    "22.6% in 2022-23 — the highest in the WIL series since 1922."
+)
+
+indicator_note(
+    "these estimates",
+    "**Where they come from.** The World Inequality Lab combines national "
+    "accounts, income-tax tabulations, household surveys and rich lists "
+    "into one consistent long-run series. Read them as a consistent "
+    "series, not census-precise measurements.\n\n"
+    "**Likely understated at the top.** Rich households under-report "
+    "assets and are under-sampled in surveys; the authors caution that "
+    "India's data quality has deteriorated and that their estimates may "
+    "understate true inequality.\n\n"
+    "**Weakest for the bottom and middle since 2011-12.** India has no "
+    "comparable, publicly released consumption-survey microdata after "
+    "2011-12, which is why this page has no figure for the Bottom 10% or "
+    "the Lower middle (P10–P50).\n\n"
+    "**What is checked here.** The three side-by-side groups add to 100% "
+    "for both income and wealth, and each group's average income implies "
+    "its stated share to within 0.2 percentage points — except the Middle "
+    "40%, where the rounded '₹1.65 lakh' average implies about 28.1% "
+    "against the 27.3% remainder (0.8 pp; most likely rounding in the "
+    "average).\n\n"
+    "**Status: PARTIAL.** Values are transcribed from a summary of Bharti, "
+    "Chancel, Piketty & Somanchi (2024), *Income and Wealth Inequality in "
+    "India, 1922-2023: The Rise of the Billionaire Raj*, WIL Working Paper "
+    "2024/09, and have not yet been checked against the paper's tables.",
+    kind="method",
 )
 
 

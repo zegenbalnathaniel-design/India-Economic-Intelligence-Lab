@@ -162,3 +162,33 @@ def load_nsdp_constant_as_published() -> pd.DataFrame:
     two footnote rows and Jammu & Kashmir under two different territorial
     definitions ("Jammu & Kashmir*" incl. Ladakh, "Jammu & Kashmir-U.T.")."""
     return pd.read_csv(RAW_DIR / "rbi_handbook" / "percapita_nsdp_constant_prices_2004_05_to_2022_23.csv")
+
+
+# ---------------------------------------------------------------------------
+# Real data: World Inequality Lab (WIL) distributional estimates for India,
+# as supplied by the author (a summary of Bharti, Chancel, Piketty &
+# Somanchi, "Income and Wealth Inequality in India, 1922-2023: The Rise of
+# the Billionaire Raj", WIL Working Paper 2024/09). Status: PARTIAL -- the
+# values are transcribed from that summary and have not yet been checked
+# against the paper's own tables. Approximate statements ("about 29%") are
+# kept as notes, never as numbers. Derived values live in
+# analysis/inequality.py.
+# ---------------------------------------------------------------------------
+
+@lru_cache(maxsize=8)
+def load_wil_distribution() -> pd.DataFrame:
+    """Income and wealth by group, 2022-23 (Bottom 50% ... Top 0.1%)."""
+    return pd.read_csv(RAW_DIR / "wil" / "distribution_2022_23.csv")
+
+
+@lru_cache(maxsize=8)
+def load_wil_wealth_shares() -> pd.DataFrame:
+    """Wealth shares by group, 1961 vs 2022-23."""
+    return pd.read_csv(RAW_DIR / "wil" / "wealth_shares_1961_2022_23.csv")
+
+
+@lru_cache(maxsize=8)
+def load_wil_facts() -> pd.DataFrame:
+    """Long-run headline figures (growth, wealth-income ratio, billionaires).
+    `qualifier` is "stated", "approximate" or "upper bound"."""
+    return pd.read_csv(RAW_DIR / "wil" / "long_run_facts.csv")

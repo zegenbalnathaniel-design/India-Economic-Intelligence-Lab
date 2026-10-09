@@ -1,52 +1,54 @@
 // "Riffle" on the Wealth Inequality Lab: a tray of eight cards, the one
-// under the pointer stands up. Used here as a STRUCTURAL device naming the
-// eight standard population percentile bands used in distributional
-// economics (the same bracket convention the World Inequality Database and
-// similar sources use) -- NOT as a chart of India-specific wealth shares,
-// since no real Indian percentile-level wealth/income dataset exists in
-// this project yet. No number is attached to any card; only Hairline's own
-// generic "card N" animation and a real definitional label. Arrow keys
-// walk the cards (Hairline's own built-in a11y for this figure).
+// under the pointer stands up. Each card is one population group (bottom
+// card = Bottom 10%, top card = Top 0.1%) and its caption is built
+// server-side by analysis/inequality.py from the World Inequality Lab
+// files in data/raw/wil/ -- passed in as the `bands` param, never written
+// here. Without the param the cards fall back to their percentile names
+// only, with no numbers. Arrow keys walk the cards (Hairline's own a11y).
 import { riffle } from "@lucasmarkes/hairline";
 
-// Card 1 (bottom of the tray) .. Card 8 (top), matching Hairline's own
-// left-to-right "N - a" numbering (see riffle.ts's caption()).
-const BANDS = [
-  { range: "P0–P10", name: "Bottom 10%" },
-  { range: "P10–P25", name: "Lower-middle" },
-  { range: "P25–P40", name: "Lower-middle" },
-  { range: "P40–P60", name: "Middle" },
-  { range: "P60–P75", name: "Upper-middle" },
-  { range: "P75–P90", name: "Upper-middle" },
-  { range: "P90–P99", name: "Top 10%" },
-  { range: "P99–P100", name: "Top 1%" },
+const FALLBACK = [
+  "P0–P10 · Bottom 10%", "P10–P50 · Lower middle", "P0–P50 · Bottom 50%",
+  "P50–P90 · Middle 40%", "P90–P99 · Upper middle", "P90–P100 · Top 10%",
+  "P99–P100 · Top 1%", "P99.9–P100 · Top 0.1%",
 ];
+const IDLE = "Hover a card, or tab in and use the arrow keys.";
+
+function bands() {
+  const raw = typeof window.__hairlineParams === "string" ? window.__hairlineParams : window.location.search.replace(/^\?/, "");
+  try {
+    const v = JSON.parse(new URLSearchParams(raw).get("bands") || "null");
+    return Array.isArray(v) && v.length === 8 ? v.map(String) : FALLBACK;
+  } catch {
+    return FALLBACK;
+  }
+}
 
 function init() {
   const root = document.getElementById("figure-root");
   if (!root) return;
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const BANDS = bands();
 
   const wrap = document.createElement("div");
   wrap.className = "hf-wrap";
   root.appendChild(wrap);
   const caption = document.createElement("div");
   caption.className = "hf-caption";
-  caption.textContent = "Hover a card, or tab in and use the arrow keys.";
+  caption.textContent = IDLE;
   root.appendChild(caption);
 
   riffle(wrap, {
-    intensity: reduceMotion ? 0.15 : 0.55,
+    intensity: reduceMotion ? 0.15 : 0.6,
     theme: "dark",
-    label: "A tray of eight cards, one per population percentile band, from the bottom 10% to the top 1%.",
+    label: "A tray of eight cards, one per population group, from the bottom 10% to the top 0.1%, each with its share of India's income and wealth.",
     onRead: (text) => {
       if (!text || text === "rest") {
-        caption.textContent = "Hover a card, or tab in and use the arrow keys.";
+        caption.textContent = IDLE;
         return;
       }
-      const n = parseInt(text, 10);
-      const band = BANDS[n - 1];
-      caption.textContent = band ? `${band.range} — ${band.name}` : text;
+      const band = BANDS[parseInt(text, 10) - 1];
+      caption.textContent = band || text;
     },
   });
 }

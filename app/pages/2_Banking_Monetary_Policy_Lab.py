@@ -60,6 +60,26 @@ st.markdown(
     "the code."
 )
 
+_repo = load_repo_rate().sort_values("period")
+_repo_last = _repo.iloc[-1]
+_as_of = f"{_repo_last['period'].year}-Q{_repo_last['period'].quarter}"
+fig_col, text_col = st.columns([5, 4], vertical_alignment="center")
+with fig_col:
+    hairline_display.render("slow", hero=True, accent=COBALT,
+                            repoRate=f"{float(_repo_last['repo_rate']):.2f}", asOf=_as_of)
+with text_col:
+    st.markdown(
+        "### Policy works like a slower clock\n"
+        "Tighter monetary policy is meant to slow credit growth and "
+        "activity. **Hover the belt** and it slows down — a metaphor for "
+        "that transmission, not a chart of any number. The only number "
+        f"on it is the repo rate in the last quarter of this panel's "
+        f"repo_rate.csv ({_as_of}: {float(_repo_last['repo_rate']):.2f}%) — not today's rate. "
+        "The actual 2018-2024 relationship is in the *RBI repo rate vs "
+        "iBFPI* section below."
+    )
+
+
 callout(
     "The panel shipped in the MVP is <b>illustrative and synthetic</b> — "
     "constructed to demonstrate the methodology end-to-end. Replace "
@@ -371,20 +391,6 @@ for tab, key in zip(tabs, banking.INDICATOR_DIRECTION):
 st.markdown("---")
 kicker("Monetary policy · financial conditions")
 st.header("RBI repo rate vs iBFPI")
-
-latest_repo_rate = float(repo.sort_values("period")["repo_rate"].iloc[-1])
-fig_col, text_col = st.columns([2, 3])
-with fig_col:
-    hairline_display.render("slow", repoRate=f"{latest_repo_rate:.2f}")
-with text_col:
-    st.markdown(
-        "Tighter monetary policy is meant to slow credit growth and economic "
-        "activity — the figure alongside is a metaphor for that transmission "
-        "mechanism, not a literal visualisation of any number. **It is not "
-        "driven by a historical rate series**, only by the latest repo rate "
-        "shown. The real relationship, over the actual 2018-2024 window, is "
-        "the chart below."
-    )
 
 indicator_note(
     "the RBI repo rate and its transmission to banks",

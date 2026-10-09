@@ -32,17 +32,43 @@ def _bundle(name: str) -> tuple[str, str] | None:
     return css_path.read_text(encoding="utf-8"), js_path.read_text(encoding="utf-8")
 
 
-def render(name: str, height: int = FRAME_HEIGHT, **params: str) -> None:
-    """Render a built Hairline figure (name = "slow" | "elevator" | "vault").
+# The lab-page hero: a larger figure with heavier strokes, lit in the lab's
+# accent colour. Figure up to 520px wide at 5:4 (416px) + a caption of up to
+# three 17px lines must fit, so the frame is taller than FRAME_HEIGHT.
+HERO_HEIGHT = 580
 
-    Extra keyword args become URL query params the figure's own JS reads
-    (e.g. render("slow", repoRate="6.50")) -- silently does nothing if the
-    bundle hasn't been built, keeping pages usable without the Node toolchain.
+
+def _hero_css(accent: str) -> str:
+    return f"""
+.hf-wrap {{ max-width: 520px;
+  --hairline-stroke: 1.7;
+  --hairline-hi: {accent};
+  --hairline-edge: #F5F0E6;
+  --hairline-mid: #8B8D99;
+  --hairline-lo: #3A3F52; }}
+.hf-caption {{ max-width: 560px; font-size: 17px; font-weight: 700; padding: 12px 16px;
+  white-space: pre-line; border-left: 4px solid {accent}; }}
+"""
+
+
+def render(name: str, height: int | None = None, *, hero: bool = False,
+           accent: str = "#F3C542", **params: str) -> None:
+    """Render a built Hairline figure (e.g. "slow", "riffle", "lockers").
+
+    `hero=True` is the large, bold variant used at the top of each Lab page,
+    lit in `accent`. Extra keyword args become URL query params the figure's
+    own JS reads (e.g. render("slow", repoRate="6.50")) -- silently does
+    nothing if the bundle hasn't been built, keeping pages usable without
+    the Node toolchain.
     """
     bundle = _bundle(name)
     if bundle is None:
         return
     css, js = bundle
+    if hero:
+        css += _hero_css(accent)
+    if height is None:
+        height = HERO_HEIGHT if hero else FRAME_HEIGHT
     query = f"?{urlencode(params)}" if params else ""
     html = f"""
 <!doctype html>

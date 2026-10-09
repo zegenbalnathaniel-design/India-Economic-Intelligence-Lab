@@ -14,13 +14,14 @@ function params() {
   // window.__hairlineParams to the encoded param string instead.
   const raw = typeof window.__hairlineParams === "string" ? window.__hairlineParams : window.location.search.replace(/^\?/, "");
   const p = new URLSearchParams(raw);
-  return { repoRate: parseFloat(p.get("repoRate") || "6.5") };
+  return { repoRate: parseFloat(p.get("repoRate") || "6.5"), asOf: p.get("asOf") || "" };
 }
 
 function init() {
   const root = document.getElementById("figure-root");
   if (!root) return;
-  const { repoRate } = params();
+  const { repoRate, asOf } = params();
+  const idle = `RBI repo rate${asOf ? ", " + asOf : ""} (latest in this panel): ${repoRate.toFixed(2)}% — hover the belt.`;
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const wrap = document.createElement("div");
@@ -28,7 +29,7 @@ function init() {
   root.appendChild(wrap);
   const caption = document.createElement("div");
   caption.className = "hf-caption";
-  caption.textContent = `Current RBI repo rate: ${repoRate.toFixed(2)}% — hover the belt.`;
+  caption.textContent = idle;
   root.appendChild(caption);
 
   // Map the real repo rate (roughly 4-9% in recent RBI history) onto a
@@ -43,7 +44,7 @@ function init() {
     label: "A belt of crates through a gate; hovering slows it, a metaphor for policy tightening slowing activity.",
     onRead: (text) => {
       if (!text || text.startsWith("rate 1.00")) {
-        caption.textContent = `Current RBI repo rate: ${repoRate.toFixed(2)}% — hover the belt.`;
+        caption.textContent = idle;
       } else {
         caption.textContent = "Tighter conditions, slower activity — a metaphor, not a forecast.";
       }
