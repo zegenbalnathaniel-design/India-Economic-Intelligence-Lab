@@ -134,6 +134,23 @@ behaviour against an injected extreme outlier, and insufficient-data handling).
 
 ---
 
+## New: live World Bank WDI provider (`data_sources/worldbank.py`, page 12)
+
+Nothing is stored in the repository. The India Macro & World page calls the World Bank API v2
+(`api.worldbank.org/v2`, no key, no environment variable) for 12 annual indicators (real GDP growth,
+GDP per capita PPP, CPI inflation, ILO-modelled unemployment, current account % GDP, total reserves,
+official exchange rate, trade / exports / imports % GDP, central-government debt % GDP, Gini) for India
+and up to six peers. Status of every value: **VERIFIED at source** (World Bank's published value), shown
+with the API's `lastupdated` date and the UTC retrieval time.
+
+- **No fallback.** Any failure (timeout, network, HTTP, API error message, schema mismatch) shows
+  *DATA UNAVAILABLE* and no numbers; partial results are never shown. Successful responses are cached 6 h.
+- `null` stays missing (gaps in lines, "no data" in cards).
+- These are harmonised series and can differ from MOSPI/RBI headline releases (unemployment is ILO
+  modelled, not PLFS; central-government debt excludes states).
+- **Not verified live from the build sandbox**, which has no route to the World Bank. Parsing is tested
+  against the documented schema (`tests/test_worldbank.py`); the first live check happens on deploy.
+
 ## Everything from the previous registry entry
 
 (RESIDEX city index 2013-2024/2025-2026, RESIDEX city price levels by unit size, RBI Handbook Table 26 constant-price NSDP 2004-05→2022-23 as originally published in two base-year blocks, bank earnings — reported and ESTIMATED — PLFS unemployment, real per-capita NNI, GDP CAGR) is unchanged; see git history or the files directly in `data/raw/` for the full per-file writeup.

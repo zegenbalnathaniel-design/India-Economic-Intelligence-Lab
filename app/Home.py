@@ -168,6 +168,13 @@ with sl4:
     st.page_link("pages/8_About.py", label="08 About")
 with sl5:
     st.page_link("pages/9_Limitations.py", label="09 Limitations")
+tl1, tl2, tl3 = st.columns(3)
+with tl1:
+    st.page_link("pages/10_Economic_Relationships_Lab.py", label="10 Economic Relationships")
+with tl2:
+    st.page_link("pages/11_State_Economy_Explorer.py", label="11 State Economy Explorer")
+with tl3:
+    st.page_link("pages/12_Macro_and_World.py", label="12 India Macro & World")
 st.markdown("</div>", unsafe_allow_html=True)
 
 st.markdown("---")
