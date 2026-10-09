@@ -32,7 +32,7 @@ import streamlit as st
 
 from analysis import inequality, wealth
 from app.components.theme import (
-    setup, kicker, callout, source_badge, stat_card, footnote, GOLD, CRIMSON, MUTED, VERMILLION,
+    setup, set_chart_source, chart_source, kicker, callout, source_badge, stat_card, footnote, GOLD, CRIMSON, MUTED, VERMILLION,
     TURQUOISE, WARM_WHITE, COBALT,
 )
 from app.components.glossary import indicator_note
@@ -41,6 +41,7 @@ from data_sources import loaders
 
 
 setup("Wealth & Inequality Lab", accent=VERMILLION)
+set_chart_source("World Inequality Lab WP 2024/09 (Bharti, Chancel, Piketty & Somanchi); calculations on this site")
 
 
 # ---------- Sidebar -----------------------------------------------------------
@@ -759,7 +760,7 @@ path_fig.update_layout(
     xaxis_title="Year", yaxis_title="Wealth (₹)",
     hovermode="x unified", height=380,
 )
-st.plotly_chart(path_fig, use_container_width=True)
+st.plotly_chart(chart_source(path_fig, "Simulation under the assumptions set on this page — not data"), use_container_width=True)
 
 # Composition chart
 comp = result.composition.rename(columns=wealth.ASSET_LABELS)
@@ -772,7 +773,7 @@ comp_fig.update_layout(
     xaxis_title="Year", yaxis_title="Balance (₹, nominal)",
     hovermode="x unified", height=380,
 )
-st.plotly_chart(comp_fig, use_container_width=True)
+st.plotly_chart(chart_source(comp_fig, "Simulation under the assumptions set on this page — not data"), use_container_width=True)
 
 with st.expander("What am I looking at?"):
     st.markdown(
@@ -946,7 +947,7 @@ mc_fig.update_layout(
     xaxis_title="Year", yaxis_title="Wealth (₹, nominal)",
     hovermode="x unified", height=380,
 )
-st.plotly_chart(mc_fig, use_container_width=True)
+st.plotly_chart(chart_source(mc_fig, "Simulation under the assumptions set on this page — not data"), use_container_width=True)
 
 p5, p25, p50, p75, p95 = np.percentile(mc.final_nominal, [5, 25, 50, 75, 95])
 q1, q2, q3, q4, q5 = st.columns(5)
@@ -1035,7 +1036,7 @@ bar.update_layout(
     title="Final wealth if concentrated in one asset (real terms)",
     yaxis_title="₹ (real)", xaxis_title="", height=360, showlegend=False,
 )
-st.plotly_chart(bar, use_container_width=True)
+st.plotly_chart(chart_source(bar, "Simulation under the assumptions set on this page — not data"), use_container_width=True)
 
 callout(
     "Do not read this as a ranking of assets. Under the assumptions you have "
@@ -1155,7 +1156,7 @@ fig_rg.update_layout(height=340, xaxis=dict(title="Real return, % a year (1991�
                                             range=[min(-2, rmg["real"].min() * 100 - 1), max(14, rmg["real"].max() * 100 + 6)]),
                      yaxis=dict(autorange="reversed"), showlegend=False,
                      title="Real return of each asset vs real growth g")
-st.plotly_chart(fig_rg, use_container_width=True, key="rg_assets")
+st.plotly_chart(chart_source(fig_rg, "Author's paper, Table 1 (returns 1991-2021, Wahengbam 2023); inflation and g as set on this page"), use_container_width=True, key="rg_assets")
 beats = rmg[rmg["r_minus_g"] > 0]["asset"].tolist()
 st.markdown(
     f"**At these settings, {('only ' + ', '.join(beats)) if beats else 'no asset'} "
@@ -1183,7 +1184,7 @@ for a in ("Listed equity", "Typical household portfolio", "Bank deposits"):
 fig_div.update_layout(height=360, yaxis_title="Real value of ₹1 (×)", xaxis_title="Years",
                       title="₹1 of capital vs ₹1 of national income, in real terms",
                       legend=dict(orientation="h", y=-0.2), hovermode="x unified")
-st.plotly_chart(fig_div, use_container_width=True, key="rg_paths")
+st.plotly_chart(chart_source(fig_div, "Author's paper, Table 1; illustrative compounding at the rates set on this page"), use_container_width=True, key="rg_paths")
 hh_r = rmg.set_index("asset").loc["Typical household portfolio", "real"]
 st.caption(
     f"After {horizon} years, national income has grown {(1+g_real)**horizon:.1f}× in real terms; the typical "
@@ -1259,7 +1260,7 @@ fig2.update_layout(height=520, xaxis=dict(title="Years of saving", range=[0, yrs
                    yaxis_title="Accumulated wealth (₹ crore, nominal)",
                    title="The composition effect: why identical savers end up unequal",
                    legend=dict(orientation="h", y=-0.18), hovermode="x unified")
-st.plotly_chart(fig2, use_container_width=True, key="paper_fig2")
+st.plotly_chart(chart_source(fig2, "Author's paper, Figure 2 (returns 1991-2021, Wahengbam 2023; RBI 2017 asset shares)"), use_container_width=True, key="paper_fig2")
 
 chk = pd.DataFrame([
     {"Series": n, "Return (paper)": f"{PAPER_R[n]*100:.1f}%",
@@ -1322,7 +1323,7 @@ fig_rank.update_layout(height=420, yaxis=dict(autorange="reversed", automargin=T
                        xaxis=dict(title="Final wealth (₹ crore, nominal)",
                                   range=[0, rank["final_nominal"].max() / 1e7 * 1.35]),
                        showlegend=False, title=f"Final wealth after {e_years} years of saving ₹1 lakh a year")
-st.plotly_chart(fig_rank, use_container_width=True, key="fig2_rank")
+st.plotly_chart(chart_source(fig_rank, "Author's paper, Table 1 returns; future value of ₹1 lakh a year"), use_container_width=True, key="fig2_rank")
 
 callout(
     f"<b>The answer, on the paper's numbers: the more of the saving held in listed equity, the more wealth "

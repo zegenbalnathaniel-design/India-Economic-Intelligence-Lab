@@ -24,12 +24,13 @@ import plotly.graph_objects as go
 import streamlit as st
 
 from analysis import housing
-from app.components.theme import setup, kicker, callout, source_badge, stat_card, footnote, GOLD
+from app.components.theme import setup, set_chart_source, chart_source, kicker, callout, source_badge, stat_card, footnote, GOLD
 from app.components.glossary import indicator_note
 from app.components import hairline_display
 from data_sources import loaders
 
 setup("Housing Intelligence Lab", accent=GOLD)
+set_chart_source("NHB RESIDEX; RBI Handbook (state income proxy); MoSPI HCES 2023-24; calculations on this site")
 
 with st.sidebar:
     st.markdown("## Housing Intelligence Lab")

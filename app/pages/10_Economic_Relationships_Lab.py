@@ -36,13 +36,14 @@ from analysis import banking, housing, regional
 from analysis import hypotheses as hyp
 from analysis import relationships as rel
 from app.components.theme import (
-    setup, kicker, callout, source_badge, stat_card, footnote,
+    setup, set_chart_source, chart_source, kicker, callout, source_badge, stat_card, footnote,
     TURQUOISE, GOLD, MUTED, VERMILLION,
 )
 from app.components.glossary import indicator_note
 from data_sources import loaders
 
 setup("Economic Relationships Lab", accent=TURQUOISE)
+set_chart_source("data files in this project (sources listed with each variable); calculations on this site")
 
 with st.sidebar:
     st.markdown("## Relationships Lab")

@@ -29,11 +29,12 @@ import streamlit as st
 from analysis import macro_monthly as MM
 from data_sources import loaders, worldbank as WB
 from app.components.theme import (
-    setup, kicker, callout, source_badge, stat_card, footnote, COBALT, SERIES, MUTED,
+    setup, set_chart_source, chart_source, kicker, callout, source_badge, stat_card, footnote, COBALT, SERIES, MUTED,
 )
 from app.components.glossary import indicator_note
 
 setup("India Macro & World", accent=COBALT)
+set_chart_source("MoSPI and RBI releases; World Bank WDI API")
 
 CODES = list(WB.INDICATORS)
 LABEL = {c: m.label for c, m in WB.INDICATORS.items()}
@@ -148,7 +149,7 @@ with g1:
     ifig.add_hline(y=0, line_color=MUTED, line_width=1)
     ifig.update_layout(height=360, title="IIP growth by sector, Aug 2026 (y/y)", yaxis_title="% y/y",
                        showlegend=False)
-    st.plotly_chart(ifig, use_container_width=True, key="now_iip")
+    st.plotly_chart(chart_source(ifig, "MoSPI IIP quick estimates, Aug 2026"), use_container_width=True, key="now_iip")
     i_now, i_ago = MM.value(mm, "IIP_GENERAL_INDEX", "2026-08"), MM.value(mm, "IIP_GENERAL_INDEX", "2025-08")
     st.caption(
         f"Check: index {i_now:.1f} vs {i_ago:.1f} a year earlier implies "
@@ -168,7 +169,7 @@ with g2:
     ))
     efig.update_layout(height=360, title="Measured inflation vs what households report",
                        yaxis=dict(title="%", range=[0, 12]), showlegend=False)
-    st.plotly_chart(efig, use_container_width=True, key="now_expect")
+    st.plotly_chart(chart_source(efig, "MoSPI CPI (Aug 2026); RBI Inflation Expectations Survey of Households (Sep 2026)"), use_container_width=True, key="now_expect")
     st.caption(
         "The grey bars are survey medians from the RBI's household survey (Sep 2026, 19 cities) — "
         "sentiment, not an RBI forecast. The gap between them and measured CPI is itself "
@@ -307,7 +308,7 @@ if code in ("NY.GDP.MKTP.KD.ZG", "BN.CAB.XOKA.GD.ZS"):
     fig.add_hline(y=0, line_color=MUTED, line_width=1)
 fig.update_layout(height=440, yaxis_title=meta.unit, xaxis_title=None, legend_title_text=None,
                   title=f"{meta.label} ({meta.unit})")
-st.plotly_chart(fig, use_container_width=True, key="wb_line")
+st.plotly_chart(chart_source(fig, "World Bank WDI API"), use_container_width=True, key="wb_line")
 st.caption("Gaps in a line are years the World Bank reports as missing — they are not filled in.")
 indicator_note(meta.label, f"**Definition.** {meta.definition}\n\n**Source & caveats.** {meta.source_note}\n\n"
                f"[WDI page for {meta.code}]({meta.url})")
@@ -340,7 +341,7 @@ else:
     ))
     bfig.update_layout(height=max(300, 56 * len(rows) + 100), yaxis=dict(autorange="reversed", automargin=True),
                        xaxis_title=WB.INDICATORS[cmp_code].unit, title=LABEL[cmp_code], showlegend=False)
-    st.plotly_chart(bfig, use_container_width=True, key="wb_bar")
+    st.plotly_chart(chart_source(bfig, "World Bank WDI API"), use_container_width=True, key="wb_bar")
     years = {y for _, _, y, _ in rows if y}
     if len(years) > 1:
         st.caption(f"Latest years differ across countries ({min(years)}–{max(years)}), shown in brackets — "

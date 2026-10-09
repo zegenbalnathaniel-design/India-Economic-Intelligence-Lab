@@ -13,6 +13,8 @@ of this shared base rather than one flat colour for the whole site.
 """
 from __future__ import annotations
 
+import re
+
 import plotly.graph_objects as go
 import plotly.io as pio
 import streamlit as st
@@ -149,8 +151,15 @@ def kicker(text: str) -> None:
     st.markdown(f"<div class='kicker'>{text}</div>", unsafe_allow_html=True)
 
 
+_BOLD = re.compile(r"\*\*(.+?)\*\*", re.S)
+_ITALIC = re.compile(r"(?<![*\w])\*(?!\s)([^*]+?)(?<!\s)\*(?![*\w])")
+
+
 def callout(text: str, kind: str = "note") -> None:
-    st.markdown(f"<div class='callout {kind}'>{text}</div>", unsafe_allow_html=True)
+    """Boxed note. The box is raw HTML, where Markdown is not rendered, so
+    **bold** and *italic* are converted here rather than shown literally."""
+    html = _ITALIC.sub(r"<i>\1</i>", _BOLD.sub(r"<b>\1</b>", text))
+    st.markdown(f"<div class='callout {kind}'>{html}</div>", unsafe_allow_html=True)
 
 
 def source_badge(*labels: str) -> None:
@@ -171,9 +180,109 @@ def footnote(text: str) -> None:
     st.markdown(f"<div class='footnote'>{text}</div>", unsafe_allow_html=True)
 
 
+# ---------------------------------------------------------------------------
+# Chart export: every st.plotly_chart gets a high-resolution PNG download
+# (the chart's camera button) and, when the chart has a title, a "Source: …"
+# subtitle so an exported image always carries its source. Pages set a
+# default with set_chart_source(); a single chart can override it with
+# chart_source(fig, "…"). Patched once per process from setup().
+# ---------------------------------------------------------------------------
+_FALLBACK_DEFAULTS = {"source": None, "page": "chart"}  # outside a Streamlit run (tests)
+
+
+def _chart_defaults() -> dict:
+    """Per-session store, so two visitors on different pages never share a
+    source line; falls back to a module dict outside a Streamlit run."""
+    try:
+        return st.session_state.setdefault("_ieil_chart_defaults", {"source": None, "page": "chart"})
+    except Exception:
+        return _FALLBACK_DEFAULTS
+
+
+def set_chart_source(text: str) -> None:
+    """Default source line for every titled chart on the current page."""
+    _chart_defaults()["source"] = text
+
+
+def chart_source(fig: go.Figure, text: str) -> go.Figure:
+    """Source line for this one chart (overrides the page default)."""
+    meta = fig.layout.meta if isinstance(fig.layout.meta, dict) else {}
+    fig.update_layout(meta={**meta, "source": text})
+    return fig
+
+
+def _slug(text: str) -> str:
+    keep = "".join(ch.lower() if ch.isalnum() else "-" for ch in text)
+    return "-".join(p for p in keep.split("-") if p)[:60] or "chart"
+
+
+_FY = re.compile(r"^\d{4}-\d{2}$")
+
+
+def _fix_financial_year_axis(fig: go.Figure) -> None:
+    """Plotly reads Indian financial-year labels such as "2004-05" as dates
+    (May 2004), misplacing points and silently dropping "2012-13" onwards
+    (no 13th month). Any x axis carrying such labels becomes a category
+    axis in chronological order unless a type was set explicitly."""
+    for tr in fig.data:
+        xs = getattr(tr, "x", None)
+        if xs is None or len(xs) == 0:
+            continue
+        sample = [v for v in list(xs)[:50] if v is not None]
+        if sample and all(isinstance(v, str) and _FY.match(v) for v in sample):
+            axis = getattr(tr, "xaxis", None) or "x"
+            name = "xaxis" if axis == "x" else f"xaxis{axis[1:]}"
+            ax = fig.layout[name]
+            if ax is None or ax.type in (None, "-"):
+                cfg = dict(type="category", categoryorder="category ascending", automargin=True)
+                if len(set(xs)) > 8 and (ax is None or ax.tickangle is None):
+                    cfg["tickangle"] = -45
+                fig.update_layout({name: cfg})
+
+
+def prepare_figure_for_export(fig: go.Figure) -> tuple[go.Figure, str]:
+    """Fix financial-year axes, add the source subtitle (if the chart has a
+    title and no subtitle) and return the figure plus a PNG file name."""
+    _fix_financial_year_axis(fig)
+    title = fig.layout.title.text or ""
+    meta = fig.layout.meta if isinstance(fig.layout.meta, dict) else {}
+    defaults = _chart_defaults()
+    source = meta.get("source") or defaults["source"]
+    if title and source:
+        try:
+            if not fig.layout.title.subtitle.text:
+                fig.update_layout(title_subtitle_text=f"Source: {source}",
+                                  title_subtitle_font=dict(size=11, color=MUTED))
+                top = fig.layout.margin.t if fig.layout.margin.t is not None else 48
+                fig.update_layout(margin_t=max(top, 78))
+        except (AttributeError, ValueError):  # Plotly < 5.24 has no title.subtitle
+            pass
+    return fig, f"ieil-{_slug(defaults['page'])}-{_slug(title)}"
+
+
+def _install_chart_export() -> None:
+    if getattr(st.plotly_chart, "_ieil_export", False):
+        return
+    original = st.plotly_chart
+
+    def plotly_chart(figure_or_data, *args, **kwargs):
+        if isinstance(figure_or_data, go.Figure):
+            figure_or_data, filename = prepare_figure_for_export(figure_or_data)
+            config = dict(kwargs.get("config") or {})
+            config.setdefault("displaylogo", False)
+            config.setdefault("toImageButtonOptions", {"format": "png", "scale": 3, "filename": filename})
+            kwargs["config"] = config
+        return original(figure_or_data, *args, **kwargs)
+
+    plotly_chart._ieil_export = True
+    st.plotly_chart = plotly_chart
+
+
 def setup(page_title: str, accent: str | None = None) -> None:
     apply_page_config(page_title)
     register_plotly_template(accent)
     inject_css()
     if accent is not None:
         inject_accent_override(accent)
+    _chart_defaults().update(source=None, page=page_title)
+    _install_chart_export()

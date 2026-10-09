@@ -37,13 +37,14 @@ import streamlit as st
 from analysis import regional
 from analysis import states as S
 from app.components.theme import (
-    setup, kicker, callout, source_badge, stat_card, footnote, GOLD, LEAF, MUTED,
+    setup, set_chart_source, chart_source, kicker, callout, source_badge, stat_card, footnote, GOLD, LEAF, MUTED,
 )
 from app.components.glossary import indicator_note
 from app.components import hairline_display
 from data_sources import loaders
 
 setup("State Economy Lab", accent=LEAF)
+set_chart_source("RBI Handbook of Statistics on Indian States; PLFS 2023-24; MoSPI HCES 2023-24; calculations on this site")
 
 UNIT_TEXT = {
     "₹": "₹ per person, per year",

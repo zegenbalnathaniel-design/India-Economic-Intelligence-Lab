@@ -30,7 +30,7 @@ from data_sources.loaders import (
     load_bank_panel, load_repo_rate, bank_names, joined_panel,
 )
 from app.components.theme import (
-    setup, kicker, callout, source_badge, stat_card, footnote,
+    setup, set_chart_source, chart_source, kicker, callout, source_badge, stat_card, footnote,
     GOLD, CRIMSON, MUTED, PARCHMENT, COBALT,
 )
 from app.components import hairline_display
@@ -40,6 +40,7 @@ from app.components.glossary import indicator_note
 
 
 setup("Banking & Monetary Policy Lab", accent=COBALT)
+set_chart_source("ILLUSTRATIVE synthetic bank panel and repo-rate file in this project; calculations on this site")
 
 
 with st.sidebar:
