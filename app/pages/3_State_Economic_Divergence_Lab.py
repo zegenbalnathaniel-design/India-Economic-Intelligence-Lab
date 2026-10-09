@@ -5,6 +5,7 @@ more divergent?
 """
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
@@ -18,6 +19,7 @@ import streamlit as st
 from analysis import regional
 from app.components.theme import setup, kicker, callout, source_badge, stat_card, footnote, LEAF
 from app.components.glossary import indicator_note
+from app.components import hairline_display
 from data_sources import loaders
 
 setup("State Economic Divergence Lab", accent=LEAF)
@@ -202,6 +204,26 @@ ranked = regional.rank_states_latest(nsdp)
 latest_year = nsdp["financial_year"].max()
 st.caption(f"Per-capita NSDP (constant prices, spliced series), {latest_year}")
 st.dataframe(ranked, use_container_width=True, hide_index=True)
+
+main_states = ranked.sort_values("rank")["state"].head(8).tolist()
+feature_states = (
+    beta.per_state.sort_values("avg_annual_growth_pct", ascending=False)["state"].head(3).tolist()
+)
+fig_col, text_col = st.columns([2, 3])
+with fig_col:
+    hairline_display.render(
+        "branches", height=330,
+        main=json.dumps(main_states), feature=json.dumps(feature_states),
+    )
+with text_col:
+    st.markdown(
+        "**Economies do not follow one path.** The main line is the 8 "
+        "states with the highest latest per-capita NSDP, real-data-ranked "
+        "above; the branch is the 3 states growing fastest on average "
+        "over the same real series. Hover to see which state is which — "
+        "every name here is a real rank, computed from the same data as "
+        "the table above, not illustrative."
+    )
 
 st.markdown("---")
 

@@ -18,6 +18,7 @@ import streamlit as st
 from analysis import regional
 from app.components.theme import setup, kicker, callout, footnote
 from app.components import terrain_hero
+from app.components import turntable_home
 from app.components import home_theme
 from data_sources import loaders
 
@@ -98,6 +99,22 @@ with st.container(key="reveal_index"):
                 st.page_link(page, label=link_label)
 
     home_theme.carousel_drag_script("research_carousel")
+
+st.markdown("<br>", unsafe_allow_html=True)
+
+# ---------- A second way in: Turntable ---------------------------------------
+with st.container(key="reveal_turntable"):
+    st.subheader("Four Ways of Looking at This Site")
+    tcol1, tcol2 = st.columns([1, 2])
+    with tcol1:
+        turntable_home.render()
+    with tcol2:
+        st.markdown(
+            "Markets. People. Institutions. Data. Drag the turntable to a "
+            "face, then open it — a second, more deliberate way into the "
+            "same four real sections as the terrain above and the index "
+            "below, for anyone who'd rather turn than hover."
+        )
 
 st.markdown("<br>", unsafe_allow_html=True)
 

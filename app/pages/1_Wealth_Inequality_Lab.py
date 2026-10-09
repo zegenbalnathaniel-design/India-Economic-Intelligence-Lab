@@ -27,6 +27,7 @@ from app.components.theme import (
     setup, kicker, callout, source_badge, stat_card, footnote, GOLD, CRIMSON, MUTED, VERMILLION,
 )
 from app.components.glossary import indicator_note
+from app.components import hairline_display
 
 
 setup("Wealth & Inequality Lab", accent=VERMILLION)
@@ -58,6 +59,40 @@ st.markdown(
     "Interactive extension of my research paper on income and wealth "
     "inequality in India. Each module below reproduces a piece of the "
     "static paper as a live model you can re-run under your own assumptions."
+)
+
+fig_col, text_col = st.columns([2, 3])
+with fig_col:
+    hairline_display.render("riffle", height=330)
+with text_col:
+    st.markdown(
+        "**Who gets what?** Eight cards, one per population percentile "
+        "band — hover one, or tab in and use the arrow keys. These are "
+        "the standard bracket definitions used in distributional "
+        "economics (bottom 10%, top 1%, and so on), **not a chart of "
+        "India-specific wealth shares** — no percentile-level Indian "
+        "wealth or income dataset is in this project yet, so no number "
+        "is attached to any card. See 'What data would expand this?' "
+        "below."
+    )
+
+indicator_note(
+    "percentile bands",
+    "**What they are.** Economists split a population into bands by "
+    "where each person or household sits in the income or wealth "
+    "distribution — not by income *level*, but by *rank*. 'Top 1%' means "
+    "the richest 1% of the population, whatever income that takes in a "
+    "given year and place, not a fixed rupee threshold.\n\n"
+    "**Why they matter for inequality.** A single summary number (like a "
+    "Gini coefficient) can hide *where* in the distribution change is "
+    "happening — two populations with the same Gini can have very "
+    "different top-1% shares. Percentile bands let you ask 'who, "
+    "specifically' instead of just 'how unequal, overall.'\n\n"
+    "**What would make this real for India.** India-specific percentile "
+    "shares of income or wealth — sources like the World Inequality "
+    "Database's India series, or a micro-data-based estimate from the "
+    "All-India Debt & Investment Survey, would let this module show "
+    "actual measured shares per band instead of just naming them.",
 )
 
 

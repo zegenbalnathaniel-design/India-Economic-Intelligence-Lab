@@ -6,7 +6,7 @@
 import { build } from "esbuild";
 import { copyFileSync, mkdirSync, writeFileSync } from "node:fs";
 
-const FIGURES = ["slow", "elevator", "vault"];
+const FIGURES = ["slow", "elevator", "vault", "riffle", "branches"];
 
 for (const name of FIGURES) {
   mkdirSync(`dist/${name}`, { recursive: true });
@@ -39,4 +39,4 @@ for (const name of FIGURES) {
   );
 }
 
-console.log("built dist/{slow,elevator,vault}/");
+console.log(`built dist/{${FIGURES.join(",")}}/`);
