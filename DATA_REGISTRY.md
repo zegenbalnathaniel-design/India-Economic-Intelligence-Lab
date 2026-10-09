@@ -214,6 +214,22 @@ with the API's `lastupdated` date and the UTC retrieval time.
 - **Not verified live from the build sandbox**, which has no route to the World Bank. Parsing is tested
   against the documented schema (`tests/test_worldbank.py`); the first live check happens on deploy.
 
+## New: Structural Transformation Lab (page 13, `analysis/structural.py`) — LIVE + DERIVED; states DATA REQUIRED
+
+Same provider and rules as above (no fallback, nulls stay missing, nothing stored). Eleven WDI series:
+value added % of GDP (agriculture, industry, manufacturing, services — national accounts), employment
+shares by sector, female and male labour force participation and vulnerable employment (all **ILO
+modelled estimates**, not PLFS), and GDP per person employed (constant PPP $). Ledger records:
+`data_sources/meta_structural.py`.
+
+- **DERIVED on the page, same country and same year only:** output-minus-employment share gaps; the sum
+  of the three VA shares and its residual to 100 (net taxes on products — shown, not hidden); relative
+  labour productivity = VA share ÷ employment share (relative to GDP per worker, not an absolute level);
+  an optional rescaled version (VA shares ÷ their sum × 100), always labelled DERIVED. Nothing is interpolated.
+- **State comparisons: DATA REQUIRED.** No state GSVA-by-sector or PLFS state industry-of-work file is in
+  the repository (records `state_sectoral_gva`, `plfs_state_industry`); the page names the files needed.
+- Not verified live from the build sandbox; tested with mocked API responses (`tests/test_structural.py`).
+
 ## Everything from the previous registry entry
 
 (RESIDEX city index 2013-2024/2025-2026, RESIDEX city price levels by unit size, RBI Handbook Table 26 constant-price NSDP 2004-05→2022-23 as originally published in two base-year blocks, bank earnings — reported and ESTIMATED — PLFS unemployment, real per-capita NNI, GDP CAGR) is unchanged; see git history or the files directly in `data/raw/` for the full per-file writeup.
