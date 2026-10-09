@@ -73,6 +73,32 @@ def load_unemployment_by_state() -> pd.DataFrame:
 
 
 @lru_cache(maxsize=8)
+def load_real_percapita_nni() -> pd.DataFrame:
+    """All-India real per-capita NNI (₹, constant prices) for the seven
+    financial years in `real_percapita_nni_timeseries.csv` (2011-12,
+    2014-15, 2019-20, 2020-21, 2022-23, 2023-24, 2024-25 -- not a
+    continuous annual series). Status PARTIAL (source inferred as MoSPI
+    National Accounts, not confirmed; see DATA_REGISTRY.md).
+
+    The only processing is parsing the display formatting: the en dash in
+    the year label becomes '-' ('2011–12' -> '2011-12', the convention of
+    the NSDP tables) and '₹63,462' becomes 63462.0. The cells as published
+    are kept in `financial_year_as_published` / `value_as_published`.
+    Missing years stay missing -- nothing is interpolated."""
+    raw = pd.read_csv(RAW_DIR / "real_percapita_nni_timeseries.csv", dtype=str)
+    out = pd.DataFrame({
+        "financial_year": raw["Financial year"].str.strip().str.replace("–", "-", regex=False),
+        "real_percapita_nni_inr": pd.to_numeric(
+            raw["Real per-capita NNI"].str.replace("₹", "", regex=False).str.replace(",", "", regex=False).str.strip(),
+            errors="raise",
+        ),
+        "financial_year_as_published": raw["Financial year"],
+        "value_as_published": raw["Real per-capita NNI"],
+    })
+    return out
+
+
+@lru_cache(maxsize=8)
 def load_gross_capital_formation() -> pd.DataFrame:
     """Institutional-sector-wise gross capital formation, current prices,
     2011-12 to 2023-24."""

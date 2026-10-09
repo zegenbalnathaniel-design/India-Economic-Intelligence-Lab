@@ -164,6 +164,22 @@ removed. It mixed Table 3 with the tentative 2023 row of C.1 (Top 10% wealth 64.
 2023 values; 2022-23 is 65.0% and 29.7%) and had several approximate or wrong figures — listed on the page
 under "What changed from the earlier summary".
 
+## New loader: `load_real_percapita_nni()` (Economic Relationships Lab) — PARTIAL
+
+No new data. `data_sources.loaders.load_real_percapita_nni()` reads the existing
+`data/raw/real_percapita_nni_timeseries.csv` (all-India real per-capita NNI, ₹ at constant prices,
+status **PARTIAL** since the first registry entry: source inferred as MoSPI National Accounts, not
+confirmed). The only processing is display-format parsing — `'2011–12'` → `'2011-12'` and
+`'₹63,462'` → `63462` — with the published cells kept alongside (`financial_year_as_published`,
+`value_as_published`). The file has seven non-consecutive financial years (2011-12, 2014-15,
+2019-20, 2020-21, 2022-23, 2023-24, 2024-25); missing years stay missing.
+
+Used only by the Relationships Lab hypothesis "real per-capita NNI vs Top 10% income share"
+(`analysis/hypotheses.py`), which matches financial year Y-(Y+1) to WIL calendar year Y (the
+paper's Table 2, labelled 2022-23, equals the 2022 row of Table B.1). Five years overlap, and only
+one consecutive-year change exists, so the page reports n = 5 and marks the first-difference
+check as not computable rather than bridging the gaps.
+
 ## New: latest monthly releases (`data/raw/macro_monthly/`, Macro & World "Now" section)
 
 - `india_macro_monthly.csv` — CPI (Aug 2026, base 2024=100, provisional), IIP (Aug 2026 quick estimates,
