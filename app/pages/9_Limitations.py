@@ -17,6 +17,7 @@ import pandas as pd
 import streamlit as st
 
 from app.components.theme import setup, kicker, callout, footnote
+from app.components import hairline_display
 
 
 setup("Limitations")
@@ -34,6 +35,25 @@ st.markdown(
     "explicitly, categorised, and mapped to the module where they bite."
 )
 
+fig_col, text_col = st.columns([2, 3])
+with fig_col:
+    hairline_display.render("vault", height=330)
+with text_col:
+    st.markdown(
+        "**Six kinds of limits, not one.** Turn the dial — then read them "
+        "stated plainly below, by category, not buried in a tooltip:"
+    )
+    st.markdown(
+        "- **Data** — what's missing, proxied, or a single cross-section\n"
+        "- **Measurement** — what a number is actually counting\n"
+        "- **Causality** — what a correlation cannot tell you\n"
+        "- **Assumptions** — what a user-set slider is standing in for\n"
+        "- **External validity** — what a result does and doesn't generalise to\n"
+        "- **Time** — what's current, what's dated, what's a single snapshot"
+    )
+    st.caption("A model is not reality. It is a way of asking questions about reality.")
+
+st.markdown("---")
 
 st.header("Cross-cutting")
 callout(

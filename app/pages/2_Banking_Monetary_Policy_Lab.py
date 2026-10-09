@@ -27,6 +27,7 @@ from app.components.theme import (
     setup, kicker, callout, source_badge, stat_card, footnote,
     GOLD, CRIMSON, MUTED, PARCHMENT, COBALT,
 )
+from app.components import hairline_display
 
 
 setup("Banking & Monetary Policy Lab", accent=COBALT)
@@ -207,6 +208,20 @@ for tab, key in zip(tabs, banking.INDICATOR_DIRECTION):
 st.markdown("---")
 kicker("Monetary policy · financial conditions")
 st.header("RBI repo rate vs iBFPI")
+
+latest_repo_rate = float(repo.sort_values("period")["repo_rate"].iloc[-1])
+fig_col, text_col = st.columns([2, 3])
+with fig_col:
+    hairline_display.render("slow", height=330, repoRate=f"{latest_repo_rate:.2f}")
+with text_col:
+    st.markdown(
+        "Tighter monetary policy is meant to slow credit growth and economic "
+        "activity — the figure alongside is a metaphor for that transmission "
+        "mechanism, not a literal visualisation of any number. **It is not "
+        "driven by a historical rate series**, only by the latest repo rate "
+        "shown. The real relationship, over the actual 2018-2024 window, is "
+        "the chart below."
+    )
 
 merged = agg.merge(repo, on="period", how="inner").dropna()
 

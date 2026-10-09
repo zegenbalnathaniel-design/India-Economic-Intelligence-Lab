@@ -9,5 +9,6 @@ data/cache/*
 !data/cache/.gitkeep
 .DS_Store
 app/assets/terrain_hero/node_modules/
+app/assets/hairline_figures/node_modules/
 streamlit.log
 .claude/worktrees/

@@ -11,6 +11,7 @@ if str(ROOT) not in sys.path:
 import streamlit as st
 
 from app.components.theme import setup, kicker, callout, footnote
+from app.components import hairline_display
 
 
 setup("Methodology")
@@ -36,6 +37,20 @@ st.markdown(
     "Every number produced on this site is derived from the formulas "
     "and assumptions below. Nothing is black-box."
 )
+
+fig_col, text_col = st.columns([2, 3])
+with fig_col:
+    hairline_display.render("elevator", height=330)
+with text_col:
+    st.markdown(
+        "**From question to model, one floor at a time.** Move the pointer "
+        "up and down the shaft: every number on this site passes through "
+        "the same four stops — a real question, real data, a stated model "
+        "or simulation, and an interpretation that names its own limits. "
+        "No chart on this site skips a floor."
+    )
+
+st.markdown("---")
 
 
 # ---- Wealth
