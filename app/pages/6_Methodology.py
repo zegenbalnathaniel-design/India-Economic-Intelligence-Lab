@@ -156,6 +156,59 @@ st.markdown(
 )
 
 
+# ---- Robustness of the iBFPI association
+st.header("Robustness of the iBFPI–repo association")
+st.markdown(
+    "- **Weight sensitivity.** 300 random indicator weightings drawn uniformly from the simplex "
+    "(Dirichlet(1,…,1)); ρ is recomputed for each and the distribution is shown.\n"
+    "- **Leave-one-out.** Each indicator dropped in turn, the rest equal-weighted.\n"
+    "- **Direction flips.** Each direction coefficient `D_k` reversed in turn.\n"
+    "- **Panel regression.** iBFPI on the repo rate with bank fixed effects (within-bank OLS); "
+    "standard errors conventional, clustered by bank (CR1; unreliable with five banks and labelled "
+    "so), and, for the system series, Newey–West with lag `⌊4(n/100)^{2/9}⌋`. No macro controls — "
+    "quarterly GDP and CPI are not in the project."
+)
+
+
+# ---- Convergence
+st.header("Interstate convergence")
+st.markdown(
+    "**σ-convergence** is the coefficient of variation (population standard deviation ÷ mean, %) of "
+    "real per-capita NSDP across states in each year. Coverage changes over time, so the headline "
+    "uses a **balanced panel** — only the states observed in every year — and fits an OLS trend on "
+    "year. The all-states series is shown alongside and labelled as not like-for-like.\n\n"
+    "**β-convergence** regresses each state's average annual growth over the whole window on its "
+    "log initial income (one observation per state); a significantly negative slope means poorer "
+    "states grew faster. Both are descriptive: they say nothing about why."
+)
+
+
+# ---- Data validation and evidence ledger
+st.header("Evidence ledger and data validation")
+st.markdown(
+    "Every dataset has a record (`data_sources/registry.py`) with its publisher, link, status, "
+    "period, units, coverage, publication and download dates, transformations, missing-value "
+    "treatment and limitations. A test fails if any CSV in `data/` is not registered.\n\n"
+    "Each file is checked for duplicate rows and keys, missing cells (counted, never filled), "
+    "malformed period labels, names with stray spaces or inconsistent spellings, impossible values "
+    "(shares above 100, negative prices or levels) and suspicious period-on-period jumps "
+    "(|robust z| > 8 within one state or city). Findings are reported on the Data page; nothing is "
+    "removed or corrected automatically."
+)
+
+
+# ---- Reproducibility
+st.header("Exports and reproducibility")
+st.markdown(
+    "Every chart's camera button saves a PNG at three times screen resolution, with the chart title "
+    "and a *Source:* line. Indian financial-year labels (e.g. `2012-13`) are plotted as ordered "
+    "categories, never parsed as dates. The Research Library computes each investigation from the "
+    "files listed in its sources and downloads it as an HTML brief (question, motivation, sources, "
+    "method, results, interpretation, limitations, further questions, settings and a UTC timestamp), "
+    "with the result tables as CSV and the settings as JSON."
+)
+
+
 # ---- Provenance
 st.markdown("---")
 st.header("What is from the papers, what is new here")
@@ -168,6 +221,10 @@ st.markdown(
     "| BFPI construction (formula) | **Paper B** | Direction coefficients (fixed) |\n"
     "| iBFPI (application to India) | New here | Bank subset, weighting |\n"
     "| Regime split | New here | Threshold (fixed at ±25bp) |\n"
+    "| Weight sensitivity, leave-one-out, fixed-effects regression | New here | Number of draws (fixed at 300) |\n"
+    "| Group shares, Gini lower bound | **World Inequality Lab** shares; Gini new here | Redistribution scenario |\n"
+    "| Convergence (σ balanced panel, β) | New here | None |\n"
+    "| Research Library investigations | New here | Inflation and g (composition effect) |\n"
     "| Illustrative bank panel | New here (synthetic) | Replace CSV to reproduce with real data |"
 )
 

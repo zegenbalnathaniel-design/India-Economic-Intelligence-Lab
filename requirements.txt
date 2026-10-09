@@ -1,4 +1,7 @@
-streamlit>=1.32
+# Capped at the release the site is tested on: the 3D figures and homepage scripts use
+# st.components.v1.html, which Streamlit has deprecated for removal. Lift the cap only
+# after moving them to st.iframe and re-checking every figure.
+streamlit>=1.40,<1.66
 pandas>=2.1
 numpy>=1.26
 scipy>=1.11
