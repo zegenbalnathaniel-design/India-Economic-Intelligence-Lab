@@ -444,7 +444,7 @@ st.plotly_chart(fig, use_container_width=True)
 corr = banking.spearman(merged["repo_rate"], merged["ibfpi_system"])
 c1, c2, c3 = st.columns(3)
 with c1:
-    stat_card("Spearman ρ", f"{corr.rho:+.3f}", "monotonic association")
+    stat_card("Spearman rank correlation", f"{corr.rho:+.3f}", "monotonic association")
 with c2:
     stat_card("p-value", f"{corr.p_value:.3f}", "two-sided")
 with c3:
@@ -483,9 +483,9 @@ reg_fig.update_layout(
 st.plotly_chart(reg_fig, use_container_width=True)
 
 rc1, rc2, rc3 = st.columns(3)
-with rc1: stat_card("Rising · ρ", f"{rising.rho:+.3f}", f"n = {rising.n}, p = {rising.p_value:.3f}")
-with rc2: stat_card("Falling · ρ", f"{falling.rho:+.3f}", f"n = {falling.n}, p = {falling.p_value:.3f}")
-with rc3: stat_card("Stable · ρ", f"{stable.rho:+.3f}", f"n = {stable.n}, p = {stable.p_value:.3f}")
+with rc1: stat_card("Rising rates · correlation", f"{rising.rho:+.3f}", f"n = {rising.n}, p = {rising.p_value:.3f}")
+with rc2: stat_card("Falling rates · correlation", f"{falling.rho:+.3f}", f"n = {falling.n}, p = {falling.p_value:.3f}")
+with rc3: stat_card("Stable rates · correlation", f"{stable.rho:+.3f}", f"n = {stable.n}, p = {stable.p_value:.3f}")
 
 st.caption(
     "Regime classification: three-quarter rolling change in the repo rate. "
@@ -521,6 +521,86 @@ indicator_note(
     "could be responding to a third factor (e.g. the broader macro cycle), "
     "and a small number of quarters per regime makes any single ρ fragile "
     "to one or two unusual observations.",
+)
+
+# ---------- Robustness -----------------------------------------------------------
+
+st.markdown("---")
+kicker("Robustness")
+st.header("How much does the result depend on the choices?")
+st.markdown(
+    "Two checks on the repo-rate association above: a bank fixed-effects regression (with "
+    "standard errors that allow for autocorrelation), and a sensitivity analysis over the "
+    "composite's weights and direction coefficients. Both run on the banks selected above, "
+    "using the same **illustrative** panel."
+)
+
+
+@st.cache_data(show_spinner="Re-running iBFPI under 300 random weightings…")
+def _robustness(banks: tuple[str, ...]):
+    p = panel[panel["bank"].isin(banks)]
+    return (banking.fixed_effects_regression(banking.compute_ibfpi(p), repo),
+            banking.weight_sensitivity(p, repo, n_draws=300),
+            banking.leave_one_out(p, repo), banking.direction_flips(p, repo),
+            banking.system_rho(p, repo).rho)
+
+
+fe_res, ws, loo, flips, base_rho = _robustness(tuple(sorted(selected)))
+
+st.subheader("Bank fixed-effects regression")
+st.dataframe(pd.DataFrame([{
+    "Model": r.label, "Slope (iBFPI per 1 pp of repo)": f"{r.slope:+.3f}", "Std. error": f"{r.se:.3f}",
+    "95% CI": f"[{r.ci_low:+.3f}, {r.ci_high:+.3f}]", "p-value": f"{r.p_value:.4f}", "n": r.n,
+    "Standard errors": r.se_type,
+} for r in fe_res]), hide_index=True, use_container_width=True)
+st.caption(
+    "Fixed effects compare each bank only with itself over time, removing permanent differences between "
+    "banks. Newey–West standard errors allow this quarter's error to be related to recent quarters', which "
+    "plain p-values ignore. **No macro controls** (GDP growth, inflation): quarterly series for those are not "
+    "in this project yet. Equal-weighted iBFPI; uses equal indicator weights regardless of the setting above."
+)
+
+st.subheader("Sensitivity to weights and direction coefficients")
+share_neg = float((ws["rho"] < 0).mean())
+s1, s2, s3 = st.columns(3)
+with s1:
+    stat_card("Baseline correlation, equal weights", f"{base_rho:+.3f}", "five indicators, 1/5 each")
+with s2:
+    stat_card("Weightings with a negative correlation", f"{share_neg:.0%}", f"of {len(ws)} draws")
+with s3:
+    stat_card("Correlation range across weightings", f"{ws['rho'].min():+.2f} to {ws['rho'].max():+.2f}",
+              f"median {ws['rho'].median():+.2f}")
+hfig = go.Figure(go.Histogram(x=ws["rho"], nbinsx=30, marker_color=COBALT,
+                              hovertemplate="ρ %{x}: %{y} draws<extra></extra>"))
+hfig.add_vline(x=base_rho, line_color=GOLD, line_width=3, annotation_text="equal weights",
+               annotation_position="top")
+hfig.add_vline(x=0, line_color=MUTED, line_dash="dash")
+hfig.update_layout(height=340, xaxis=dict(title="Spearman ρ (repo rate vs system iBFPI)", range=[-1, 1]),
+                   yaxis_title="number of weightings", showlegend=False,
+                   title="ρ under 300 random indicator weightings")
+st.plotly_chart(hfig, use_container_width=True, key="sens_hist")
+
+t1, t2 = st.columns(2)
+fmt_tbl = lambda d: d.assign(rho=d["rho"].map(lambda v: f"{v:+.3f}"),
+                             **({"p_value": d["p_value"].map(lambda v: "—" if pd.isna(v) else f"{v:.3f}")}
+                                if "p_value" in d else {})) \
+    .rename(columns={"variant": "Variant", "rho": "ρ", "p_value": "p"})
+with t1:
+    st.markdown("**Drop one indicator**")
+    st.dataframe(fmt_tbl(loo), hide_index=True, use_container_width=True)
+with t2:
+    st.markdown("**Reverse one direction coefficient**")
+    st.dataframe(fmt_tbl(flips), hide_index=True, use_container_width=True)
+
+drivers = loo.iloc[1:].assign(shift=lambda d: (d["rho"] - base_rho).abs()).sort_values("shift", ascending=False)
+top2 = drivers.head(2)
+callout(
+    f"<b>Reading this.</b> Dropping <b>{top2.iloc[0]['variant'].removeprefix('Without ')}</b> moves ρ from "
+    f"{base_rho:+.2f} to {top2.iloc[0]['rho']:+.2f}, and dropping "
+    f"<b>{top2.iloc[1]['variant'].removeprefix('Without ')}</b> moves it to {top2.iloc[1]['rho']:+.2f}. "
+    f"{share_neg:.0%} of random weightings keep ρ negative. A result that changes this much with the "
+    "composite's construction should be reported together with this sensitivity, not as a single number.",
+    kind="warn" if abs(top2.iloc[0]["rho"] - base_rho) > 0.3 or share_neg < 0.95 else "note",
 )
 
 footnote(

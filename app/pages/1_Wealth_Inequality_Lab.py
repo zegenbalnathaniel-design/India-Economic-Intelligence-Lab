@@ -283,12 +283,74 @@ fig_b.add_trace(go.Scatter(x=vh["year"], y=vh["forbes_wealth_pct_nni"], name="Th
                            yaxis="y2", mode="lines+markers", line=dict(color=VERMILLION, width=3),
                            hovertemplate="%{x}: %{y:.1f}% of NNI<extra></extra>"))
 fig_b.update_layout(height=400, title="The billionaire raj: Forbes USD billionaires, 1988-2022",
-                    yaxis=dict(title="count"), yaxis2=dict(title="% of NNI", overlaying="y", side="right",
-                                                          showgrid=False),
+                    yaxis=dict(title="count", rangemode="tozero"),
+                    yaxis2=dict(title="% of NNI", overlaying="y", side="right", showgrid=False,
+                                range=[0, 30], tickmode="array", tickvals=[0, 10, 20, 30], ticksuffix="%"),
                     legend=dict(orientation="h", y=-0.15))
 st.plotly_chart(fig_b, use_container_width=True, key="wil_billionaires")
 st.caption("Table C.2. Hurun's broader list (net wealth above ₹1,000 crore) had 1,103 people holding "
            "27.5% of national income in 2022.")
+
+kicker("W · One number")
+st.subheader("A distributional Gini, from the group shares")
+g_inc = inequality.gini_series(wil_inc_series)
+g_w = inequality.gini_series(wil_wealth_series)
+fig_g = go.Figure()
+fig_g.add_trace(go.Scatter(x=g_inc["year"], y=g_inc["gini_lower_bound"], name="Income", mode="lines",
+                           line=dict(color=GOLD, width=3), hovertemplate="Income %{x}: %{y:.3f}<extra></extra>"))
+gw_firm = g_w[~g_w["tentative"]]
+fig_g.add_trace(go.Scatter(x=gw_firm["year"], y=gw_firm["gini_lower_bound"], name="Wealth", mode="lines+markers",
+                           line=dict(color=VERMILLION, width=3), hovertemplate="Wealth %{x}: %{y:.3f}<extra></extra>"))
+gw_tail = g_w[g_w["year"] >= gw_firm["year"].max()]
+fig_g.add_trace(go.Scatter(x=gw_tail["year"], y=gw_tail["gini_lower_bound"], mode="lines+markers", showlegend=False,
+                           line=dict(color=VERMILLION, width=2, dash="dot"), marker=dict(symbol="circle-open", size=9),
+                           hovertemplate="Wealth %{x}: %{y:.3f} (tentative)<extra></extra>"))
+fig_g.update_layout(height=380, yaxis=dict(title="Gini (lower bound)", range=[0, 1]),
+                    title="Gini coefficient implied by the WIL group shares", legend=dict(orientation="h", y=-0.15))
+st.plotly_chart(fig_g, use_container_width=True, key="wil_gini")
+gi = g_inc.set_index("year")["gini_lower_bound"]
+gwi = g_w.set_index("year")["gini_lower_bound"]
+st.caption(
+    f"Income: {gi.loc[1982]:.2f} in 1982 → {gi.loc[2022]:.2f} in 2022. Wealth: {gwi.loc[1961]:.2f} in 1961 → "
+    f"{gwi.loc[2022]:.2f} in 2022. Calculated here from Tables B.1 and C.1."
+)
+indicator_note(
+    "this Gini",
+    "**How it is calculated.** Each year's shares give five points on the Lorenz curve: the poorest 50% "
+    "hold X%, the poorest 90% hold X + Y%, the poorest 99% and 99.9% hold everything except the Top 1% "
+    "and Top 0.1%. Joining those points with straight lines and measuring the gap from perfect equality "
+    "gives the Gini.\n\n**Why it is a lower bound.** Straight lines treat everyone *inside* a group as "
+    "equal, so the true Gini — which also counts inequality within each group — is higher. It is a "
+    "consistent way to track the trend from published shares, not a survey Gini.\n\n"
+    "**What would make it complete.** Household-level data (AIDIS for wealth, NSS/PLFS for "
+    "consumption) would give the full distribution. Those microdata need a registered login at "
+    "microdata.gov.in and are not in this project.",
+    kind="method",
+)
+
+st.markdown("**What if some of the Top 1%'s share went to the Bottom 50%?**")
+sc1, sc2 = st.columns([1, 2])
+with sc1:
+    sc_measure = st.radio("Of", ["Income (2022)", "Wealth (2022)"], key="gini_measure")
+    sc_src = (wil_inc_series if sc_measure.startswith("Income") else wil_wealth_series).set_index("year").loc[2022]
+    base_shares = {k: float(sc_src[k]) for k in inequality.SERIES}
+    moved = st.slider("Percentage points moved", 0.0, float(base_shares["top_1"]), 5.0, 0.5, key="gini_pp")
+new_shares = inequality.redistribute(base_shares, moved)
+g_before = inequality.gini_lower_bound(base_shares["bottom_50"], base_shares["middle_40"],
+                                       base_shares["top_1"], base_shares["top_0_1"])
+g_after = inequality.gini_lower_bound(new_shares["bottom_50"], new_shares["middle_40"],
+                                      new_shares["top_1"], new_shares["top_0_1"])
+with sc2:
+    st.dataframe(pd.DataFrame({
+        "Group": list(inequality.SERIES.values()),
+        "Actual 2022": [f"{base_shares[k]:.1f}%" for k in inequality.SERIES],
+        "Scenario": [f"{new_shares[k]:.1f}%" for k in inequality.SERIES],
+    }), hide_index=True, use_container_width=True)
+    stat_card("Gini (lower bound)", f"{g_before:.3f} → {g_after:.3f}", f"{g_after - g_before:+.3f}")
+st.caption(
+    "A mechanical scenario, not a policy forecast: it moves shares on paper and recomputes the Gini. The Top "
+    "0.1% is assumed to give up the same fraction of its share as the Top 1% as a whole."
+)
 
 kicker("Long run")
 facts = wil_facts.set_index(["metric", "period"])["value"]
@@ -718,11 +780,13 @@ indicator_note(
     "as illustrating 'returns are uncertain, and here is one way to "
     "quantify that uncertainty under stated assumptions', not as a "
     "probability of any specific rupee amount occurring in reality.\n\n"
-    "**Caveat.** Each asset's returns are drawn independently year to year "
-    "and, as the warning below notes, independently across assets within a "
-    "year too — real asset returns show serial correlation (a bad year can "
-    "be followed by a partial rebound) and cross-asset correlation that "
-    "this simplified version does not capture.",
+    "**Correlation and fat tails.** By default each asset is drawn "
+    "independently of the others, from a normal distribution. Below you can "
+    "set correlations between assets (assets that fall together widen the "
+    "band) and switch to fat-tailed Student-t draws (more extreme years, "
+    "same volatility). Both are your assumptions — this project has no "
+    "Indian asset-return history to estimate them from. Returns are still "
+    "independent from one year to the next (no momentum or rebound).",
 )
 
 mc_c1, mc_c2 = st.columns([1, 1])
@@ -751,6 +815,35 @@ for idx, k in enumerate(keys):
             key=f"vol_{k}",
         )
 
+st.markdown("**How assets move together, and how extreme bad years are**")
+cc1, cc2 = st.columns([3, 2])
+with cc1:
+    corr_mode = st.radio("Correlation between assets", ["Independent (none)", "Set correlations"],
+                         horizontal=True, key="mc_corr_mode")
+with cc2:
+    fat_tails = st.toggle("Fat tails (Student-t draws)", key="mc_fat")
+    t_df = st.slider("Tail heaviness — degrees of freedom (lower = fatter)", 3, 30, 5,
+                     key="mc_df", disabled=not fat_tails)
+mc_corr = None
+if corr_mode == "Set correlations":
+    st.caption(
+        "Edit the cells **above the diagonal** (−1 to 1); the lower half mirrors them. These are your "
+        "assumptions — no Indian return history is in this project to estimate them. Starts at 0."
+    )
+    labels = [wealth.ASSET_LABELS[k] for k in wealth.ASSET_KEYS]
+    base = pd.DataFrame(np.eye(len(labels)), index=labels, columns=labels)
+    edited = st.data_editor(base, key="mc_corr_editor", use_container_width=True,
+                            column_config={c: st.column_config.NumberColumn(c, min_value=-1.0, max_value=1.0,
+                                                                            step=0.05, format="%.2f")
+                                           for c in labels})
+    upper = np.triu(edited.to_numpy(dtype=float), 1)
+    candidate = upper + upper.T + np.eye(len(labels))
+    try:
+        mc_corr = wealth.validate_correlation(candidate, len(labels))
+    except ValueError as exc:
+        st.error(f"{exc} Showing the independent model until this is fixed.")
+        mc_corr = None
+
 mc = wealth.monte_carlo(
     annual_contribution=annual,
     years=years,
@@ -760,6 +853,8 @@ mc = wealth.monte_carlo(
     inflation=inflation,
     n_paths=int(n_paths),
     seed=int(mc_seed),
+    correlation=mc_corr,
+    t_df=float(t_df) if fat_tails else None,
 )
 
 mc_fig = go.Figure()
@@ -805,12 +900,12 @@ with q3: stat_card("Median", _rupee(p50), "central outcome")
 with q4: stat_card("75th pct", _rupee(p75), "")
 with q5: stat_card("95th pct", _rupee(p95), "best-case tail")
 
+model_desc = ("independent" if mc_corr is None else "correlated (your matrix)") + \
+    (f", Student-t with {t_df} degrees of freedom" if fat_tails else ", normal")
 callout(
-    "The Monte Carlo assumes returns across assets are <b>independent</b>. "
-    "In reality they are not — property, gold and equities show non-trivial "
-    "correlation in Indian data. A joint-covariance model is a natural next "
-    "step; the width of the band here is a lower bound on real-world "
-    "dispersion, not an upper bound.",
+    f"Model in use: <b>{model_desc}</b> returns. Correlations and tail heaviness are assumptions you "
+    "set, not estimates. With positive correlations or fat tails the band widens — the independent, "
+    "normal default understates real-world dispersion if Indian assets fall together.",
     kind="warn",
 )
 

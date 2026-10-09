@@ -208,6 +208,26 @@ class MonteCarloResult:
     inflation: float
 
 
+def validate_correlation(matrix, n: int) -> np.ndarray:
+    """Check a user-entered correlation matrix: n×n, symmetric, unit
+    diagonal, entries in [-1, 1] and positive semi-definite (so it can
+    describe real assets). Returns it as a float array or raises ValueError
+    naming the first problem."""
+    m = np.asarray(matrix, dtype=float)
+    if m.shape != (n, n):
+        raise ValueError(f"correlation matrix must be {n}×{n}, got {m.shape}.")
+    if not np.allclose(m, m.T, atol=1e-9):
+        raise ValueError("correlation matrix must be symmetric.")
+    if not np.allclose(np.diag(m), 1.0):
+        raise ValueError("correlation matrix must have 1s on the diagonal.")
+    if (np.abs(m) > 1 + 1e-12).any():
+        raise ValueError("correlations must lie between -1 and 1.")
+    if np.linalg.eigvalsh(m).min() < -1e-8:
+        raise ValueError("these correlations are mutually impossible (matrix not positive semi-definite); "
+                         "e.g. A and B, and B and C, strongly positive while A and C are strongly negative.")
+    return m
+
+
 def monte_carlo(
     annual_contribution: float,
     years: int,
@@ -217,14 +237,22 @@ def monte_carlo(
     inflation: float = 0.05,
     n_paths: int = 2000,
     seed: int = 7,
+    correlation: np.ndarray | None = None,
+    t_df: float | None = None,
 ) -> MonteCarloResult:
     """Stochastic version of `composition_effect`.
 
-    Draws annual asset returns from independent normal distributions with
-    the specified per-asset mean and volatility, applies annual
-    rebalancing, and reports the cross-path percentiles of nominal
-    wealth. Returns are assumed independent — a deliberate simplification
-    that avoids implying a covariance structure the model does not have.
+    Draws annual asset returns with the specified per-asset mean and
+    volatility, applies annual rebalancing, and reports the cross-path
+    percentiles of nominal wealth.
+
+    * `correlation` -- optional asset-by-asset correlation matrix (order
+      `ASSET_KEYS`). None (the default) keeps returns independent, exactly
+      as before. Any matrix passed is a **user assumption**: this project
+      holds no Indian asset-return history to estimate one from.
+    * `t_df` -- optional degrees of freedom for Student-t shocks (fat
+      tails), rescaled so each asset keeps its stated volatility; must be
+      > 2. None means normal shocks.
     """
     if n_paths <= 0:
         raise ValueError("n_paths must be positive.")
@@ -241,11 +269,26 @@ def monte_carlo(
     sigma = np.array([vols[k] for k in keys])
     w = np.array([alloc[k] for k in keys])
 
+    chol = None
+    if correlation is not None:
+        chol = np.linalg.cholesky(validate_correlation(correlation, len(keys)) + 1e-12 * np.eye(len(keys)))
+    if t_df is not None and not t_df > 2:
+        raise ValueError("t_df must be greater than 2 (finite variance).")
+
     balances = np.zeros((n_paths, len(keys)))
     nominal = np.zeros((n_paths, years))
     for t in range(years):
         balances += annual_contribution * w  # contribute at start of year
-        shocks = rng.normal(loc=mu, scale=sigma, size=(n_paths, len(keys)))
+        if chol is None and t_df is None:
+            shocks = rng.normal(loc=mu, scale=sigma, size=(n_paths, len(keys)))
+        else:
+            z = rng.standard_normal(size=(n_paths, len(keys)))
+            if chol is not None:
+                z = z @ chol.T  # correlated standard normals
+            if t_df is not None:
+                scale = np.sqrt(rng.chisquare(t_df, size=(n_paths, 1)) / t_df)
+                z = z / scale * np.sqrt((t_df - 2) / t_df)  # unit variance, fat tails
+            shocks = mu + sigma * z
         balances *= 1.0 + shocks
         totals = balances.sum(axis=1, keepdims=True)
         balances = totals * w  # annual rebalance to target weights

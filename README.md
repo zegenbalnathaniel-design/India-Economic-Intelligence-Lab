@@ -139,10 +139,10 @@ The MVP ships with an **illustrative synthetic panel** so the methodology can be
 ## Suggested future research directions
 
 - Ingest live RBI DBIE and bank-filing data via a scheduled pull; replace the illustrative panel entirely.
-- FOMC / RBI MPC event studies around individual rate decisions (see the JP Morgan paper).
-- Bank fixed-effects panel regression of iBFPI on the repo rate with macro controls.
-- Sensitivity analysis of the composition-effect module to return-distribution assumptions (Monte Carlo, not deterministic).
-- A distributional Gini simulation seeded with household-level ownership rates from the AIDIS / NSS surveys.
+- FOMC / RBI MPC event studies around individual rate decisions (needs the full MPC decision history and higher-frequency bank data).
+- Macro controls (quarterly GDP growth, CPI) in the bank fixed-effects regression — the regression itself, with clustered and Newey–West errors, is now in the Banking Lab.
+- Estimate the Monte Carlo correlation matrix from Indian asset-return history — correlated and fat-tailed draws are now available, with user-set correlations.
+- A household-level Gini from AIDIS / NSS microdata — a Gini from the WIL group shares (a lower bound) is now in the Wealth Lab.
 - Cross-country replication of the BFPI on other emerging-market bank systems.
 
 ---

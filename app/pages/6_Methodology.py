@@ -96,10 +96,14 @@ callout(
 # ---- Gini
 st.header("Gini coefficient (used sparingly)")
 st.markdown(
-    "Where used, the Gini is computed from sorted individual wealth levels "
-    "with the standard trapezoidal Lorenz-curve formula. The MVP does not "
-    "run a distributional Gini simulation — the composition-effect module "
-    "is deterministic for a single household."
+    "The Wealth Lab computes a Gini for every year of the World Inequality "
+    "Lab series from five published group shares (Bottom 50%, Middle 40%, "
+    "Top 10%, Top 1%, Top 0.1%). The Lorenz curve through those points is "
+    "joined with straight lines and the Gini is 1 − 2 × the area under it "
+    "(trapezoidal rule). Because everyone inside a group is treated as "
+    "equal, this is a **lower bound** on the true Gini. A redistribution "
+    "scenario moves share from the Top 1% to the Bottom 50% and recomputes "
+    "it. A household-level Gini needs AIDIS / NSS microdata."
 )
 
 

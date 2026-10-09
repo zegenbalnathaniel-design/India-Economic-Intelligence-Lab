@@ -109,7 +109,9 @@ callout(
 )
 
 footnote(
-    "Version 0.1 (MVP). Future work: real-data ingestion, event studies "
-    "around FOMC / RBI MPC decisions, bank-fixed-effects panel regression, "
-    "sensitivity analysis for the composition-effect module."
+    "Still to do: real bank filings to replace the illustrative panel, event "
+    "studies around RBI MPC decisions (needs the decision history), and macro "
+    "controls for the fixed-effects regression. Done: bank fixed-effects and "
+    "Newey–West regression, iBFPI sensitivity analysis, correlated / fat-tailed "
+    "Monte Carlo, and a distributional Gini from the WIL shares. See Limitations."
 )

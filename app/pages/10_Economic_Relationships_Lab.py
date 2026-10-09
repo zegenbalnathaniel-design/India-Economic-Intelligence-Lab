@@ -581,7 +581,7 @@ with s1:
 with s2:
     stat_card("Pearson r", _fmt(corr.pearson_r), f"p = {_fmt_p(corr.pearson_p)} · linear")
 with s3:
-    stat_card("Spearman ρ", _fmt(corr.spearman_rho), f"p = {_fmt_p(corr.spearman_p)} · rank / monotone")
+    stat_card("Spearman rank correlation", _fmt(corr.spearman_rho), f"p = {_fmt_p(corr.spearman_p)} · rank / monotone")
 with s4:
     stat_card("R²", _fmt(fit.r_squared), "share of Y variance fitted by X")
 s5, s6, s7 = st.columns(3)

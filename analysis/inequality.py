@@ -152,3 +152,54 @@ def riffle_captions(table: pd.DataFrame) -> list[str]:
             parts.append(f"avg {fmt_inr(r.avg_income)}/yr{star(r.avg_income_status)}")
         caps.append(f"{head}\n" + " · ".join(parts))
     return caps
+
+
+# ---------------------------------------------------------------------------
+# Distributional Gini from group shares
+# ---------------------------------------------------------------------------
+def lorenz_points(bottom_50: float, middle_40: float, top_1: float, top_0_1: float) -> list[tuple[float, float]]:
+    """Lorenz-curve points (population share, cumulative share), both 0-1,
+    from the group shares in percent. Top 10% is implied by the partition."""
+    b, m, t1, t01 = (x / 100 for x in (bottom_50, middle_40, top_1, top_0_1))
+    return [(0.0, 0.0), (0.5, b), (0.9, b + m), (0.99, 1 - t1), (0.999, 1 - t01), (1.0, 1.0)]
+
+
+def gini_lower_bound(bottom_50: float, middle_40: float, top_1: float, top_0_1: float) -> float:
+    """Gini of the piecewise-linear Lorenz curve through the group shares.
+
+    Joining the known points with straight lines treats everyone inside a
+    group as equal, so this is a LOWER BOUND on the true Gini (it ignores
+    inequality within each group). Uses only the published shares.
+    """
+    pts = lorenz_points(bottom_50, middle_40, top_1, top_0_1)
+    area = sum((x1 - x0) * (y0 + y1) / 2 for (x0, y0), (x1, y1) in zip(pts, pts[1:]))
+    return 1 - 2 * area
+
+
+def gini_series(series: pd.DataFrame) -> pd.DataFrame:
+    """Lower-bound Gini for every year of Table B.1 or C.1 (DERIVED)."""
+    out = series[["year"]].copy()
+    out["gini_lower_bound"] = [
+        gini_lower_bound(r.bottom_50, r.middle_40, r.top_1, r.top_0_1) for r in series.itertuples()
+    ]
+    if "tentative" in series.columns:
+        out["tentative"] = series["tentative"].to_numpy()
+    return out
+
+
+def redistribute(shares: dict[str, float], pp: float) -> dict[str, float]:
+    """Scenario: move `pp` percentage points of the total from the Top 1% to
+    the Bottom 50%. The Top 0.1% gives up the same fraction of its share as
+    the Top 1% as a whole (an assumption: the cut is proportional within
+    the Top 1%). Returns new shares in percent; raises if pp exceeds the
+    Top 1% share."""
+    if pp < 0 or pp > shares["top_1"]:
+        raise ValueError("pp must be between 0 and the Top 1% share.")
+    frac = pp / shares["top_1"] if shares["top_1"] else 0.0
+    return {
+        "bottom_50": shares["bottom_50"] + pp,
+        "middle_40": shares["middle_40"],
+        "top_10": shares["top_10"] - pp,
+        "top_1": shares["top_1"] - pp,
+        "top_0_1": shares["top_0_1"] * (1 - frac),
+    }
