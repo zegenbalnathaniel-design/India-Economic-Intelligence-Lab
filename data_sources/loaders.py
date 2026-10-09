@@ -128,3 +128,37 @@ def load_hces_urban_mpce() -> pd.DataFrame:
     `income_source='mpce'` path on `city_affordability`). Status: VERIFIED
     (directly supplied primary statistic)."""
     return pd.read_csv(RAW_DIR / "hces" / "state_ut_urban_mpce_2023_24.csv")
+
+
+# ---------------------------------------------------------------------------
+# Real data: state-level files that had no loader yet (added for the State
+# Economy Explorer, analysis/states.py). Both return the file exactly as
+# read -- no cleaning, realignment or renaming happens here.
+# ---------------------------------------------------------------------------
+
+@lru_cache(maxsize=8)
+def load_state_gsdp_nsdp_percapita() -> pd.DataFrame:
+    """Per-capita GSDP and NSDP, current and constant prices, 2023-24 and
+    2024-25, ~33 states/UTs plus an "India" row (the original, earlier
+    upload; source not confirmed -- PARTIAL, see DATA_REGISTRY.md).
+
+    Read as strings with no NA conversion so the caller sees the cells
+    exactly as stored. Known issues, carried as-is (not repaired here):
+    this is an **older release vintage** than `load_nsdp_current()`
+    (values differ by ~1-2% for ~20 states); the Delhi row is blanked;
+    the Ladakh row has one field fewer than the header, so its values
+    cannot be placed in the right columns with certainty
+    (analysis/states.py excludes it rather than realigning it); some blank
+    cells contain a single space."""
+    return pd.read_csv(RAW_DIR / "state_gsdp_nsdp_percapita.csv", dtype=str, keep_default_na=False)
+
+
+@lru_cache(maxsize=8)
+def load_nsdp_constant_as_published() -> pd.DataFrame:
+    """Per-capita NSDP, constant prices, RBI Handbook Table 26 exactly as
+    published in its two base-year blocks (2004-05 base: 2004-05 to
+    2014-15; 2011-12 base: 2011-12 to 2022-23). The spliced series in
+    `load_nsdp_spliced()` is built from this file. Includes the table's
+    two footnote rows and Jammu & Kashmir under two different territorial
+    definitions ("Jammu & Kashmir*" incl. Ladakh, "Jammu & Kashmir-U.T.")."""
+    return pd.read_csv(RAW_DIR / "rbi_handbook" / "percapita_nsdp_constant_prices_2004_05_to_2022_23.csv")
