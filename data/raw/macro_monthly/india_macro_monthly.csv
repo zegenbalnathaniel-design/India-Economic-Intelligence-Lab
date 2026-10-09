@@ -1,0 +1,20 @@
+indicator,reference_period,value,unit,base,release_type,release_date,status,source,note
+CPI_COMBINED_YOY,2026-08,4.82,% y/y,2024=100,provisional,,VERIFIED,MoSPI CPI press release for August 2026 (PIB PRID 2310058),"Release date: user stated 2 Oct 2026; not confirmed (MoSPI usually releases CPI on the 12th of the next month)."
+CPI_RURAL_YOY,2026-08,5.23,% y/y,2024=100,provisional,,VERIFIED,MoSPI CPI press release for August 2026 (PIB PRID 2310058),
+CPI_URBAN_YOY,2026-08,4.31,% y/y,2024=100,provisional,,VERIFIED,MoSPI CPI press release for August 2026 (PIB PRID 2310058),
+CPI_COMBINED_YOY,2026-07,4.45,% y/y,2024=100,final,,VERIFIED,MoSPI CPI press release for August 2026 (comparison table),July final as shown in the August release.
+IIP_GENERAL_YOY,2026-08,8.0,% y/y,2022-23=100,quick estimate,2026-09-28,PARTIAL,MoSPI IIP quick estimates for August 2026 (as reported by news coverage),"Base year is 2022-23=100 per the release title -- the 2011-12 base in the user's note is outdated."
+IIP_GENERAL_INDEX,2026-08,123.3,index,2022-23=100,quick estimate,2026-09-28,PARTIAL,MoSPI IIP quick estimates for August 2026 (as reported),
+IIP_GENERAL_INDEX,2025-08,114.2,index,2022-23=100,as shown in Aug 2026 release,2026-09-28,PARTIAL,MoSPI IIP quick estimates for August 2026 (as reported),Year-earlier comparison value printed in the August 2026 release.
+IIP_MANUFACTURING_YOY,2026-08,9.0,% y/y,2022-23=100,quick estimate,2026-09-28,PARTIAL,MoSPI IIP quick estimates for August 2026 (as reported),
+IIP_ELECTRICITY_YOY,2026-08,12.3,% y/y,2022-23=100,quick estimate,2026-09-28,PARTIAL,MoSPI IIP quick estimates for August 2026 (as reported),Electricity and gas supply.
+IIP_MINING_YOY,2026-08,-5.6,% y/y,2022-23=100,quick estimate,2026-09-28,PARTIAL,MoSPI IIP quick estimates for August 2026 (as reported),
+IIP_GENERAL_YOY,2026-07,6.7,% y/y,2022-23=100,quick estimate,,PARTIAL,As stated in the August 2026 release,Some outlets report July later revised to 7.4%; not confirmed.
+IIP_GENERAL_YOY_CUMULATIVE,FY2026-27 Apr-Aug,6.7,% y/y,2022-23=100,quick estimate,2026-09-28,PARTIAL,MoSPI IIP quick estimates for August 2026 (as reported),Same period a year earlier: 4.2%.
+IIP_GENERAL_YOY_CUMULATIVE,FY2025-26 Apr-Aug,4.2,% y/y,2022-23=100,as shown in Aug 2026 release,2026-09-28,PARTIAL,MoSPI IIP quick estimates for August 2026 (as reported),
+HH_INFLATION_EXPECTATION_3M,2026-09,9.9,% (median),,survey round,,PARTIAL,RBI Inflation Expectations Survey of Households (as reported by Reuters/ANI),"Survey of 19 cities, 10-20 Sep 2026, 5,987 responses. Household sentiment, not an RBI forecast."
+HH_INFLATION_EXPECTATION_1Y,2026-09,10.0,% (median),,survey round,,PARTIAL,RBI Inflation Expectations Survey of Households (as reported by Reuters/ANI),"Household sentiment, not an RBI forecast."
+HH_INFLATION_PERCEPTION,2026-09,8.4,% (median),,survey round,,PARTIAL,RBI Inflation Expectations Survey of Households (as reported by Reuters/ANI),Perception of current inflation.
+HH_INFLATION_EXPECTATION_3M,2026-07,9.2,% (median),,survey round,,PARTIAL,RBI Inflation Expectations Survey of Households (as reported),
+HH_INFLATION_EXPECTATION_1Y,2026-07,9.4,% (median),,survey round,,PARTIAL,RBI Inflation Expectations Survey of Households (as reported),
+HH_INFLATION_PERCEPTION,2026-07,7.8,% (median),,survey round,,PARTIAL,RBI Inflation Expectations Survey of Households (as reported),

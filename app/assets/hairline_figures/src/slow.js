@@ -21,7 +21,7 @@ function init() {
   const root = document.getElementById("figure-root");
   if (!root) return;
   const { repoRate, asOf } = params();
-  const idle = `RBI repo rate${asOf ? ", " + asOf : ""} (latest in this panel): ${repoRate.toFixed(2)}% — hover the belt.`;
+  const idle = `RBI policy repo rate: ${repoRate.toFixed(2)}%${asOf ? " (" + asOf + ")" : ""} — hover the belt.`;
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const wrap = document.createElement("div");

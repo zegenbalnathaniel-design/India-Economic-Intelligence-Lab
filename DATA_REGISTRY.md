@@ -154,8 +154,28 @@ DATA REQUIRED.**
 
 Checks run (`tests/test_inequality.py`): shares of the three side-by-side groups sum to 100.0 for income
 and wealth; each stated average income implies its stated share within 0.2 pp. **Known inconsistency:**
-the Middle 40% average of ₹1.65 lakh implies ≈28.1% of income, against the 27.3% remainder (0.8 pp,
-most likely rounding of the average); the summary's "about 29–30%" matches neither and is not used.
+the Middle 40% average implies ≈28.1% of income, against the 27.3% remainder (0.8 pp). Web search
+(9 Oct 2026) found coverage reproducing the paper's table with **27.3%** and an average of **₹1,65,273**, so
+27.3% is the paper's figure and the gap is in the source's averages, not rounding here. The summary's "about
+29–30%" is wrong and is not used. Also confirmed against the paper's abstract: Top 1% = 22.6% of income,
+40.1% of wealth. The full PDF (wid.world) was not reachable from the build sandbox.
+
+## New: latest monthly releases (`data/raw/macro_monthly/`, Macro & World "Now" section)
+
+- `india_macro_monthly.csv` — CPI (Aug 2026, base 2024=100, provisional), IIP (Aug 2026 quick estimates,
+  **base 2022-23=100** — the 2011-12 base in the supplied note is outdated), RBI household
+  inflation-expectations survey (Sep and Jul 2026 rounds). Each row has `status`, `base`, `release_type`,
+  `release_date` and `source`.
+- `rbi_policy_decisions.csv` — dated RBI policy-rate decisions. One so far: 7 Oct 2026, +25 bp to 5.50%
+  (SDF 5.25%, MSF/Bank Rate 5.75%). Daily and monthly tables are **built** from decisions in
+  `analysis/macro_monthly.py`; days before the first loaded decision stay blank, and monthly averages
+  appear only for complete months.
+- `release_calendar.csv` — scheduled releases (CPI for Sep 2026 on 12 Oct 2026). Never an observed value.
+
+Status: **VERIFIED** for CPI (MoSPI press release on PIB surfaced by web search, 9 Oct 2026); **PARTIAL**
+for IIP, the policy decision and the survey (confirmed by several reports quoting the official release; the
+primary documents were not opened — the sandbox cannot reach mospi.gov.in or rbi.org.in). The August CPI
+release date (stated as 2 Oct 2026) is not confirmed and is left blank.
 
 ## New: live World Bank WDI provider (`data_sources/worldbank.py`, page 12)
 

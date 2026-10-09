@@ -20,7 +20,8 @@ import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 
-from data_sources import worldbank as WB
+from analysis import macro_monthly as MM
+from data_sources import loaders, worldbank as WB
 from app.components.theme import (
     setup, kicker, callout, source_badge, stat_card, footnote, COBALT, SERIES, MUTED,
 )
@@ -86,12 +87,116 @@ with st.sidebar:
 kicker("India Macro & World")
 st.title("India's macro picture, against its peers")
 st.markdown(
-    "Annual headline series for India — growth, prices, jobs, the external "
+    "The latest monthly releases first, then annual headline series for India — growth, prices, jobs, the external "
     "account, reserves, the rupee, debt and inequality — and the same series "
     "for comparator economies you choose. Each figure is the World Bank's "
     "published value, retrieved live; the latest year differs by indicator "
     "because each source reports on its own schedule."
 )
+# ---------------------------------------------------------------------------
+# Now · latest monthly releases (stored files -- shown even if the World
+# Bank API below is unreachable)
+# ---------------------------------------------------------------------------
+st.header("Now · India's latest monthly releases")
+st.caption(
+    "Entered from the official MoSPI and RBI releases and cross-checked against press "
+    "coverage; not fetched live. Each figure keeps its status, base year and release type."
+)
+mm = loaders.load_macro_monthly()
+dec = loaders.load_rbi_policy_decisions()
+last_dec = MM.latest_decision(dec)
+TODAY = pd.Timestamp(date.today())
+
+def _r(ind, per):
+    return MM.row(mm, ind, per)
+
+cpi, cpi_prev = _r("CPI_COMBINED_YOY", "2026-08"), _r("CPI_COMBINED_YOY", "2026-07")
+iip, iip_prev = _r("IIP_GENERAL_YOY", "2026-08"), _r("IIP_GENERAL_YOY", "2026-07")
+e1y, e1y_prev = _r("HH_INFLATION_EXPECTATION_1Y", "2026-09"), _r("HH_INFLATION_EXPECTATION_1Y", "2026-07")
+n1, n2, n3, n4 = st.columns(4)
+with n1:
+    stat_card("CPI inflation · Aug 2026", f"{cpi['value']:.2f}%",
+              f"{cpi['release_type']} · base {cpi['base']} · July {cpi_prev['value']:.2f}%")
+with n2:
+    stat_card("Industrial output (IIP) · Aug 2026", f"{iip['value']:+.1f}%",
+              f"{iip['release_type']} · base {iip['base']} · July {iip_prev['value']:+.1f}%")
+with n3:
+    stat_card("RBI policy repo rate", f"{last_dec['policy_repo_rate_pct']:.2f}%",
+              f"{int(last_dec['change_bp']):+d} bp on {last_dec['decision_date']:%d %b %Y} · "
+              f"from {last_dec['previous_rate_pct']:.2f}%")
+with n4:
+    stat_card("Households expect, 1 yr ahead", f"{e1y['value']:.1f}%",
+              f"Sep 2026 survey median · July {e1y_prev['value']:.1f}%")
+
+g1, g2 = st.columns(2)
+with g1:
+    parts = [("General", "IIP_GENERAL_YOY"), ("Manufacturing", "IIP_MANUFACTURING_YOY"),
+             ("Electricity & gas", "IIP_ELECTRICITY_YOY"), ("Mining", "IIP_MINING_YOY")]
+    vals = [MM.value(mm, code, "2026-08") for _, code in parts]
+    ifig = go.Figure(go.Bar(
+        x=[p for p, _ in parts], y=vals,
+        marker_color=[COBALT if v >= 0 else "#F04A32" for v in vals],
+        text=[f"{v:+.1f}%" for v in vals], textposition="outside", cliponaxis=False,
+        hovertemplate="%{x}: %{y:+.1f}% y/y<extra></extra>",
+    ))
+    ifig.add_hline(y=0, line_color=MUTED, line_width=1)
+    ifig.update_layout(height=360, title="IIP growth by sector, Aug 2026 (y/y)", yaxis_title="% y/y",
+                       showlegend=False)
+    st.plotly_chart(ifig, use_container_width=True, key="now_iip")
+    i_now, i_ago = MM.value(mm, "IIP_GENERAL_INDEX", "2026-08"), MM.value(mm, "IIP_GENERAL_INDEX", "2025-08")
+    st.caption(
+        f"Check: index {i_now:.1f} vs {i_ago:.1f} a year earlier implies "
+        f"{MM.implied_yoy(i_now, i_ago):.2f}% — matches the published {iip['value']:.1f}%. "
+        f"April–August cumulative: {MM.value(mm, 'IIP_GENERAL_YOY_CUMULATIVE', 'FY2026-27 Apr-Aug'):.1f}% "
+        f"vs {MM.value(mm, 'IIP_GENERAL_YOY_CUMULATIVE', 'FY2025-26 Apr-Aug'):.1f}% a year earlier."
+    )
+with g2:
+    bars = [("Measured CPI\n(Aug 2026)", cpi["value"], "#F3C542"),
+            ("Households' view of\ncurrent inflation", MM.value(mm, "HH_INFLATION_PERCEPTION", "2026-09"), MUTED),
+            ("Expected,\n3 months ahead", MM.value(mm, "HH_INFLATION_EXPECTATION_3M", "2026-09"), MUTED),
+            ("Expected,\n1 year ahead", e1y["value"], MUTED)]
+    efig = go.Figure(go.Bar(
+        x=[b[0].replace("\n", "<br>") for b in bars], y=[b[1] for b in bars],
+        marker_color=[b[2] for b in bars], text=[f"{b[1]:.1f}%" for b in bars],
+        textposition="outside", cliponaxis=False, hovertemplate="%{x}: %{y:.1f}%<extra></extra>",
+    ))
+    efig.update_layout(height=360, title="Measured inflation vs what households report",
+                       yaxis=dict(title="%", range=[0, 12]), showlegend=False)
+    st.plotly_chart(efig, use_container_width=True, key="now_expect")
+    st.caption(
+        "The grey bars are survey medians from the RBI's household survey (Sep 2026, 19 cities) — "
+        "sentiment, not an RBI forecast. The gap between them and measured CPI is itself "
+        "something the RBI watches."
+    )
+
+with st.expander("RBI policy rate — decisions, daily and monthly tables"):
+    st.markdown(
+        "The rate is stored as **dated decisions**; the daily and monthly tables are built "
+        "from them. Only decisions entered so far are used — earlier days are left blank "
+        "rather than assumed."
+    )
+    st.dataframe(dec.assign(decision_date=dec["decision_date"].dt.date,
+                            effective_date=dec["effective_date"].dt.date),
+                 hide_index=True, use_container_width=True)
+    first_day = (last_dec["effective_date"] - pd.Timedelta(days=last_dec["effective_date"].day - 1))
+    daily = MM.daily_policy_rate(dec, first_day, TODAY)
+    st.caption(f"Daily rate in force, {first_day:%d %b} → {TODAY:%d %b %Y} (blank = no decision loaded yet):")
+    st.dataframe(daily.rename_axis("date").reset_index().assign(date=lambda d: d["date"].dt.date),
+                 hide_index=True, use_container_width=True, height=220)
+    st.dataframe(MM.monthly_policy_rate(daily, TODAY), hide_index=True, use_container_width=True)
+
+cal = MM.calendar_status(loaders.load_release_calendar(), TODAY)
+st.markdown("**Coming up**")
+st.dataframe(cal.assign(scheduled_release_date=cal["scheduled_release_date"].dt.date),
+             hide_index=True, use_container_width=True)
+
+with st.expander("All monthly figures, with status and source"):
+    st.dataframe(mm, hide_index=True, use_container_width=True)
+    st.download_button("Download (CSV)", mm.to_csv(index=False).encode("utf-8"),
+                       file_name="india_macro_monthly.csv", mime="text/csv", key="now_dl")
+
+st.markdown("---")
+st.header("India vs the world · annual series")
 source_badge("World Bank WDI · API v2", "Annual", "No API key")
 callout(
     "<b>These are internationally harmonised series, not India's official "

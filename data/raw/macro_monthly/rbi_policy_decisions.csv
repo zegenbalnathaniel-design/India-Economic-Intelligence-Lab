@@ -1,0 +1,2 @@
+decision_date,effective_date,policy_repo_rate_pct,previous_rate_pct,change_bp,sdf_rate_pct,msf_rate_pct,bank_rate_pct,stance,status,source,note
+2026-10-07,2026-10-07,5.50,5.25,25,5.25,5.75,5.75,calibrated tightening,PARTIAL,"RBI MPC resolution, 7 Oct 2026 (as reported by Business Standard and others)","Unanimous; first increase since Feb 2023. Effective date taken as the decision date (RBI rate changes apply with immediate effect) -- confirm in the RBI resolution."

@@ -192,3 +192,31 @@ def load_wil_facts() -> pd.DataFrame:
     """Long-run headline figures (growth, wealth-income ratio, billionaires).
     `qualifier` is "stated", "approximate" or "upper bound"."""
     return pd.read_csv(RAW_DIR / "wil" / "long_run_facts.csv")
+
+
+# ---------------------------------------------------------------------------
+# Real data: latest monthly releases (MoSPI CPI and IIP, RBI policy rate and
+# household inflation-expectations survey), entered by hand from official
+# releases and cross-checked against press coverage. Each row carries its
+# own status, base year and release type -- see DATA_REGISTRY.md.
+# ---------------------------------------------------------------------------
+
+@lru_cache(maxsize=8)
+def load_macro_monthly() -> pd.DataFrame:
+    """One row per (indicator, reference_period); `reference_period` is a
+    string ("2026-08", or a labelled range for cumulative figures)."""
+    return pd.read_csv(RAW_DIR / "macro_monthly" / "india_macro_monthly.csv", dtype={"reference_period": str})
+
+
+@lru_cache(maxsize=8)
+def load_rbi_policy_decisions() -> pd.DataFrame:
+    """Dated RBI policy-repo-rate decisions (one row per decision)."""
+    return pd.read_csv(RAW_DIR / "macro_monthly" / "rbi_policy_decisions.csv",
+                       parse_dates=["decision_date", "effective_date"])
+
+
+@lru_cache(maxsize=8)
+def load_release_calendar() -> pd.DataFrame:
+    """Scheduled future releases -- never observed values."""
+    return pd.read_csv(RAW_DIR / "macro_monthly" / "release_calendar.csv",
+                       parse_dates=["scheduled_release_date"])

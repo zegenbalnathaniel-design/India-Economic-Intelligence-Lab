@@ -69,8 +69,8 @@ def test_consistency_gaps_are_small_for_stated_shares(table):
     c = I.consistency_check(table, L.load_wil_facts()).set_index("group")
     for g in ("Bottom 50%", "Top 10%", "Top 1%"):
         assert abs(c.loc[g, "gap_pp"]) < 0.25
-    # Known: the rounded Rs 1.65 lakh average implies ~28.1%, not 27.3% --
-    # surfaced on the page, not hidden.
+    # Known: the Middle 40% average (Rs 1,65,273 per coverage of the paper's
+    # table) implies ~28.1%, not the paper's 27.3% -- surfaced on the page.
     assert 0.5 < c.loc["Middle 40%", "gap_pp"] < 1.0
 
 

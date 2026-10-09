@@ -28,6 +28,8 @@ from app.components.theme import (
     GOLD, CRIMSON, MUTED, PARCHMENT, COBALT,
 )
 from app.components import hairline_display
+from analysis.macro_monthly import latest_decision
+from data_sources.loaders import load_rbi_policy_decisions
 from app.components.glossary import indicator_note
 
 
@@ -60,23 +62,23 @@ st.markdown(
     "the code."
 )
 
-_repo = load_repo_rate().sort_values("period")
-_repo_last = _repo.iloc[-1]
-_as_of = f"{_repo_last['period'].year}-Q{_repo_last['period'].quarter}"
+_dec = latest_decision(load_rbi_policy_decisions())
+_rate = float(_dec["policy_repo_rate_pct"])
+_when = f"{int(_dec['change_bp']):+d} bp on {_dec['decision_date']:%d %b %Y}"
 fig_col, text_col = st.columns([5, 4], vertical_alignment="center")
 with fig_col:
-    hairline_display.render("slow", hero=True, accent=COBALT,
-                            repoRate=f"{float(_repo_last['repo_rate']):.2f}", asOf=_as_of)
+    hairline_display.render("slow", hero=True, accent=COBALT, repoRate=f"{_rate:.2f}", asOf=_when)
 with text_col:
     st.markdown(
         "### Policy works like a slower clock\n"
         "Tighter monetary policy is meant to slow credit growth and "
         "activity. **Hover the belt** and it slows down — a metaphor for "
-        "that transmission, not a chart of any number. The only number "
-        f"on it is the repo rate in the last quarter of this panel's "
-        f"repo_rate.csv ({_as_of}: {float(_repo_last['repo_rate']):.2f}%) — not today's rate. "
-        "The actual 2018-2024 relationship is in the *RBI repo rate vs "
-        "iBFPI* section below."
+        "that transmission, not a chart of any number.\n\n"
+        f"The rate on it is the RBI's current policy repo rate, **{_rate:.2f}%** "
+        f"({_when}, from {float(_dec['previous_rate_pct']):.2f}%), taken from the "
+        "dated decisions file behind the Macro & World page. The bank panel "
+        "below is separate and still illustrative; its own 2018-2024 rate "
+        "series is in the *RBI repo rate vs iBFPI* section."
     )
 
 
