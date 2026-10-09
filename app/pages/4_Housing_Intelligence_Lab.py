@@ -17,6 +17,7 @@ import streamlit as st
 
 from analysis import housing
 from app.components.theme import setup, kicker, callout, source_badge, stat_card, footnote, GOLD
+from app.components.glossary import indicator_note
 from data_sources import loaders
 
 setup("Housing Intelligence Lab", accent=GOLD)
@@ -124,6 +125,39 @@ if income_source == "nsdp":
 else:
     callout(housing.INCOME_PROXY_CAVEATS["mpce"], kind="warn")
 
+indicator_note(
+    "EMI and price-to-income",
+    "**What EMI measures.** EMI (Equated Monthly Instalment) is the "
+    "fixed monthly payment that fully repays a loan — principal plus "
+    "interest — over a chosen tenure, given a loan amount and an interest "
+    "rate. It is the standard amortising-loan formula used by every "
+    "Indian lender: `EMI = P·r·(1+r)ⁿ / ((1+r)ⁿ − 1)`, where `P` is the "
+    "loan principal, `r` the *monthly* interest rate, and `n` the number "
+    "of monthly instalments. Every EMI in the early years of a loan is "
+    "mostly interest; the principal share rises as the loan amortises — "
+    "this page's EMI figure is the level monthly payment, not a snapshot "
+    "of the principal/interest split.\n\n"
+    "**What price-to-income measures.** The price-to-income ratio divides "
+    "a home's purchase price by one year of (proxy) household income — "
+    "a quick, widely-used affordability heuristic: a ratio of 5 means the "
+    "home costs five years of income, before any financing is considered "
+    "at all. The dashed line on the chart below marks 5× as a commonly-"
+    "cited stress threshold in housing-affordability research, not a "
+    "rule derived from this dataset.\n\n"
+    "**How the two relate, and why both are shown.** Price-to-income "
+    "ignores financing terms entirely (rate, tenure, down payment); "
+    "EMI-to-income captures them, but only for *one* specific choice of "
+    "those terms (the sliders on this page). A city can look expensive on "
+    "price-to-income but more manageable on EMI-to-income if a long "
+    "tenure and low rate are assumed, or the reverse — showing both "
+    "avoids a false impression of agreement that would come from relying "
+    "on only one.\n\n"
+    "**Caveat.** Both ratios use the income proxy selected above, not "
+    "measured city household income — see the state-income-proxy note "
+    "below for what that distorts, and the warning banner at the top of "
+    "this page.",
+)
+
 unit_size = st.slider("Reference dwelling size (sq.m.)", 40, 150, int(housing.DEFAULT_UNIT_SIZE_SQM), step=5)
 down_payment_pct = st.slider("Down payment (%)", 0, 50, 20) / 100
 rate = st.slider("Mortgage rate (%)", 5.0, 14.0, 8.5) / 100
@@ -151,6 +185,37 @@ st.dataframe(
         "price_to_income": "{:.2f}", "emi_monthly": "₹{:,.0f}", "emi_to_income_pct": "{:.1f}%",
     }),
     use_container_width=True, hide_index=True,
+)
+
+indicator_note(
+    "the state-income-proxy distortion, concretely",
+    "**Beyond the Delhi-NCR example already flagged above** — the same "
+    "mechanism plays out *within* a single state too. Bengaluru and a "
+    "smaller Karnataka city such as Mysuru or Hubli are assigned the "
+    "*exact same* income proxy value in every row of the table above, "
+    "because both map to Karnataka's single state-average per-capita "
+    "NSDP. In reality Bengaluru's own city-level economy — dominated by "
+    "IT and services employment paying well above the state average — "
+    "almost certainly sits meaningfully above that state figure, while a "
+    "smaller city's actual income may sit closer to, or below, it. The "
+    "proxy cannot see this gap, because by construction it assigns "
+    "*every* city in a state the identical number.\n\n"
+    "**What this means for the ranking above.** A high-income-concentration "
+    "city like Bengaluru, Mumbai or Gurugram will show a price-to-income "
+    "ratio that is **biased toward looking worse** than its true local "
+    "ratio (its true income is probably higher than the state-average "
+    "proxy used), while a smaller or less economically-dominant city in "
+    "the same state will show a ratio that is **biased toward looking "
+    "better** than its true local ratio, for the mirror-image reason. The "
+    "ranking's *ordering* should be read with that systematic tilt in "
+    "mind, not taken as a precise city-by-city affordability league "
+    "table.\n\n"
+    "**The MPCE alternative has a different, not smaller, version of the "
+    "same problem.** Switching to the HCES urban-MPCE proxy changes the "
+    "unit of distortion (it is consumption, not income, and state/UT-"
+    "level, not city-level) but not its shape — every city in a state/UT "
+    "still receives one shared number, so the within-state gap described "
+    "above persists regardless of which proxy is selected.",
 )
 
 st.markdown("---")
@@ -207,6 +272,42 @@ st.markdown(
     "benchmark price level or rate history. 100 = price and income grew equally since the base "
     "period; **>100 = price outpaced income; <100 = income outpaced price**."
 )
+
+indicator_note(
+    "RPIPI, in plain terms",
+    "**What it measures, beyond the formula above.** RPIPI tracks the "
+    "*ratio of two growth rates* — how much a city's housing price index "
+    "has grown since its base period, divided by how much its state's "
+    "per-capita income has grown over the same stretch. It deliberately "
+    "does not try to say whether housing in a city is 'expensive' in "
+    "absolute terms (that is what section B's price-to-income ratio is "
+    "for) — it only tracks the *direction of change* in relative pace, "
+    "starting from wherever the city happened to be at its base year.\n\n"
+    "**Why >100 and <100 matter, not just >/< some other number.** 100 is "
+    "not an arbitrary cutoff the way price-to-income's '5×' line is — it "
+    "is a mathematical consequence of the formula: RPIPI equals exactly "
+    "100 at the base period by construction (price and income have each "
+    "grown 0% from themselves), so any later reading above 100 means "
+    "price growth has outrun income growth *since that specific base "
+    "year*, and any reading below 100 means the reverse. It is a "
+    "self-referential index, not a universal affordability scale.\n\n"
+    "**A finding worth being explicit about.** For Mumbai specifically, "
+    "the real computed RPIPI from this data falls *below* 100 by the "
+    "latest year — Maharashtra's per-capita NSDP grew faster over this "
+    "window than Mumbai's RESIDEX composite index did, i.e. by this "
+    "specific measure, income outpaced price in Mumbai, which runs "
+    "against the popular narrative that Mumbai housing has become ever "
+    "less affordable. This is exactly why the index is useful: it reports "
+    "what the two real series actually did, which does not always match "
+    "intuition.\n\n"
+    "**Caveat.** Because the base year is the *earliest year both series "
+    "happen to cover for that specific city*, different cities are not "
+    "all being measured from the same calendar starting point — compare "
+    "RPIPI levels across cities only after checking each one's base "
+    "financial year (shown above), and never mistake a RPIPI run that "
+    "starts from a different base year for a like-for-like comparison.",
+)
+
 rpipi_city = st.selectbox("City", cities, index=cities.index("Mumbai") if "Mumbai" in cities else 0, key="rpipi_city")
 try:
     residex_index = loaders.load_residex_index()
@@ -258,6 +359,39 @@ st.markdown(
     "so one extreme-outlier city cannot compress every other city's score toward zero."
 )
 callout(housing.RATE_DISCLOSURE, kind="warn")
+
+indicator_note(
+    "ICHASI's percentile clipping",
+    "**What percentile clipping does.** Before rescaling every city's "
+    "price-to-income ratio onto a 0-100 scale, each ratio is first capped "
+    "(*clipped*) to the 5th and 95th percentile values of that same "
+    "quarter's cross-city distribution — any city below the 5th "
+    "percentile is pulled up to it, and any city above the 95th "
+    "percentile is pulled down to it, before the 0-100 rescaling happens.\n\n"
+    "**Why this matters — the problem it prevents.** A 0-100 rescaling "
+    "normally stretches the *lowest* value in the set to 0 and the "
+    "*highest* to 100, and spaces everything else linearly between them. "
+    "If one city-quarter is a genuine extreme outlier (say, an "
+    "unusually small, unusually expensive market), that single city would "
+    "anchor one end of the 0-100 scale, compressing every other city's "
+    "score into a narrow band near the other end — making 49 ordinary "
+    "cities look artificially similar to each other just because one "
+    "city is extreme. Clipping first removes that single city's power to "
+    "distort everyone else's score.\n\n"
+    "**How to read the resulting score.** 0 corresponds to the "
+    "(post-clipping) least price-stressed city in that quarter's "
+    "comparison set, 100 to the most price-stressed — it is a **relative** "
+    "ranking among the cities actually compared that quarter, not an "
+    "absolute stress level that would mean the same thing if the set of "
+    "cities compared changed, or in a different quarter.\n\n"
+    "**Caveat.** Clipping trades away some information at the extremes — "
+    "two cities that were genuinely far apart in raw price-to-income "
+    "terms, if both landed beyond the 5th/95th percentile bounds, can be "
+    "pulled to the same clipped value and therefore the same score. This "
+    "is a deliberate, disclosed trade-off (robustness to outliers, at the "
+    "cost of some resolution at the tails), consistent with the same "
+    "robust-statistics logic used for iBFPI in the Banking Lab.",
+)
 
 try:
     stress_result = housing.stress_index_cross_section(

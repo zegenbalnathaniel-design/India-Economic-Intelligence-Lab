@@ -17,6 +17,7 @@ import streamlit as st
 
 from analysis import regional
 from app.components.theme import setup, kicker, callout, source_badge, stat_card, footnote, LEAF
+from app.components.glossary import indicator_note
 from data_sources import loaders
 
 setup("State Economic Divergence Lab", accent=LEAF)
@@ -53,6 +54,42 @@ st.markdown(
     "time, measured by the cross-sectional **coefficient of variation** (CV = population "
     "std / mean, as a %) of per-capita NSDP each year. A falling CV means states are "
     "converging toward each other; a rising CV means they're spreading apart."
+)
+
+indicator_note(
+    "sigma convergence vs. beta convergence",
+    "**Two different questions, both called 'convergence'.** Sigma (σ) "
+    "convergence asks a question about the *group as a whole*: is the "
+    "spread of incomes across all states shrinking over time? Beta (β) "
+    "convergence asks a different question about *individual states*: do "
+    "the states that started poorer tend to grow faster than the states "
+    "that started richer? These sound similar but are not interchangeable "
+    "— one describes the shape of the whole distribution at each point in "
+    "time, the other describes a pattern in each state's own growth rate "
+    "relative to where it started.\n\n"
+    "**Why you need both.** Beta convergence (poorer states growing "
+    "faster) is a *necessary but not sufficient* condition for sigma "
+    "convergence (the overall spread shrinking). It is possible for a few "
+    "poor states to grow quickly and a few rich states to grow slowly — "
+    "satisfying beta convergence — while the dispersion of the *whole* "
+    "distribution barely moves, because other states in the middle are "
+    "pulling apart, or the fast-growing poor states were too few to move "
+    "the aggregate statistic. Seeing one without the other is a normal, "
+    "informative outcome, not a contradiction to be explained away — it "
+    "tells you *where* in the distribution the action (or inaction) is "
+    "concentrated.\n\n"
+    "**How to read the two findings together on this page.** If sigma "
+    "says 'converging' and beta also says 'converging', that is a "
+    "consistent, mutually reinforcing picture. If they disagree — as the "
+    "callout further down discusses for this dataset — it means the "
+    "convergence story is more complicated than 'states are/aren't "
+    "converging': look at which specific states are driving each test "
+    "(the beta scatter plot) before drawing a single headline conclusion.\n\n"
+    "**Caveat.** Both are purely descriptive statistics about this income "
+    "series over this period. Neither test, by itself, identifies *why* "
+    "any convergence or divergence occurs (trade, migration, policy, "
+    "technology diffusion are all candidate explanations in the growth "
+    "literature, and none is tested here).",
 )
 
 sigma = regional.sigma_convergence(nsdp)
@@ -130,6 +167,37 @@ st.markdown("---")
 
 # ---------- C. State ranking ----------------------------------------------
 st.header("C · State ranking — latest year")
+
+indicator_note(
+    "per-capita NSDP as a welfare measure",
+    "**What it measures.** Net State Domestic Product (NSDP) per capita "
+    "divides a state's total economic output (minus depreciation) by its "
+    "population. It is a measure of *average output per person in the "
+    "state economy* — the standard, officially published way to compare "
+    "the size of state economies on a population-adjusted basis.\n\n"
+    "**How to read a high vs. low value.** A higher per-capita NSDP means "
+    "a state produces more economic output per resident, on average. It "
+    "is the state-level analogue of national per-capita GDP, and carries "
+    "the same broad interpretation: a rough, aggregate indicator of "
+    "economic scale relative to population, not a precise welfare score.\n\n"
+    "**What it is NOT.** Per-capita NSDP is **not household income** — "
+    "output produced within a state's borders is not the same as income "
+    "received by its residents (profits can flow to shareholders "
+    "elsewhere; migrant workers can send output home to other states). It "
+    "also says nothing about **how that output is distributed within the "
+    "state** — a state can have a high average and still have most of its "
+    "population living far below that average, if income is concentrated "
+    "in a small share of residents or a few urban centres. Averages by "
+    "construction hide distribution.\n\n"
+    "**Caveat.** State output estimates carry their own measurement "
+    "issues — informal-sector activity is harder to capture than formal-"
+    "sector activity, and price deflators and population estimates used "
+    "to convert raw output into real, per-capita terms are themselves "
+    "estimates subject to revision (see the splice-method note in "
+    "`DATA_REGISTRY.md` for exactly how this series' two base-year "
+    "vintages were linked).",
+)
+
 ranked = regional.rank_states_latest(nsdp)
 latest_year = nsdp["financial_year"].max()
 st.caption(f"Per-capita NSDP (constant prices, spliced series), {latest_year}")
@@ -144,6 +212,37 @@ st.markdown(
     "not a trend. It cannot itself answer the convergence/divergence question; it's shown "
     "alongside income for context."
 )
+
+indicator_note(
+    "the PLFS unemployment rate",
+    "**What it measures.** This is the **usual status** unemployment "
+    "rate for persons aged 15 and above, from the government's Periodic "
+    "Labour Force Survey (PLFS) — the share of the labour force (people "
+    "working or seeking work) who did not have work for a relatively long "
+    "reference period (the preceding 365 days under the 'usual status' "
+    "definition) but were available for it.\n\n"
+    "**What 'unemployed' means here, precisely.** PLFS classifies someone "
+    "as unemployed only if they are *actively seeking or available for* "
+    "work and currently have none — this excludes people not seeking work "
+    "at all (students, those engaged solely in unpaid domestic duties, "
+    "retirees), who are counted as 'out of the labour force' rather than "
+    "unemployed. It also does not distinguish someone working one hour a "
+    "week from someone working full-time — both count as 'employed' under "
+    "usual status, which is a known limitation of this kind of headline "
+    "unemployment measure, not specific to PLFS or to India.\n\n"
+    "**How to read a high vs. a low value.** A higher rate means a larger "
+    "share of that state's labour force is both seeking work and not "
+    "finding it over the reference period — but a *low* unemployment rate "
+    "in a state with widespread informal, low-paid or underemployed work "
+    "does not necessarily mean that state's workforce is well off; it can "
+    "simply mean very few people can afford to be formally jobless.\n\n"
+    "**Why this is a snapshot, not a trend.** Only the 2023-24 PLFS year "
+    "is available in this project, so the chart above shows one point in "
+    "time for each state — it cannot show whether any state's "
+    "unemployment rate is rising, falling, or stable, and should not be "
+    "read as doing so.",
+)
+
 unemp = loaders.load_unemployment_by_state()
 unemp_sorted = unemp[unemp["state"] != "India"].sort_values("unemployment_rate_usual_status_15plus_2023_24", ascending=False)
 fig_u = go.Figure(go.Bar(x=unemp_sorted["state"], y=unemp_sorted["unemployment_rate_usual_status_15plus_2023_24"]))

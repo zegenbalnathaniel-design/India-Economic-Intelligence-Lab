@@ -28,6 +28,7 @@ from app.components.theme import (
     GOLD, CRIMSON, MUTED, PARCHMENT, COBALT,
 )
 from app.components import hairline_display
+from app.components.glossary import indicator_note
 
 
 setup("Banking & Monetary Policy Lab", accent=COBALT)
@@ -71,6 +72,36 @@ source_badge(
     "Data · Illustrative (this build)",
     "Method · BFPI, adapted",
     "Reference · Author’s JP Morgan / Fed-rate paper",
+)
+
+indicator_note(
+    "iBFPI",
+    "**What it is, in plain terms.** iBFPI is a single number per bank per "
+    "quarter that summarises, in one figure, whether that bank's financial "
+    "performance is running above or below its *own historical norm* on "
+    "five dimensions at once — profitability (PPNR/assets), capital "
+    "strength (CET1 ratio), credit quality (net charge-off rate), "
+    "liquidity (LCR) and balance-sheet interest-rate risk (unrealised "
+    "losses relative to CET1). Rather than reading five separate charts "
+    "and forming an impression, iBFPI collapses them into one comparable "
+    "scale.\n\n"
+    "**How to read a high vs. a low value.** A positive iBFPI means the "
+    "bank's blended performance that quarter sits *above* its own "
+    "historical median across these five indicators; a negative value "
+    "means it sits below. Zero is that bank's own typical quarter — it is "
+    "a relative, not absolute, scale (see the construction section below "
+    "for why).\n\n"
+    "**What moves it.** Any quarter-to-quarter change in profitability, "
+    "capital, asset quality, liquidity or interest-rate exposure that is "
+    "unusual *relative to that bank's own history* — a one-off credit loss, "
+    "a capital raise, a liquidity buffer build-up, or (per the regime-"
+    "split analysis below) a shift in the interest-rate environment.\n\n"
+    "**Caveat.** Because each bank is standardised against its own "
+    "history, iBFPI cannot tell you which bank is healthier than another "
+    "in absolute terms — a bank with a strong but *stable* balance sheet "
+    "will show an iBFPI near zero most quarters, the same as a chronically "
+    "weak bank that is simply having an average quarter for itself. It "
+    "measures change-from-self, not rank-across-banks.",
 )
 
 
@@ -131,12 +162,74 @@ st.markdown(
 st.latex(r"Z^*_{it} = D \cdot \frac{X_{it} - \mathrm{median}_i(X)}{1.4826 \cdot \mathrm{MAD}_i(X)}")
 st.latex(r"iBFPI_{it} = \frac{1}{5} \sum_{k=1}^{5} Z^*_{k,it}")
 
+indicator_note(
+    "a robust z-score (vs. a plain average)",
+    "**Why robust statistics instead of a plain mean and standard "
+    "deviation.** An ordinary z-score, `(x − mean) / std`, is built from "
+    "two statistics that are themselves highly sensitive to outliers: one "
+    "extreme quarter (a one-off loan write-off, a reporting anomaly) can "
+    "drag the mean and inflate the standard deviation enough to distort "
+    "every *other* quarter's z-score, not just the outlier's own. Banking "
+    "data over a 2018-2024 window that spans COVID-era credit losses and "
+    "sharp rate moves is exactly the kind of series where a handful of "
+    "unusual quarters is likely.\n\n"
+    "**What the robust version does differently.** The **median** replaces "
+    "the mean as the centre point — it does not move much even if one or "
+    "two quarters are extreme. The **median absolute deviation (MAD)** "
+    "replaces the standard deviation as the spread measure, for the same "
+    "reason. The constant 1.4826 rescales MAD so that, *if* the underlying "
+    "data were normally distributed, the robust z-score would numerically "
+    "match an ordinary z-score — this keeps the robust version "
+    "interpretable on the same 'roughly how many typical deviations away' "
+    "scale, while remaining resistant to outliers.\n\n"
+    "**How to read it.** A robust z-score of, say, +2 means the value is "
+    "unusually far above that bank's typical (median) quarter, in a way "
+    "that a few anomalous quarters elsewhere in the series cannot "
+    "manufacture or hide.\n\n"
+    "**Caveat.** Robustness to outliers is not free: if MAD happens to be "
+    "very small (a bank with an unusually stable history on one "
+    "indicator), even a modest absolute change can produce a large robust "
+    "z-score. The code handles the degenerate case (MAD = 0) by returning "
+    "zero rather than dividing by zero, but a near-zero MAD can still make "
+    "the index noisier than it looks.",
+)
+
 with st.expander("Direction coefficients"):
     dcoef = pd.DataFrame([
         {"Indicator": banking.INDICATOR_LABELS[k], "Direction D": banking.INDICATOR_DIRECTION[k]}
         for k in banking.INDICATOR_DIRECTION
     ])
     st.dataframe(dcoef, hide_index=True, use_container_width=True)
+
+indicator_note(
+    "the direction coefficients",
+    "**Why some indicators get multiplied by −1.** iBFPI is built so that "
+    "a higher score always means 'better for the bank', consistently "
+    "across all five indicators. That is automatically true for "
+    "profitability (PPNR/assets), capital strength (CET1 ratio) and "
+    "liquidity (LCR) — more of each is unambiguously good, so their "
+    "direction coefficient `D` is +1 and the raw robust z-score is used "
+    "as-is.\n\n"
+    "**Why net charge-offs and unrealised losses flip sign.** For the "
+    "net charge-off rate and for unrealised securities losses relative to "
+    "CET1, the relationship is reversed: a *higher* value means *worse* "
+    "credit quality or *worse* balance-sheet stress. Multiplying their "
+    "robust z-score by `D = −1` flips the sign, so that for these two "
+    "indicators specifically, a bank doing *better* than its own history "
+    "(lower charge-offs, smaller unrealised losses) also produces a "
+    "*positive* contribution to iBFPI — matching the other three.\n\n"
+    "**What this buys you.** Without the flip, averaging the five raw "
+    "z-scores together would be meaningless: an improving bank would push "
+    "some indicators up and others down for the same underlying reason "
+    "(getting healthier), and they would partially cancel out instead of "
+    "reinforcing each other in the composite.\n\n"
+    "**Caveat.** Flipping the sign is a modelling choice about what "
+    "'good' means for each indicator — it is standard practice for this "
+    "kind of composite index, not a measured fact, and it assumes each "
+    "indicator's 'badness' direction never reverses (which is a reasonable "
+    "assumption for these five, but would need re-checking for any "
+    "indicator added later).",
+)
 
 
 # ---------- Aggregate iBFPI plot ---------------------------------------------
@@ -223,6 +316,35 @@ with text_col:
         "the chart below."
     )
 
+indicator_note(
+    "the RBI repo rate and its transmission to banks",
+    "**What it is.** The repo rate is the interest rate at which the "
+    "Reserve Bank of India lends short-term funds to commercial banks "
+    "against government securities as collateral. It is the RBI's main "
+    "policy lever: raising it is meant to tighten monetary conditions "
+    "(cool demand, fight inflation); cutting it is meant to loosen them "
+    "(support growth).\n\n"
+    "**How it is meant to transmit to bank performance.** A repo-rate "
+    "change is meant to pass through to banks' own lending and deposit "
+    "rates (loan EMIs, deposit yields), to credit demand and quality over "
+    "time, and — specifically relevant to one of the five iBFPI "
+    "indicators here — to the **mark-to-market value of banks' existing "
+    "fixed-rate bond holdings**: when rates rise, previously-issued bonds "
+    "paying a lower fixed coupon become less valuable, which shows up as "
+    "unrealised losses relative to CET1. This 'unrealised-loss channel' is "
+    "the single most mechanical, fastest-acting link between the repo "
+    "rate and iBFPI in this panel.\n\n"
+    "**What moves it.** RBI's own policy decisions, set in response to "
+    "inflation, growth and external conditions — the repo rate itself is "
+    "not something banks or this dashboard can influence.\n\n"
+    "**Caveat.** Transmission in practice is neither instant nor "
+    "complete — banks reprice loans and deposits with lags that vary by "
+    "product and by bank, and the degree of pass-through has historically "
+    "been a live policy debate in India. This page measures a "
+    "*correlation* between the policy rate and the index level, not an "
+    "estimate of transmission speed or strength.",
+)
+
 merged = agg.merge(repo, on="period", how="inner").dropna()
 
 fig = make_subplots(specs=[[{"secondary_y": True}]])
@@ -284,6 +406,37 @@ with rc3: stat_card("Stable · ρ", f"{stable.rho:+.3f}", f"n = {stable.n}, p = 
 st.caption(
     "Regime classification: three-quarter rolling change in the repo rate. "
     "> +25bp = rising, < −25bp = falling, otherwise stable."
+)
+
+indicator_note(
+    "the regime split and the Spearman correlation",
+    "**What the regime split is doing.** The relationship between the "
+    "repo rate and iBFPI might not be the same in every interest-rate "
+    "environment — a cut might coincide with improving iBFPI for a "
+    "different reason than a hike coincides with declining iBFPI. "
+    "Splitting the sample into 'rising', 'falling' and 'stable' quarters "
+    "(by the three-quarter rolling change in the repo rate) and "
+    "re-running the correlation *within each regime* checks whether the "
+    "overall association is uniform or is instead concentrated in, say, "
+    "the rising-rate quarters only.\n\n"
+    "**What Spearman's ρ is.** Spearman correlation measures whether two "
+    "series move in the same *rank order* — when one is high, is the "
+    "other also high, regardless of whether the relationship between them "
+    "is a straight line? It runs from −1 (perfectly opposite ranking) to "
+    "+1 (perfectly matching ranking), and is reported here with a "
+    "p-value, which indicates how likely a correlation this strong would "
+    "arise by chance alone if there were truly no association — a "
+    "pragmatic, not definitive, way to flag whether a given regime's "
+    "sample is too small or too noisy to read much into.\n\n"
+    "**What this is NOT.** This whole panel is explicitly illustrative, "
+    "per the warning at the top of this page — the underlying bank panel "
+    "is synthetic, so the specific ρ values are a demonstration of the "
+    "method, not a finding about real Indian banks. Even with real data, "
+    "a correlation — split by regime or not — never by itself establishes "
+    "that the repo rate *causes* the change in iBFPI, or vice versa; both "
+    "could be responding to a third factor (e.g. the broader macro cycle), "
+    "and a small number of quarters per regime makes any single ρ fragile "
+    "to one or two unusual observations.",
 )
 
 footnote(

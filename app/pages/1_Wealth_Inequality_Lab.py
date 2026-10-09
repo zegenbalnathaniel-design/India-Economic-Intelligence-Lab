@@ -26,6 +26,7 @@ from analysis import wealth
 from app.components.theme import (
     setup, kicker, callout, source_badge, stat_card, footnote, GOLD, CRIMSON, MUTED, VERMILLION,
 )
+from app.components.glossary import indicator_note
 
 
 setup("Wealth & Inequality Lab", accent=VERMILLION)
@@ -118,6 +119,35 @@ st.markdown(
     "assumption below is editable."
 )
 
+indicator_note(
+    "the composition effect",
+    "**What it measures.** Two households can save the exact same amount, "
+    "every year, for the exact same number of years, and still end up with "
+    "very different final wealth — purely because of *what* they bought with "
+    "those savings. The composition effect isolates that gap: it holds the "
+    "savings rate and horizon fixed and varies only the asset mix (property, "
+    "gold, equities, bonds, deposits, cash), so whatever difference in final "
+    "wealth remains is attributable to composition, not effort or thrift.\n\n"
+    "**How to read it.** A portfolio tilted toward a higher-expected-return "
+    "asset compounds to a larger number over a long horizon — not because "
+    "the household did anything differently in terms of saving, but because "
+    "money sitting in a higher-return asset for decades grows geometrically "
+    "faster. The gap widens with the horizon: over 5 years, two reasonable "
+    "allocations barely diverge; over 30-40 years, the same return gap "
+    "compounds into a materially different outcome.\n\n"
+    "**What moves it.** The weighted average return of the portfolio — which "
+    "is a function of the allocation *and* the return assumptions you set "
+    "above — and, when rebalancing is off, the way winning assets grow to "
+    "dominate the portfolio's weight over time (drift), which itself changes "
+    "the effective weighted return as the simulation runs.\n\n"
+    "**Caveat.** This is an accounting identity about compounding, not a "
+    "claim that any one allocation is the 'right' one for a given household. "
+    "It says nothing about the risk, liquidity or tax consequences of holding "
+    "more of a higher-return asset — those are shown separately in module C, "
+    "specifically because folding them into one number would hide the "
+    "trade-off rather than illuminate it.",
+)
+
 with st.container():
     c_input, c_alloc = st.columns([1, 1.3], gap="large")
     with c_input:
@@ -199,6 +229,33 @@ with k4:
     stat_card("Investment gains", _rupee(final_gain),
               f"weighted return {result.weighted_return*100:.2f}%")
 
+indicator_note(
+    "real return vs. nominal return",
+    "**What it measures.** A *nominal* return is the percentage growth in "
+    "the rupee number on a statement — it says nothing about what those "
+    "rupees can buy. A *real* return subtracts out inflation, so it measures "
+    "growth in **purchasing power**: `real ≈ nominal − inflation` (the exact "
+    "relationship is `(1+real) = (1+nominal)/(1+inflation)`, which this page "
+    "uses rather than the approximation).\n\n"
+    "**How to read it.** 'Nominal wealth' above is the number that would "
+    "appear on an account statement at year *T*. 'Real wealth' deflates that "
+    "same path by the inflation assumption you set, so it answers a "
+    "different question: how much could this pile of money actually buy, in "
+    "today's terms, at year *T*? The two lines on the chart below diverge "
+    "more the higher the inflation assumption and the longer the horizon — "
+    "they are the same underlying wealth path, just two different rulers "
+    "held up to it.\n\n"
+    "**What moves it.** The gap between nominal and real wealth is driven "
+    "entirely by the inflation slider — raise it, and the real line falls "
+    "further below the nominal line even though nothing about the "
+    "portfolio's actual returns changed.\n\n"
+    "**Caveat.** A single inflation assumption applied uniformly is a "
+    "simplification: in reality, different assets have different exposure "
+    "to inflation (property and gold are often considered partial inflation "
+    "hedges; a fixed-rate bank deposit is not), and a household's own cost "
+    "of living may run above or below the general inflation rate used here.",
+)
+
 # Path chart
 path_fig = go.Figure()
 path_fig.add_scatter(x=result.years, y=result.nominal_wealth,
@@ -262,6 +319,39 @@ st.markdown(
     "volatilities from the research paper, with annual rebalancing to "
     "target weights. The band is the 5th-95th percentile of outcomes; the "
     "dark line is the median."
+)
+
+indicator_note(
+    "the Monte Carlo simulation",
+    "**What it is doing.** For each of the simulated paths, every asset's "
+    "annual return is redrawn at random from a distribution centred on the "
+    "mean return you set, with a spread equal to that asset's assumed "
+    "volatility — then the same contribution-and-compounding arithmetic from "
+    "module B is run on that one random path. Doing this thousands of times "
+    "produces a *distribution* of possible final-wealth outcomes rather "
+    "than a single number, and the chart shows the 5th, 25th, 50th "
+    "(median), 75th and 95th percentiles of that distribution at each year.\n\n"
+    "**How to read it.** The median line is the typical simulated outcome "
+    "under these assumptions — it will usually sit close to, but not "
+    "exactly on, the deterministic path above, because compounding "
+    "volatile returns is not the same arithmetic as compounding a fixed "
+    "average return. The bands show *how wide* the range of plausible "
+    "outcomes is, which is itself useful information: a wide band at year "
+    "30 means the long-run outcome is genuinely uncertain, even if the "
+    "assumptions you set are reasonable on average.\n\n"
+    "**What this is *not*.** This is not a forecast of what will actually "
+    "happen to Indian asset returns over the next few decades. It is a "
+    "mechanical exercise in propagating the volatility assumptions you "
+    "chose through the same compounding model — garbage assumptions in, "
+    "garbage (but precisely quantified) distribution out. Treat the spread "
+    "as illustrating 'returns are uncertain, and here is one way to "
+    "quantify that uncertainty under stated assumptions', not as a "
+    "probability of any specific rupee amount occurring in reality.\n\n"
+    "**Caveat.** Each asset's returns are drawn independently year to year "
+    "and, as the warning below notes, independently across assets within a "
+    "year too — real asset returns show serial correlation (a bad year can "
+    "be followed by a partial rebound) and cross-asset correlation that "
+    "this simplified version does not capture.",
 )
 
 mc_c1, mc_c2 = st.columns([1, 1])
@@ -344,6 +434,34 @@ st.markdown(
     "before diversification."
 )
 
+indicator_note(
+    "the asset-allocation comparison",
+    "**What it measures.** Each row re-runs the identical savings plan "
+    "(same annual contribution, same horizon) as if the household held "
+    "*only* that one asset for the entire period — a deliberately extreme "
+    "case that makes the return-driven gap between assets as visible as "
+    "possible, before diversification blends it away.\n\n"
+    "**How to read it.** 'Final real wealth' is the fair comparison across "
+    "rows, because it controls for the inflation assumption that applies "
+    "equally to all of them; 'nominal return' and 'real return' show the "
+    "assumed annual growth rate each asset compounds at, which is the "
+    "entire reason the final-wealth column differs row to row. The "
+    "volatility and liquidity columns are shown next to, not folded into, "
+    "the wealth figures — a higher final number from an all-equities "
+    "scenario did not 'cost' anything in this table, because the table "
+    "does not price risk or liquidity, only return.\n\n"
+    "**What moves it.** Purely the return assumption you set for each asset "
+    "in module B above (volatility does not enter the deterministic "
+    "wealth path at all — see the Monte Carlo module for that).\n\n"
+    "**Caveat — read this before treating any row as advice.** A single-"
+    "asset household is not a realistic recommendation; it is an analytic "
+    "device. A real household concentrated entirely in equities would face "
+    "a very different, much wider range of actual outcomes than the single "
+    "number shown here (compare to the Monte Carlo band above), and would "
+    "also bear transaction costs, taxes and liquidity constraints this "
+    "table excludes by design, exactly as the warning below states.",
+)
+
 rows = []
 for k in wealth.ASSET_KEYS:
     r = ret_inputs[k]
@@ -399,6 +517,38 @@ st.markdown(
     "inequality of *individuals* must rise. Distributional outcomes also "
     "depend on savings behaviour, bequest patterns and the composition of "
     "wealth across the distribution."
+)
+
+indicator_note(
+    "r − g",
+    "**What it measures.** `r` is the real rate of return earned on capital "
+    "(property, equities, bonds — anything owned rather than earned as a "
+    "wage); `g` is the real growth rate of the overall economy (and, over "
+    "the long run, of average labour income). `r − g` compares how fast "
+    "money invested grows against how fast the economy — and with it, "
+    "typical wages — grows.\n\n"
+    "**How to read it.** When `r > g`, wealth that is simply held and "
+    "reinvested grows faster than the economy as a whole, so **the share "
+    "of total income flowing to owners of capital tends to rise relative "
+    "to the share flowing to labour** over time, all else equal. When "
+    "`r < g`, the reverse holds — capital's share tends to shrink relative "
+    "to labour's. This is the core mechanism popularised by Thomas "
+    "Piketty's work on long-run inequality: it is an argument about the "
+    "*functional* distribution of income (capital vs. labour), not "
+    "directly a statement about how unequal individual people's incomes "
+    "or wealth are.\n\n"
+    "**What moves it.** `r` responds to asset returns and inflation (see "
+    "the nominal-vs-real note above); `g` responds to productivity growth, "
+    "labour-force growth and capital investment in the real economy — the "
+    "two are driven by largely different forces, which is exactly why "
+    "comparing them is informative rather than circular.\n\n"
+    "**Caveat.** `r > g` is an accounting relationship about *aggregate* "
+    "capital and labour shares. Whether it translates into rising "
+    "inequality *between individuals* also depends on how concentrated "
+    "capital ownership already is, how much of capital income is saved "
+    "versus consumed, and bequest and tax policy — none of which this "
+    "identity speaks to on its own. Treat it as one necessary ingredient "
+    "in an inequality story, not the whole story.",
 )
 
 cA, cB, cC = st.columns(3)
