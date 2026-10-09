@@ -198,18 +198,35 @@ def carousel_drag_script(key: str) -> None:
       tries++;
       if (el && !el.dataset.dragWired) {{
         el.dataset.dragWired = "1";
-        var isDown = false, startX = 0, startScroll = 0;
+        // Only become a drag after the pointer moves past a small threshold:
+        // capturing on pointerdown retargets the click to the carousel and
+        // swallows clicks on the card links inside it.
+        var isDown = false, dragging = false, startX = 0, startScroll = 0, pid = null;
+        var THRESHOLD = 6;
         el.addEventListener('pointerdown', function(e) {{
-          isDown = true; startX = e.pageX; startScroll = el.scrollLeft;
-          el.setPointerCapture(e.pointerId);
+          if (e.pointerType !== 'mouse' || e.button !== 0) return;  // touch scrolls natively
+          isDown = true; dragging = false; startX = e.pageX; startScroll = el.scrollLeft; pid = e.pointerId;
         }});
         el.addEventListener('pointermove', function(e) {{
           if (!isDown) return;
-          el.scrollLeft = startScroll - (e.pageX - startX);
+          var dx = e.pageX - startX;
+          if (!dragging && Math.abs(dx) > THRESHOLD) {{
+            dragging = true;
+            try {{ el.setPointerCapture(pid); }} catch (err) {{}}
+          }}
+          if (dragging) el.scrollLeft = startScroll - dx;
         }});
-        var stop = function() {{ isDown = false; }};
+        var stop = function() {{
+          isDown = false;
+          if (dragging) setTimeout(function() {{ dragging = false; }}, 0);
+        }};
         el.addEventListener('pointerup', stop);
         el.addEventListener('pointercancel', stop);
+        // After a real drag, cancel the click that follows so a drag that
+        // ends on a link doesn't navigate.
+        el.addEventListener('click', function(e) {{
+          if (dragging) {{ e.preventDefault(); e.stopPropagation(); }}
+        }}, true);
       }}
       if (tries > 20 || (el && el.dataset.dragWired)) clearInterval(iv);
     }}, 150);

@@ -7,6 +7,10 @@ new code while `data_sources.loaders` and `analysis.*` stay as the old
 objects in sys.modules -- and a page calling a newly added function fails
 with AttributeError / ImportError until the app is rebooted.
 
+app/components/ is inside app/, but in practice its modules were not
+reloaded either (verified: a changed home_theme.py kept serving the old
+carousel script until restart), so it is covered too.
+
 Every page calls `reload_stale_modules()` before importing those packages.
 A module is reloaded (in place, so existing references see the new code)
 when its file has changed since it was last loaded, or the first time this
@@ -20,7 +24,9 @@ import os
 import sys
 import threading
 
-PACKAGES = ("data_sources", "analysis")
+PACKAGES = ("data_sources", "analysis", "app.components")
+# Never reload this module from inside its own function.
+_SKIP = {__name__}
 _MARK = "__ieil_loaded_mtime__"
 _lock = threading.Lock()
 
@@ -44,7 +50,7 @@ def reload_stale_modules() -> list[str]:
             )
             for name in names:
                 module = sys.modules.get(name)
-                if module is None:
+                if module is None or name in _SKIP:
                     continue
                 current = _mtime(module)
                 if current is None or getattr(module, _MARK, None) == current:
