@@ -41,6 +41,7 @@ from app.components.theme import (
 )
 from app.components.glossary import indicator_note
 from app.components.provenance import sources_panel
+from app.components import regression_workbench
 from data_sources import loaders
 
 setup("Economic Relationships Lab", accent=TURQUOISE)
@@ -56,7 +57,8 @@ with st.sidebar:
         "- C · Result, analysis & statistics\n"
         "- D · Scatter & residuals\n"
         "- E · Lagged & rolling correlation (time series)\n"
-        "- F · Aligned data & downloads"
+        "- F · Aligned data & downloads\n"
+        "- Regression workbench (mode in A): multiple OLS, robust SEs, diagnostics, exports"
     )
     st.markdown("---")
     st.caption("Status: real data except the quarterly banking pair, which is ILLUSTRATIVE — every "
@@ -324,12 +326,29 @@ st.markdown("---")
 
 st.header("A · Choose a hypothesis")
 mode = st.radio(
-    "Analysis mode", ["Hypothesis library", "Cross-section of states", "Time series"],
+    "Analysis mode", ["Hypothesis library", "Cross-section of states", "Time series", "Regression workbench"],
     horizontal=True, key="rel_mode",
     help="Hypothesis library: ready-made, documented tests (states, cities, WIL inequality, growth, "
          "investment). Cross-section: build your own state-level pair. Time series: city house prices "
-         "vs state income, or the illustrative repo-rate / iBFPI pair.",
+         "vs state income, or the illustrative repo-rate / iBFPI pair. Regression workbench: multiple OLS "
+         "with robust standard errors, diagnostics and reproducible exports on real series only.",
 )
+
+if mode == "Regression workbench":
+    # Self-contained econometrics mode (app/components/regression_workbench.py,
+    # calculations in analysis/econometrics.py). Sections B-F below belong to
+    # the bivariate modes, so the page ends here for this mode.
+    st.markdown("---")
+    regression_workbench.render()
+    st.markdown("---")
+    footnote(
+        "Workbench variables are loaded from files in data/raw/ via data_sources.loaders (through "
+        "analysis.workbench_catalogue); statuses follow DATA_REGISTRY.md. Estimates are descriptive "
+        "statistics of these specific samples, not causal claims."
+    )
+    sources_panel("wil_india", "rbi_nsdp_current", "rbi_nsdp_spliced", "state_gsdp_nsdp_pc", "plfs_unemployment",
+                  "hces_mpce", "real_pc_nni", "rbi_gcf_sector")
+    st.stop()
 is_lib = mode == "Hypothesis library"
 is_ts = mode == "Time series"
 
