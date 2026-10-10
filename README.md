@@ -54,7 +54,7 @@ india-economic-intelligence-lab/
 │
 ├── data/
 │   ├── raw/                source files (RBI, NHB, PLFS, HCES, WIL, author papers, ...)
-│   └── processed/          bank_panel.csv (ILLUSTRATIVE), repo_rate.csv
+│   └── processed/          bank_panel.csv (ILLUSTRATIVE), repo_rate.csv (DERIVED)
 │
 ├── data_sources/           loaders, evidence ledger (registry.py, meta_*.py),
 │                           validation checks, World Bank client

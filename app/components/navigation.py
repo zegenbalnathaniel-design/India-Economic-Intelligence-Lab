@@ -33,10 +33,10 @@ SECTIONS: dict[str, list[PageSpec]] = {
         PageSpec("pages/4_Housing_Intelligence_Lab.py", "Housing Intelligence Lab", "Housing_Intelligence_Lab"),
         PageSpec("pages/13_Structural_Transformation_Lab.py", "Structural Transformation Lab",
                  "Structural_Transformation_Lab"),
+        PageSpec("pages/10_Economic_Relationships_Lab.py", "Economic Relationships Lab",
+                 "Economic_Relationships_Lab"),
     ],
     "Models & tools": [
-        PageSpec("pages/10_Economic_Relationships_Lab.py", "Economic Relationships & Regression",
-                 "Economic_Relationships_Lab"),
         PageSpec("pages/15_Macro_Transmission_Simulator.py", "Macro Transmission Simulator",
                  "Macro_Transmission_Simulator"),
         PageSpec("pages/12_Macro_and_World.py", "India Macro & World", "Macro_and_World"),
@@ -45,11 +45,11 @@ SECTIONS: dict[str, list[PageSpec]] = {
         PageSpec("pages/16_Research_Library.py", "Research Library", "Research_Library"),
         PageSpec("pages/5_Research.py", "The Papers", "Research"),
         PageSpec("pages/6_Methodology.py", "Methodology", "Methodology"),
-        PageSpec("pages/9_Limitations.py", "Limitations", "Limitations"),
     ],
     "About": [
         PageSpec("pages/7_Data.py", "Data & Evidence Ledger", "Data"),
         PageSpec("pages/8_About.py", "About", "About"),
+        PageSpec("pages/9_Limitations.py", "Limitations", "Limitations"),
     ],
 }
 

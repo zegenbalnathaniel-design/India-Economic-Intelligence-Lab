@@ -239,6 +239,14 @@ def load_wil_facts() -> pd.DataFrame:
     return pd.read_csv(RAW_DIR / "wil" / "long_run_facts.csv")
 
 
+@lru_cache(maxsize=2)
+def load_aidis_debt_headline() -> pd.DataFrame:
+    """Headline household-debt figures from the NSS 77th round AIDIS
+    (reference date 30 June 2018): incidence and average amount of debt,
+    rural and urban, and the highest/lowest states. Per-row status."""
+    return pd.read_csv(RAW_DIR / "aidis" / "aidis77_debt_headline.csv")
+
+
 # ---------------------------------------------------------------------------
 # Real data: latest monthly releases (MoSPI CPI and IIP, RBI policy rate and
 # household inflation-expectations survey), entered by hand from official

@@ -46,7 +46,8 @@ FY_NOTE = ("Financial year 'YYYY-YY' is keyed to its starting calendar year YYYY
 TENTATIVE_C1 = "WIL Table C.1 flags its 2023 row as tentative (excluded unless you include tentative rows)"
 
 NOT_OFFERED: Tuple[Tuple[str, str], ...] = (
-    ("Repo rate & bank panel (quarterly)", "ILLUSTRATIVE / synthetic build — never used for estimation here"),
+    ("Repo rate & bank panel (quarterly)", "bank panel is ILLUSTRATIVE / synthetic — never used for estimation here; "
+     "the quarterly repo rate (DERIVED) has no real quarterly partner in this project"),
     ("Monthly macro releases (CPI, IIP, inflation expectations)", "one or two observations per indicator — no series to regress"),
     ("World Bank WDI", "live API, not a file in data/; excluded so every run is reproducible from the repository"),
     ("Per-capita NSDP columns of state_gsdp_nsdp_percapita.csv", "older release vintage of the RBI table already offered"),

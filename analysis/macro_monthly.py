@@ -43,6 +43,17 @@ def daily_policy_rate(decisions: pd.DataFrame, start, end) -> pd.Series:
     return steps.reindex(steps.index.union(days)).ffill().reindex(days).rename("policy_repo_rate_pct")
 
 
+def quarter_end_policy_rate(decisions: pd.DataFrame, quarter_ends) -> pd.DataFrame:
+    """Repo rate in force at each quarter end, from the decision table.
+    A quarter end before the first loaded decision is left blank."""
+    q = pd.DatetimeIndex(pd.to_datetime(quarter_ends))
+    first = pd.Timestamp(decisions["effective_date"].min())
+    daily = daily_policy_rate(decisions, min(first, q.min()), q.max())
+    rate = daily.reindex(q)
+    rate[q < first] = float("nan")
+    return pd.DataFrame({"period": q, "repo_rate": rate.to_numpy()})
+
+
 def monthly_policy_rate(daily: pd.Series, as_of) -> pd.DataFrame:
     as_of = pd.Timestamp(as_of)
     out = []

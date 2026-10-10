@@ -335,6 +335,37 @@ st.subheader("Composition by household group")
 data_required_panel("aidis_composition",
                     "Asset composition by asset-holding class — NSS 77th round AIDIS (2019)", "aidis")
 
+st.subheader("What households owe — AIDIS 2019 headline figures")
+aidis = loaders.load_aidis_debt_headline()
+
+
+def _aidis(metric: str, area: str, group: str = "All households") -> float:
+    r = aidis[(aidis["metric"] == metric) & (aidis["area"] == area) & (aidis["group"] == group)]
+    return float(r["value"].iloc[0])
+
+
+d1, d2, d3, d4 = st.columns(4)
+with d1:
+    stat_card("Rural households in debt", f"{_aidis('Incidence of indebtedness', 'Rural'):.1f}%", "30 June 2018")
+with d2:
+    stat_card("Urban households in debt", f"{_aidis('Incidence of indebtedness', 'Urban'):.1f}%", "30 June 2018")
+with d3:
+    stat_card("Average debt · rural", f"₹{_aidis('Average amount of debt', 'Rural'):,.0f}", "per household, all households")
+with d4:
+    stat_card("Average debt · urban", f"₹{_aidis('Average amount of debt', 'Urban'):,.0f}",
+              "per household · not confirmed exactly")
+st.dataframe(aidis[["metric", "area", "group", "value", "unit", "status", "source"]],
+             hide_index=True, width="stretch")
+callout(
+    "**Reading these.** Incidence is the share of households with any outstanding debt; the average amount is "
+    "over all households, indebted or not. These are headline averages, **not by wealth group**, so they cannot "
+    "show whether poorer households carry costlier, informal debt — that needs AIDIS tables by asset class or "
+    "the unit-level data (DATA REQUIRED). Figures supplied for wealth-decile net worth, debt-asset ratios, asset "
+    "values, other states and caste gaps were **not loaded** because they could not be confirmed against the "
+    "survey or a named analysis of it.",
+    kind="caveat",
+)
+
 
 # ===========================================================================
 # C. Financialisation (live WDI)
@@ -642,5 +673,5 @@ footnote(
     "consumption-Gini series are DATA REQUIRED. Lorenz points, Ginis, gaps, changes and correlations are "
     "calculated on this site. See DATA_REGISTRY.md."
 )
-sources_panel("wil_india", "paper_a", "wdi_financial_inclusion", "wdi_financial_depth", "amfi_mf_folios_sip",
+sources_panel("wil_india", "paper_a", "aidis77_debt_headline", "wdi_financial_inclusion", "wdi_financial_depth", "amfi_mf_folios_sip",
               "nsdl_demat_accounts", "cdsl_demat_accounts", "aidis77_asset_composition", "consumption_gini_series")

@@ -76,34 +76,30 @@ st.header("Wealth & inequality module")
 wealth_lim = pd.DataFrame([
     {"Limitation": "Historical returns are not future returns",
      "Where it bites": "Composition effect, asset allocation comparison",
-     "Mitigation in the MVP": "Every return is user-editable; Monte Carlo overlay shows dispersion"},
+     "Mitigation": "Every return is user-editable; Monte Carlo overlay shows dispersion"},
     {"Limitation": "Deterministic returns (default view)",
      "Where it bites": "Point estimate of final wealth is a central tendency, not a forecast",
-     "Mitigation in the MVP": "Monte Carlo module renders the 5-95% band"},
+     "Mitigation": "Monte Carlo module renders the 5-95% band"},
     {"Limitation": "Correlations and tail heaviness are assumptions, not estimates",
      "Where it bites": "Monte Carlo band width depends on the correlation matrix and t degrees of freedom you set",
-     "Mitigation in the MVP": "FIXED in part: correlated and fat-tailed (Student-t) draws are now available, "
-                              "validated for consistency; estimating them needs Indian asset-return history"},
+     "Mitigation": "Correlated and fat-tailed (Student-t) draws are available and checked for "
+                              "consistency; estimating the correlations needs Indian asset-return history"},
     {"Limitation": "No fees, taxes, or transaction costs",
      "Where it bites": "Final wealth is over-stated relative to net-of-costs reality",
-     "Mitigation in the MVP": "Documented; parameterisation is a natural extension"},
-    {"Limitation": "Composition simulator is one household",
-     "Where it bites": "The simulator itself says nothing about inequality between households",
-     "Mitigation in the MVP": "FIXED: section W shows WIL income and wealth shares 1951–2023 and a "
-                              "distributional Gini with a redistribution scenario"},
+     "Mitigation": "Documented; parameterisation is a natural extension"},
     {"Limitation": "Gini is a lower bound",
      "Where it bites": "Built from five published group shares, so inequality within each group is ignored",
-     "Mitigation in the MVP": "Labelled as a lower bound; a full Gini needs AIDIS / NSS household microdata"},
+     "Mitigation": "Labelled as a lower bound; a full Gini needs AIDIS / NSS household microdata"},
     {"Limitation": "No figures for the Bottom 10% or P10–P50",
      "Where it bites": "The two lowest Riffle cards and table rows",
-     "Mitigation in the MVP": "Shown as DATA REQUIRED; WID.world downloads for p0p10 and p10p50 would fill them"},
+     "Mitigation": "Shown as DATA REQUIRED; WID.world downloads for p0p10 and p10p50 would fill them"},
     {"Limitation": "Top-tail wealth undercoverage in Indian survey data",
      "Where it bites": "Any Gini or top-share statistic",
-     "Mitigation in the MVP": "WIL combines AIDIS with Forbes rich lists for the top tail; the authors still "
+     "Mitigation": "WIL combines AIDIS with Forbes rich lists for the top tail; the authors still "
                               "describe their results as a lower bound"},
     {"Limitation": "Asset-valuation uncertainty (property, gold)",
      "Where it bites": "Real-world household wealth is measured with error",
-     "Mitigation in the MVP": "Model uses target values, not marked-to-market"},
+     "Mitigation": "Model uses target values, not marked-to-market"},
 ])
 st.dataframe(wealth_lim, hide_index=True, width="stretch")
 
@@ -112,30 +108,26 @@ st.header("Banking & monetary policy module")
 banking_lim = pd.DataFrame([
     {"Limitation": "Illustrative panel in the MVP",
      "Where it bites": "iBFPI levels and the ρ estimate reflect the synthetic generator",
-     "Mitigation in the MVP": "Panel is CSV-replaceable; loader has no hard-coded values"},
+     "Mitigation": "Panel is CSV-replaceable; loader has no hard-coded values"},
     {"Limitation": "Small sample (n ≈ 26 quarters)",
      "Where it bites": "Regime-conditional ρ has n well below rules-of-thumb",
-     "Mitigation in the MVP": "n reported alongside every ρ; p-values shown"},
+     "Mitigation": "n reported alongside every ρ; p-values shown"},
     {"Limitation": "Autocorrelation in quarterly series",
      "Where it bites": "Spearman p-values understate uncertainty on serially correlated series",
-     "Mitigation in the MVP": "FIXED in part: Newey–West (HAC) regression added under Robustness; the "
-                              "Spearman p-values themselves are still unadjusted"},
+     "Mitigation": "Newey–West (HAC) errors in the Robustness regression; the Spearman p-values "
+                              "themselves are unadjusted"},
     {"Limitation": "No macro controls in the fixed-effects regression",
      "Where it bites": "The repo-rate slope may pick up the business cycle",
-     "Mitigation in the MVP": "Stated next to the table; needs quarterly GDP growth and CPI series"},
+     "Mitigation": "Stated next to the table; needs quarterly GDP growth and CPI series"},
     {"Limitation": "Cross-bank accounting differences",
      "Where it bites": "IND-AS vs prior AS transitions create structural breaks in the raw series",
-     "Mitigation in the MVP": "Per-bank standardisation absorbs level differences but not slope breaks"},
-    {"Limitation": "Composite-index subjectivity",
-     "Where it bites": "Equal weights and fixed direction coefficients are choices",
-     "Mitigation in the MVP": "FIXED: sensitivity analysis (300 random weightings, drop one indicator, "
-                              "reverse one direction) shows which indicators drive ρ"},
+     "Mitigation": "Per-bank standardisation absorbs level differences but not slope breaks"},
     {"Limitation": "Regime threshold (±25bp on 3-quarter change) is a modelling choice",
      "Where it bites": "Alternative thresholds re-label periods and change ρ per regime",
-     "Mitigation in the MVP": "Documented; parameter can be exposed if useful"},
+     "Mitigation": "Documented; parameter can be exposed if useful"},
     {"Limitation": "Survivorship bias in the bank subset",
      "Where it bites": "Only extant large private/public banks are in the panel — small/failed banks are absent",
-     "Mitigation in the MVP": "Documented; scope is stated as five specific banks"},
+     "Mitigation": "Documented; scope is stated as five specific banks"},
 ])
 st.dataframe(banking_lim, hide_index=True, width="stretch")
 
@@ -234,31 +226,17 @@ st.dataframe(pd.DataFrame([
     {"Item": "Real bank filings replacing the illustrative panel", "Status": "NEEDS DATA",
      "Detail": "Quarterly PPNR, total assets, CET1, net charge-offs, LCR and unrealised bond losses for the "
                "five banks, 2018–2024 (Basel III Pillar 3 disclosures and results)"},
-    {"Item": "Bank fixed-effects regression of iBFPI on the repo rate", "Status": "DONE (partly)",
-     "Detail": "Banking Lab → Robustness, with clustered and Newey–West errors. Macro controls still need "
-               "quarterly GDP growth and CPI"},
+    {"Item": "Macro controls in the bank regression", "Status": "NEEDS DATA",
+     "Detail": "Quarterly GDP growth and CPI series for the fixed-effects regression of iBFPI on the repo rate"},
     {"Item": "RBI MPC event studies", "Status": "NEEDS DATA",
-     "Detail": "Every MPC decision date since 2018 (only 7 Oct 2026 is loaded) and bank data more frequent "
+     "Detail": "Every MPC meeting date since 2018, including holds (rate changes 2018-2026 are now loaded) and bank data more frequent "
                "than quarterly, so a decision's effect can be separated from the rest of the quarter"},
-    {"Item": "Joint-covariance Monte Carlo for the wealth module", "Status": "DONE",
-     "Detail": "Wealth Lab → Monte Carlo: correlation matrix and fat tails. Correlations are user "
-               "assumptions until Indian return history (Nifty TRI, gold in ₹, a house-price index, a "
-               "G-sec index) is added to estimate them"},
-    {"Item": "Distributional Gini simulation", "Status": "DONE (from WIL shares)",
-     "Detail": "Wealth Lab → section W: Gini 1951–2023 and a redistribution scenario. An AIDIS/NSS "
-               "household-level version needs the microdata (registered login at microdata.gov.in)"},
-    {"Item": "Sensitivity over composite weights and direction coefficients", "Status": "DONE",
-     "Detail": "Banking Lab → Robustness"},
-    {"Item": "State population series", "Status": "NEEDS DATA",
-     "Detail": "Population-weighted convergence measures"},
-    {"Item": "State GVA by sector and PLFS employment by industry by state", "Status": "NEEDS DATA",
-     "Detail": "State productivity and industrialisation (RBI Handbook / MoSPI; PLFS)"},
+    {"Item": "Year-by-year state population", "Status": "NEEDS DATA",
+     "Detail": "Population-weighted convergence over 2004-05 to 2022-23 (only 2026 projections are loaded)"},
     {"Item": "AIDIS asset composition by wealth group; AMFI, NSDL, CDSL series", "Status": "NEEDS DATA",
      "Detail": "Who holds financial assets; upload templates are in data_sources/financialisation_uploads.py"},
     {"Item": "Simulator parameters checked against the source documents", "Status": "NEEDS CHECK",
      "Detail": "Open each cited RBI / NIPFP document and confirm the quoted figure"},
-    {"Item": "City household income", "Status": "NEEDS DATA",
-     "Detail": "Replaces the state-income proxy in the Housing Lab"},
 ]), hide_index=True, width="stretch")
 
 footnote(

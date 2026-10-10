@@ -23,9 +23,9 @@ Long-form panel: one row per bank per quarter.
 | Field | Type | Units | Source | Notes |
 | --- | --- | --- | --- | --- |
 | `period` | date | quarter-end | RBI DBIE | ISO date |
-| `repo_rate` | float | % annualised | RBI DBIE | Value effective at quarter-end |
+| `repo_rate` | float | % annualised | RBI policy decisions (derived) | Rate in force at quarter-end |
 
-**In this build.** Values approximate the RBI repo-rate history 2018-Q2 through 2024-Q3 at quarter-end, rounded. Replace with the RBI-published series when reproducing.
+**In this build.** DERIVED: the repo rate in force on the last day of each quarter, 2018-Q2 through 2024-Q3, computed from `data/raw/macro_monthly/rbi_policy_decisions.csv` by `data_sources/build_illustrative_data.write_repo_rate()`. (Until 2026-10-10 this file held a hand-typed approximate path; seven quarters differed, most by running ahead of the 2022 hikes.)
 
 ## Provenance conventions
 

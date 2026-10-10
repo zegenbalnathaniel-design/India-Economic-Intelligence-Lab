@@ -226,19 +226,41 @@ DATASETS: list[Dataset] = [
         name="RBI policy repo rate decisions",
         publisher="Reserve Bank of India — Monetary Policy Committee",
         url="https://www.rbi.org.in/", status="PARTIAL",
-        period="7 Oct 2026 (one decision loaded)", units="% per year", coverage="India",
+        period="7 Feb 2018 to 7 Oct 2026 (21 decisions: every rate change, plus the Feb 2018 hold)",
+        units="% per year", coverage="India",
         frequency="Per MPC decision", files=("data/raw/macro_monthly/rbi_policy_decisions.csv",), added="2026-10-09",
-        transformations="Daily and monthly tables built from decisions in analysis/macro_monthly.py; no back-filling.",
-        limitations="Only one decision loaded; earlier history is DATA REQUIRED.",
+        publication="2018-2023 rows from the author's table (added 2026-10-10); 2025 rows cross-checked in press "
+                    "coverage; 7 Oct 2026 from press coverage of the MPC resolution",
+        transformations="Daily, monthly and quarter-end tables built from decisions in analysis/macro_monthly.py; "
+                        "a rate holds until the next decision; nothing before the first decision is filled.",
+        missing="Hold decisions other than Feb 2018 are not listed (the rate is unchanged between rows); SDF, MSF "
+                "and stance are recorded for the latest decision only.",
+        limitations="Primary RBI releases not opened in this build. Not every MPC meeting date is listed, so an "
+                    "event study of all meetings still needs the full meeting calendar.",
         used_on=("India Macro & World", "Banking & Monetary Policy Lab"),
     ),
     Dataset(
+        id="rbi_repo_quarterly",
+        name="RBI repo rate at quarter end, 2018-Q2 to 2024-Q3",
+        publisher="Derived in this project from the RBI policy decision table",
+        url="data/raw/macro_monthly/rbi_policy_decisions.csv", status="DERIVED",
+        period="2018-Q2 to 2024-Q3", units="% per year", coverage="India", frequency="Quarterly",
+        files=("data/processed/repo_rate.csv",), added="2026-10-10",
+        transformations="Rate in force on each quarter's last day (analysis.macro_monthly.quarter_end_policy_rate), "
+                        "written by data_sources/build_illustrative_data.write_repo_rate().",
+        missing="None for these quarters; the build fails if a quarter is not covered by a decision.",
+        limitations="Quarter-end rate, not the quarterly average: a change late in a quarter counts fully in that "
+                    "quarter. Until 2026-10-10 this file held a hand-typed approximate path that ran 2-3 quarters "
+                    "ahead of the actual 2022 hikes.",
+        used_on=("Banking & Monetary Policy Lab", "Economic Relationships Lab"),
+    ),
+    Dataset(
         id="bank_panel_illustrative",
-        name="Five-bank quarterly panel and repo-rate series (iBFPI demonstration)",
+        name="Five-bank quarterly panel (iBFPI demonstration)",
         publisher="Generated in this project (data_sources/build_illustrative_data.py)",
         url="", status="ILLUSTRATIVE",
         period="2018-Q2 to 2024-Q3", units="Ratios / % (synthetic)", coverage="SBI, HDFC, ICICI, Axis, Kotak (names only)",
-        frequency="Quarterly", files=("data/processed/bank_panel.csv", "data/processed/repo_rate.csv"), added="2026-09-23",
+        frequency="Quarterly", files=("data/processed/bank_panel.csv",), added="2026-09-23",
         methodology="Synthetic generator built to demonstrate the BFPI method end to end.",
         limitations="Not real bank data — no result from it is a finding about real banks.",
         used_on=("Banking & Monetary Policy Lab",),

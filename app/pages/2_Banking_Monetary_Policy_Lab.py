@@ -41,7 +41,7 @@ from app.components.provenance import sources_panel
 
 
 setup("Banking & Monetary Policy Lab", accent=COBALT)
-set_chart_source("ILLUSTRATIVE synthetic bank panel and repo-rate file in this project; calculations on this site")
+set_chart_source("ILLUSTRATIVE synthetic bank panel; RBI repo rate derived from RBI policy decisions; calculations on this site")
 
 
 with st.sidebar:
@@ -93,9 +93,10 @@ with text_col:
 callout(
     "The panel shipped in the MVP is <b>illustrative and synthetic</b> — "
     "constructed to demonstrate the methodology end-to-end. Replace "
-    "<code>data/processed/bank_panel.csv</code> and "
-    "<code>repo_rate.csv</code> with values sourced from bank annual "
-    "reports and RBI’s DBIE portal to reproduce with real numbers.",
+    "<code>data/processed/bank_panel.csv</code> with values sourced from bank "
+    "annual reports and Basel III disclosures to reproduce with real numbers. "
+    "The repo rate it is compared with is real: the rate in force at each quarter "
+    "end, derived from the RBI policy decision table.",
     kind="warn",
 )
 source_badge(
@@ -454,11 +455,13 @@ with c3:
               if False else f"{merged['period'].min().year}-{merged['period'].max().year}")
 
 callout(
-    "Correlation is not causation. A negative Spearman ρ suggests that "
-    "higher repo rates coincide with lower iBFPI values in the sample "
-    "period — driven mechanically by the unrealised-loss channel — but "
-    "identifies no causal effect. A proper event study or panel regression "
-    "with controls would be needed to move beyond association.",
+    "Correlation is not causation. "
+    + (f"A {'negative' if corr.rho < 0 else 'positive'} Spearman ρ means higher repo rates coincide with "
+       f"{'lower' if corr.rho < 0 else 'higher'} iBFPI values in the sample period"
+       if corr.rho == corr.rho and corr.rho != 0 else "There is no monotonic association in the sample period")
+    + " — and because the bank panel is synthetic, any pattern reflects how it was generated (its "
+    "unrealised-loss shock during the hike quarters), not real banks. A proper event study or panel "
+    "regression with controls on real bank data would be needed to move beyond association.",
     kind="warn",
 )
 

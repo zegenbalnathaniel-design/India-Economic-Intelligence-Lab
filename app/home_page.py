@@ -113,6 +113,10 @@ with st.container(key="reveal_index"):
          "Output vs employment by sector, relative labour productivity and India against its peers, "
          "from live World Bank data.",
          home_theme.TURQUOISE, "pages/13_Structural_Transformation_Lab.py", "Open the Structural Lab →"),
+        ("07", "DO THEY MOVE TOGETHER?", "Economic Relationships Lab · 2026",
+         "A hypothesis library and a multiple-regression workbench on real series — correlations, robust "
+         "errors and diagnostics, never a causal claim.",
+         home_theme.COBALT, "pages/10_Economic_Relationships_Lab.py", "Open the Relationships Lab →"),
     ]
 
     with st.container(key="research_carousel", horizontal=True, gap="medium"):

@@ -76,7 +76,7 @@ st.code(
     "│\n"
     "├── data/\n"
     "│   ├── raw/                source files (RBI, NHB, PLFS, HCES, WIL, author papers, ...)\n"
-    "│   └── processed/          bank_panel.csv (ILLUSTRATIVE), repo_rate.csv\n"
+    "│   └── processed/          bank_panel.csv (ILLUSTRATIVE), repo_rate.csv (DERIVED)\n"
     "│\n"
     "├── data_sources/           loaders, evidence ledger (registry.py, meta_*.py),\n"
     "│                           validation checks, World Bank client\n"

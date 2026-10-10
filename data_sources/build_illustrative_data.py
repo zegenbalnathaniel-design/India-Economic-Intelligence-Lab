@@ -49,14 +49,11 @@ BANK_OFFSET = {
 
 
 def _repo_path() -> np.ndarray:
-    """Approximate RBI repo rate at quarter-end (%).
-
-    Path chosen to match qualitative history: 6.25 -> 6.50 in FY19, cut to
-    4.00 by mid-2020 (Covid), held near 4.00 through mid-2022, then 250bp of
-    hikes to 6.50 by early 2023, held through 2024. Values are rounded and
-    intended for illustration; replace with the RBI-published series when
-    reproducing.
-    """
+    """Stylised rate path used only to shape the synthetic bank panel (the
+    "low-rate" shock below). Kept unchanged so the illustrative panel is
+    reproducible; it is NOT written out. data/processed/repo_rate.csv is the
+    real quarter-end repo rate, derived from the RBI decision table by
+    `write_repo_rate()`."""
     path = np.array([
         6.25, 6.50, 6.50, 6.25, 6.00, 5.75, 5.15, 4.40,
         4.00, 4.00, 4.00, 4.00, 4.00, 4.00, 4.40, 5.90,
@@ -119,11 +116,21 @@ def build() -> None:
     panel = pd.DataFrame(rows)
     panel.to_csv(OUT / "bank_panel.csv", index=False)
 
-    repo_df = pd.DataFrame({"period": PERIODS, "repo_rate": repo})
-    repo_df.to_csv(OUT / "repo_rate.csv", index=False)
-
     print(f"wrote {OUT / 'bank_panel.csv'}: {len(panel)} rows, {len(BANKS)} banks, {len(PERIODS)} quarters.")
-    print(f"wrote {OUT / 'repo_rate.csv'}: {len(repo_df)} quarters.")
+    write_repo_rate()
+
+
+def write_repo_rate() -> None:
+    """Quarter-end RBI repo rate (DERIVED) from data/raw/macro_monthly/
+    rbi_policy_decisions.csv, for the panel's quarters."""
+    from analysis.macro_monthly import quarter_end_policy_rate
+    from data_sources.loaders import load_rbi_policy_decisions
+
+    repo_df = quarter_end_policy_rate(load_rbi_policy_decisions(), PERIODS)
+    if repo_df["repo_rate"].isna().any():
+        raise ValueError("decision table does not cover every panel quarter")
+    repo_df.assign(period=repo_df["period"].dt.strftime("%Y-%m-%d")).to_csv(OUT / "repo_rate.csv", index=False)
+    print(f"wrote {OUT / 'repo_rate.csv'}: {len(repo_df)} quarters (derived from RBI decisions).")
 
 
 if __name__ == "__main__":

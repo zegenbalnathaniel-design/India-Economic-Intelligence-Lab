@@ -94,6 +94,26 @@ DATASETS: list[Dataset] = [
         used_on=_PAGE,
     ),
     Dataset(
+        id="aidis77_debt_headline",
+        name="Household debt headline figures (NSS 77th round AIDIS, 2019)",
+        publisher="Ministry of Statistics and Programme Implementation (NSO) — All India Debt and Investment Survey; "
+                  "state extremes from an India Ratings analysis of the survey",
+        url="https://www.mospi.gov.in/sites/default/files/press_release/press_note-AIDIS-240821.pdf", status="PARTIAL",
+        period="Reference date 30 June 2018 (survey January-December 2019)",
+        units="% of households (incidence); Rs per household (average amount of debt)",
+        coverage="All-India rural and urban; highest and lowest states", frequency="Survey round",
+        files=("data/raw/aidis/aidis77_debt_headline.csv",), publication="MoSPI press note, Sep 2021",
+        added="2026-10-10",
+        transformations="None — ten figures entered from the author's notes and kept only where a search summary "
+                        "of the press note or of press coverage confirmed them (per-row status and note).",
+        missing="Not loaded because they could not be confirmed: wealth-decile net worth ranges, debt-asset ratios, "
+                "average asset values, state figures other than the four extremes, and caste-gap estimates.",
+        limitations="Headline averages only — not by wealth group, so they do not show who holds which debt. "
+                    "Average debt is over all households, indebted or not. The urban average (Rs 1,20,336) is "
+                    "consistent with, but not confirmed against, the press note. Press note PDF not opened in this build.",
+        used_on=_PAGE,
+    ),
+    Dataset(
         id="consumption_gini_series",
         name="Consumption inequality (Gini) series comparable over time",
         publisher="Ministry of Statistics and Programme Implementation — Household Consumption Expenditure Survey",

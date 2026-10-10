@@ -60,3 +60,29 @@ def test_calendar_never_becomes_an_observation():
     assert cal.iloc[0]["status"] == "scheduled"
     assert M.value(L.load_macro_monthly(), "CPI_COMBINED_YOY", "2026-09") is None
     assert M.calendar_status(L.load_release_calendar(), "2026-10-13").iloc[0]["status"].startswith("due")
+
+
+def test_quarter_end_rate_from_decisions():
+    import pandas as pd
+    dec = L.load_rbi_policy_decisions()
+    q = M.quarter_end_policy_rate(dec, ["2019-06-30", "2022-03-31", "2022-09-30", "2017-12-31"])
+    got = dict(zip(q["period"].dt.strftime("%Y-%m-%d"), q["repo_rate"]))
+    assert got["2019-06-30"] == 5.75      # cut on 6 Jun 2019 counts in that quarter
+    assert got["2022-03-31"] == 4.00      # before the 4 May 2022 hike
+    assert got["2022-09-30"] == 5.90      # hike effective on the quarter's last day
+    assert pd.isna(got["2017-12-31"])     # before the first loaded decision: left blank
+
+
+def test_shipped_repo_file_matches_decisions():
+    dec = L.load_rbi_policy_decisions()
+    shipped = L.load_repo_rate()
+    derived = M.quarter_end_policy_rate(dec, shipped["period"])
+    assert (shipped["repo_rate"].to_numpy() == derived["repo_rate"].to_numpy()).all()
+
+
+def test_decision_table_is_consistent():
+    dec = L.load_rbi_policy_decisions().sort_values("effective_date")
+    rates = dec["policy_repo_rate_pct"].astype(float).to_numpy()
+    prev = dec["previous_rate_pct"].astype(float).to_numpy()
+    assert (prev[1:] == rates[:-1]).all()          # each row starts where the last ended
+    assert ((rates - prev) * 100).round().astype(int).tolist() == dec["change_bp"].astype(int).tolist()
