@@ -38,32 +38,24 @@ DATASETS: list[Dataset] = [
         used_on=("Structural Transformation Lab",),
     ),
     Dataset(
-        id="state_sectoral_gva",
-        name="State-wise gross state value added (GSVA) by sector — not loaded",
-        publisher="MoSPI (state DES estimates) as compiled in the RBI Handbook of Statistics on Indian States",
+        id="state_gsva_plfs_shares",
+        name="State sector shares of GSVA and of workers (PLFS), 19 states",
+        publisher="Compiled and supplied by the project author from state GSVA (RBI Handbook / MoSPI) and PLFS",
         url="https://www.rbi.org.in/Scripts/AnnualPublications.aspx?head=Handbook%20of%20Statistics%20on%20Indian%20States",
-        status="DATA REQUIRED",
-        period="Would need the 2011-12 base series, financial years 2011-12 onward",
-        units="₹ crore at constant (2011-12) prices, by sector",
-        coverage="States/UTs", frequency="Annual (financial year)",
-        transformations="Not loaded — nothing is shown from this source.",
-        missing="Not applicable: no file exists in this repository.",
-        limitations="Required for state comparisons of industrialisation and productivity on the Structural "
-                    "Transformation Lab; until supplied that section shows DATA REQUIRED.",
-        used_on=("Structural Transformation Lab",),
-    ),
-    Dataset(
-        id="plfs_state_industry",
-        name="PLFS state-wise distribution of workers by broad industry — not loaded",
-        publisher="Ministry of Statistics and Programme Implementation (NSO) — Periodic Labour Force Survey",
-        url="https://www.mospi.gov.in/", status="DATA REQUIRED",
-        period="Would need PLFS annual rounds (July–June survey years)",
-        units="% of workers, usual status (principal + subsidiary)",
-        coverage="States/UTs, rural + urban", frequency="Annual survey rounds",
-        transformations="Not loaded — nothing is shown from this source.",
-        missing="Not applicable: no file exists in this repository.",
-        limitations="Required (with state GSVA by sector) for state relative labour productivity; survey years "
-                    "(July–June) do not align with financial years (April–March).",
+        status="PARTIAL",
+        period="Not stated in the supplied table (GSVA year and PLFS round unknown)",
+        units="% of GSVA; % of workers", coverage="19 states", frequency="Single cross-section",
+        files=("data/raw/state_structural/state_gsva_plfs_sector_shares.csv",), added="2026-10-10",
+        transformations="Entered as supplied (the author's latest version). Relative labour productivity = GSVA "
+                        "share ÷ worker share within each state (analysis/structural.state_rlp).",
+        missing="Other states and union territories are not in the table and are not shown.",
+        methodology="The author states the figures are verified. Earlier versions supplied on 2026-10-10 gave "
+                    "different values for several states (e.g. Andhra Pradesh agriculture 26.4% / 31.2% of GSVA); "
+                    "this file uses the latest version.",
+        limitations="The GSVA year, price basis (current or constant) and PLFS round are not stated, so states "
+                    "may not be measured at the same date and the two sides may be different years. Sector "
+                    "groupings (industry = mining, manufacturing, construction, utilities) are assumed to match "
+                    "between GSVA and PLFS. Not a time series: shows levels, not change.",
         used_on=("Structural Transformation Lab",),
     ),
 ]

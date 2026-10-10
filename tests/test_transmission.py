@@ -12,7 +12,7 @@ from analysis import transmission as T
 from data_sources import registry
 
 ROOT = Path(__file__).resolve().parents[1]
-PAGE = ROOT / "app" / "pages" / "15_Macro_Transmission_Simulator.py"
+PAGE = ROOT / "app" / "views" / "15_Macro_Transmission_Simulator.py"
 
 
 @pytest.fixture(scope="module")

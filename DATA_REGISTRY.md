@@ -227,7 +227,7 @@ modelled estimates**, not PLFS), and GDP per person employed (constant PPP $). L
   labour productivity = VA share ÷ employment share (relative to GDP per worker, not an absolute level);
   an optional rescaled version (VA shares ÷ their sum × 100), always labelled DERIVED. Nothing is interpolated.
 - **State comparisons: DATA REQUIRED.** No state GSVA-by-sector or PLFS state industry-of-work file is in
-  the repository (records `state_sectoral_gva`, `plfs_state_industry`); the page names the files needed.
+  the repository: section 7 now uses the author-supplied state sector shares (record `state_gsva_plfs_shares`).
 - Not verified live from the build sandbox; tested with mocked API responses (`tests/test_structural.py`).
 
 ## Everything from the previous registry entry

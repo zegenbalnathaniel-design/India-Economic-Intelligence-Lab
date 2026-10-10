@@ -274,6 +274,13 @@ def load_city_household_income() -> pd.DataFrame:
                        na_values={"avg_annual_household_income_lakh": [""]})
 
 
+@lru_cache(maxsize=2)
+def load_state_sector_shares() -> pd.DataFrame:
+    """Sector shares (%) of GSVA and of PLFS workers for 19 states, as
+    supplied by the project author (year and PLFS round not stated)."""
+    return pd.read_csv(RAW_DIR / "state_structural" / "state_gsva_plfs_sector_shares.csv")
+
+
 # ---------------------------------------------------------------------------
 # Real data: latest monthly releases (MoSPI CPI and IIP, RBI policy rate and
 # household inflation-expectations survey), entered by hand from official

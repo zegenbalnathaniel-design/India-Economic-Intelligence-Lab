@@ -32,9 +32,9 @@ import streamlit as st
 from plotly.subplots import make_subplots
 
 from analysis import structural as S
-from data_sources import worldbank as WB
+from data_sources import loaders, worldbank as WB
 from app.components.theme import (
-    setup, set_chart_source, kicker, callout, source_badge, stat_card, footnote,
+    setup, set_chart_source, chart_source, kicker, callout, source_badge, stat_card, footnote,
     TURQUOISE, COBALT, GOLD, LEAF, VERMILLION, WARM_WHITE, MUTED,
 )
 from app.components.glossary import indicator_note
@@ -90,7 +90,7 @@ with st.sidebar:
         "- 4 · GVA composition & manufacturing\n"
         "- 5 · Participation & vulnerable work\n"
         "- 6 · India vs peers\n"
-        "- 7 · States (DATA REQUIRED)\n"
+        "- 7 · States (author-supplied shares)\n"
         "- 8 · Findings · 9 · Downloads"
     )
 
@@ -576,30 +576,61 @@ else:
         st.caption(f"PPP basis as named by the API: *{ppp_names[0]}*.")
 
 # ---------------------------------------------------------------------------
-# 7 · States: DATA REQUIRED
+# 7 · States: author-supplied GSVA and PLFS sector shares
 # ---------------------------------------------------------------------------
 st.header("7 · State-level industrialisation and productivity")
-st.error(
-    "**DATA REQUIRED — no state figures are shown.** This repository has state per-capita income (NSDP) and a "
-    "single PLFS unemployment cross-section, but **no state-wise value added by sector and no state-wise "
-    "employment by industry**. Nothing on this page estimates or proxies them."
+_shares = loaders.load_state_sector_shares()
+_rlp = S.state_rlp(_shares)
+callout(
+    "**State sector shares supplied by the project author** (stated to be verified): each state's share of "
+    "gross state value added and of workers (PLFS) in agriculture, industry and services, for "
+    f"{len(_shares)} states. The table does not state the GSVA year, price basis or PLFS round, so read "
+    "differences between states as broad structure, not precise gaps.",
+    kind="caveat",
 )
-st.markdown(
-    """
-Two files would enable state comparisons of output shares, employment shares and relative labour productivity:
+st.latex(r"\text{RLP}_{s,k} = \frac{\text{GSVA share}_{s,k}}{\text{worker share}_{s,k}}")
+_view = st.radio("Show", ["Relative labour productivity", "Output vs worker shares"], horizontal=True,
+                 key="st_state_view")
+_order = _rlp.sort_values("nonagri_to_agri", ascending=False)["state"]
+if _view == "Relative labour productivity":
+    figs = go.Figure()
+    for k, colour in zip(S.STATE_SECTORS, (GOLD, COBALT, TURQUOISE)):
+        d = _rlp.set_index("state").loc[_order]
+        figs.add_bar(x=d.index, y=d[f"rlp_{k}"], name=S.STATE_SECTORS[k], marker_color=colour)
+    figs.add_hline(y=1, line_dash="dash", line_color=MUTED,
+                   annotation_text="1 = state-average output per worker", annotation_position="top left")
+    figs.update_layout(title="Relative labour productivity by sector and state", barmode="group", height=480,
+                       xaxis_tickangle=-45, yaxis_title="GSVA share ÷ worker share", legend=dict(orientation="h", y=-0.35))
+else:
+    figs = go.Figure()
+    figs.add_scatter(x=_shares["plfs_agri_pct"], y=_shares["gsva_agri_pct"], mode="markers+text",
+                     text=_shares["state"], textposition="top center", marker=dict(color=GOLD, size=10),
+                     name="State")
+    top = float(max(_shares["plfs_agri_pct"].max(), _shares["gsva_agri_pct"].max())) + 5
+    figs.add_scatter(x=[0, top], y=[0, top], mode="lines", line=dict(color=MUTED, dash="dash"),
+                     name="Output share = worker share")
+    figs.update_layout(title="Agriculture: share of workers vs share of output", height=520,
+                       xaxis_title="Share of workers in agriculture (%)", yaxis_title="Share of GSVA from agriculture (%)")
+chart_source(figs, "state GSVA and PLFS sector shares supplied by the project author; calculations on this site")
+st.plotly_chart(figs, width="stretch")
 
-| Proposed file | What it must contain | Where it is published |
-|---|---|---|
-| `data/raw/state_structural/state_gsva_by_sector.csv` | `state, financial_year, sector, gsva_crore, price_basis, base_year, source_table` — gross state value added by industry of origin (at least agriculture, forestry & fishing; mining; manufacturing; construction; electricity, gas & water; services), constant 2011-12 prices | MoSPI state-wise GSVA (compiled from state Directorates of Economics & Statistics), reproduced in the RBI *Handbook of Statistics on Indian States* |
-| `data/raw/state_structural/plfs_state_workers_by_industry.csv` | `state, survey_year, sector, workers_pct, status_basis, area` — percentage distribution of workers by broad industry (NIC-2008), usual status (principal + subsidiary), rural + urban | MoSPI *Periodic Labour Force Survey* annual reports, state-wise tables |
-
-**Before the comparison could be shown:** each file needs a registry record (`data_sources/meta_*.py`) with its
-exact source table and release; sector definitions must be mapped explicitly between national-accounts
-industries and NIC-2008 sections; and PLFS survey years (July–June) must be paired with financial years
-(April–March) by a stated rule, not silently. State RLP would then be GSVA share ÷ worker share within each
-state, with the same caveats as section 3.
-"""
-)
+_lo, _hi = _rlp.loc[_rlp["nonagri_to_agri"].idxmin()], _rlp.loc[_rlp["nonagri_to_agri"].idxmax()]
+s1, s2, s3 = st.columns(3)
+with s1:
+    stat_card("States below 1 in agriculture", f"{int((_rlp['rlp_agri'] < 1).sum())} of {len(_rlp)}",
+              "farm workers produce less than the state average")
+with s2:
+    stat_card("Widest farm / non-farm gap", f"{_hi['nonagri_to_agri']:.1f}×", _hi["state"])
+with s3:
+    stat_card("Narrowest gap", f"{_lo['nonagri_to_agri']:.1f}×", _lo["state"])
+st.caption("Gap = output per worker outside agriculture ÷ output per worker in agriculture, from the same "
+           "shares. A large gap means moving workers out of farming would raise average productivity most — "
+           "if non-farm jobs can absorb them.")
+with st.expander("State table and download"):
+    _tab = _shares.merge(_rlp, on="state")
+    st.dataframe(_tab, hide_index=True, width="stretch")
+    st.download_button("Download CSV", _tab.to_csv(index=False).encode("utf-8"),
+                       file_name="ieil-state-sector-shares-rlp.csv", mime="text/csv", key="st_state_dl")
 
 # ---------------------------------------------------------------------------
 # 8 · Findings
@@ -688,9 +719,9 @@ with st.expander("Methodology & limitations"):
 """
     )
 
-sources_panel("wdi_structural", "worldbank_wdi", "state_sectoral_gva", "plfs_state_industry")
+sources_panel("wdi_structural", "worldbank_wdi", "state_gsva_plfs_shares")
 footnote(
     "Status: World Bank values are retrieved live and labelled with the API's last-updated date; this page "
-    "computes only gaps, sums and ratios between published values. State sectoral data: DATA REQUIRED. "
+    "computes only gaps, sums and ratios between published values. State sector shares: author-supplied (section 7). "
     "See DATA_REGISTRY.md."
 )

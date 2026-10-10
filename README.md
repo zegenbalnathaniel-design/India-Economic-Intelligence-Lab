@@ -42,7 +42,7 @@ india-economic-intelligence-lab/
 │   ├── home_page.py        the home page
 │   ├── components/         theme, chart export, navigation, sources panel, 3D figures, briefs
 │   ├── assets/             built JS bundles for the 3D figures (terrain, turntable, hairlines)
-│   └── pages/              the 15 Labs, tools and reference pages
+│   └── views/              the 15 page scripts (registered in components/navigation.py)
 │
 ├── analysis/               domain logic (pure functions, tested)
 │   ├── wealth.py, inequality.py, financialisation.py

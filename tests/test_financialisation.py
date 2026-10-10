@@ -288,7 +288,7 @@ _SMOKE = textwrap.dedent('''
     sys.path.insert(0, ROOT)
     import streamlit as st
     from streamlit.testing.v1 import AppTest
-    PAGE = ROOT + "/app/pages/14_Inequality_Financialisation_Lab.py"
+    PAGE = ROOT + "/app/views/14_Inequality_Financialisation_Lab.py"
 
     def offline(*a, **k):
         raise urllib.error.URLError("no network in tests")

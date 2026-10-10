@@ -366,7 +366,8 @@ INVESTIGATIONS = {
 }
 
 NOT_YET_POSSIBLE = [
-    ("State-level productivity differences", "State GVA by sector (RBI Handbook / MoSPI) and PLFS state employment by industry."),
+    ("State-level productivity over time", "State sector shares are loaded for one undated cross-section (Structural "
+     "Transformation Lab, section 7); change over time needs dated GSVA and PLFS rounds for several years."),
     ("Manufacturing and employment", "Uses the World Bank series in the Structural Transformation Lab (live only); a "
      "reproducible offline version needs ASI / PLFS manufacturing tables."),
     ("Public expenditure and growth", "State budget data — RBI 'State Finances: A Study of Budgets' capital outlay by state."),

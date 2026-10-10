@@ -91,32 +91,32 @@ with st.container(key="reveal_index"):
     RESEARCH_CARDS = [
         ("01", "WHO OWNS INDIA?", "Wealth Inequality Lab · 2026",
          "How income, ownership, asset composition and returns on capital shape wealth accumulation.",
-         home_theme.VERMILLION, "pages/1_Wealth_Inequality_Lab.py", "Open the Wealth Lab →"),
+         home_theme.VERMILLION, "views/1_Wealth_Inequality_Lab.py", "Open the Wealth Lab →"),
         ("02", "HOW DOES MONEY MOVE?", "Banking & Monetary Policy Lab · 2026",
          "The iBFPI robust z-score methodology, adapted from my JP Morgan research, applied "
          "to a five-bank Indian panel against the RBI repo rate.",
-         home_theme.COBALT, "pages/2_Banking_Monetary_Policy_Lab.py", "Open the Banking Lab →"),
+         home_theme.COBALT, "views/2_Banking_Monetary_Policy_Lab.py", "Open the Banking Lab →"),
         ("03", "ONE COUNTRY. UNEQUAL TRAJECTORIES.", "State Economy Lab · 2026",
          "Sigma and beta convergence on real per-capita income by state, 2004-05 to 2022-23, "
          "from the RBI Handbook of Statistics on Indian States — plus look-up, compare, rank "
          "and change-over-time for every real state indicator.",
-         home_theme.LEAF, "pages/3_State_Economy_Lab.py", "Open the State Economy Lab →"),
+         home_theme.LEAF, "views/3_State_Economy_Lab.py", "Open the State Economy Lab →"),
         ("04", "WHERE DOES INDIA'S WEALTH LIVE?", "Housing Intelligence Lab · 2026",
          "Real NHB RESIDEX price data for 50 cities against a documented state-income proxy "
          "— price-to-income, EMI, and an honest caveat about what the proxy distorts.",
-         home_theme.GOLD, "pages/4_Housing_Intelligence_Lab.py", "Open the Housing Lab →"),
+         home_theme.GOLD, "views/4_Housing_Intelligence_Lab.py", "Open the Housing Lab →"),
         ("05", "WHO HOLDS THE GAINS?", "Inequality & Financialisation Lab · 2026",
          "Lorenz curves and Gini lower bounds from the World Inequality Lab, what households hold, "
          "and whether financial deepening is reaching the bottom of the distribution.",
-         home_theme.VERMILLION, "pages/14_Inequality_Financialisation_Lab.py", "Open the Financialisation Lab →"),
+         home_theme.VERMILLION, "views/14_Inequality_Financialisation_Lab.py", "Open the Financialisation Lab →"),
         ("06", "FROM FARM TO FACTORY?", "Structural Transformation Lab · 2026",
          "Output vs employment by sector, relative labour productivity and India against its peers, "
          "from live World Bank data.",
-         home_theme.TURQUOISE, "pages/13_Structural_Transformation_Lab.py", "Open the Structural Lab →"),
+         home_theme.TURQUOISE, "views/13_Structural_Transformation_Lab.py", "Open the Structural Lab →"),
         ("07", "DO THEY MOVE TOGETHER?", "Economic Relationships Lab · 2026",
          "A hypothesis library and a multiple-regression workbench on real series — correlations, robust "
          "errors and diagnostics, never a causal claim.",
-         home_theme.COBALT, "pages/10_Economic_Relationships_Lab.py", "Open the Relationships Lab →"),
+         home_theme.COBALT, "views/10_Economic_Relationships_Lab.py", "Open the Relationships Lab →"),
     ]
 
     with st.container(key="research_carousel", horizontal=True, gap="medium"):
@@ -176,7 +176,7 @@ with st.container(key="reveal_graph"):
                 "). Full comparison in the State Economy Lab."
             )
         st.page_link(
-            "pages/3_State_Economy_Lab.py",
+            "views/3_State_Economy_Lab.py",
             label="See the full convergence analysis →",
         )
 

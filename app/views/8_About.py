@@ -64,7 +64,7 @@ st.code(
     "│   ├── home_page.py        the home page\n"
     "│   ├── components/         theme, chart export, navigation, sources panel, 3D figures, briefs\n"
     "│   ├── assets/             built JS bundles for the 3D figures (terrain, turntable, hairlines)\n"
-    "│   └── pages/              the 15 Labs, tools and reference pages\n"
+    "│   └── views/              the 15 page scripts (registered in components/navigation.py)\n"
     "│\n"
     "├── analysis/               domain logic (pure functions, tested)\n"
     "│   ├── wealth.py, inequality.py, financialisation.py\n"

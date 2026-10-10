@@ -90,7 +90,7 @@ st.markdown(
     "because of composition."
 )
 paper_viewer("Income_Wealth_Inequality_India.pdf", "Paper A — Income & wealth inequality in India", "paper_a")
-st.page_link("pages/1_Wealth_Inequality_Lab.py", label="Explore Paper A interactively →")
+st.page_link("views/1_Wealth_Inequality_Lab.py", label="Explore Paper A interactively →")
 
 
 # Paper B
@@ -112,7 +112,7 @@ st.markdown(
     "rate. See the Banking Lab."
 )
 paper_viewer("BFPI_Fed_Rates_JP_Morgan_2018_2024.pdf", "Paper B — Fed rates and JP Morgan, 2018-2024", "paper_b")
-st.page_link("pages/2_Banking_Monetary_Policy_Lab.py", label="Explore Paper B / iBFPI interactively →")
+st.page_link("views/2_Banking_Monetary_Policy_Lab.py", label="Explore Paper B / iBFPI interactively →")
 
 
 # Evaluation

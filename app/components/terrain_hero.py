@@ -21,12 +21,12 @@ _DIST_DIR = Path(__file__).resolve().parents[1] / "assets" / "terrain_hero" / "d
 
 # href slug (sent by the frontend) -> the page file st.switch_page() expects.
 PAGE_FOR_SLUG = {
-    "Wealth_Inequality_Lab": "pages/1_Wealth_Inequality_Lab.py",
-    "Banking_Monetary_Policy_Lab": "pages/2_Banking_Monetary_Policy_Lab.py",
+    "Wealth_Inequality_Lab": "views/1_Wealth_Inequality_Lab.py",
+    "Banking_Monetary_Policy_Lab": "views/2_Banking_Monetary_Policy_Lab.py",
     # Slug kept from the built JS bundle (page was renamed to State Economy Lab
     # when the State Economy Explorer was merged into it); only the target changed.
-    "State_Economic_Divergence_Lab": "pages/3_State_Economy_Lab.py",
-    "Housing_Intelligence_Lab": "pages/4_Housing_Intelligence_Lab.py",
+    "State_Economic_Divergence_Lab": "views/3_State_Economy_Lab.py",
+    "Housing_Intelligence_Lab": "views/4_Housing_Intelligence_Lab.py",
 }
 
 _component = None

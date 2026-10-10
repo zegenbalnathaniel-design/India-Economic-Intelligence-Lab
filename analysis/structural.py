@@ -405,3 +405,26 @@ def csv_with_header(df: pd.DataFrame, settings: Mapping[str, Any], title: str) -
     for k, v in rec.items():
         lines.append(f"# {k}: {json.dumps(v, ensure_ascii=False)}")
     return "\n".join(lines) + "\n" + df.to_csv(index=False)
+
+
+# ---------------------------------------------------------------------------
+# State cross-section (author-supplied GSVA and PLFS sector shares)
+# ---------------------------------------------------------------------------
+STATE_SECTORS = {"agri": "Agriculture", "ind": "Industry", "serv": "Services"}
+
+
+def state_rlp(shares: pd.DataFrame) -> pd.DataFrame:
+    """Relative labour productivity by state and sector: GSVA share ÷ worker
+    share (both %). 1 = the sector's workers produce the state-average
+    output per worker. Blank when either share is missing or the worker
+    share is zero. Also returns each side's sum (should be ~100)."""
+    out = shares[["state"]].copy()
+    for k in STATE_SECTORS:
+        out[f"rlp_{k}"] = [_safe_ratio(g, w) for g, w in zip(shares[f"gsva_{k}_pct"], shares[f"plfs_{k}_pct"])]
+    out["gsva_sum"] = shares[[f"gsva_{k}_pct" for k in STATE_SECTORS]].sum(axis=1, min_count=3)
+    out["plfs_sum"] = shares[[f"plfs_{k}_pct" for k in STATE_SECTORS]].sum(axis=1, min_count=3)
+    out["nonagri_to_agri"] = [
+        _safe_ratio(100 - g, 100 - w) / r if r and not math.isnan(r) else float("nan")
+        for g, w, r in zip(shares["gsva_agri_pct"], shares["plfs_agri_pct"], out["rlp_agri"])]
+    return out
+

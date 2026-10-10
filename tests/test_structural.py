@@ -20,7 +20,7 @@ from data_sources import registry
 from data_sources import worldbank as WB
 
 ROOT = Path(__file__).resolve().parents[1]
-PAGE = ROOT / "app" / "pages" / "13_Structural_Transformation_Lab.py"
+PAGE = ROOT / "app" / "views" / "13_Structural_Transformation_Lab.py"
 
 
 def frame(rows):
@@ -188,8 +188,24 @@ def test_catalogue_and_registry():
     for code in ("SL.AGR.EMPL.ZS", "SL.TLF.CACT.FE.ZS", "SL.EMP.VULN.ZS"):
         assert "ILO modelled" in S.INDICATORS[code].label
     assert registry.get("wdi_structural").status == "LIVE"
-    assert registry.get("state_sectoral_gva").status == "DATA REQUIRED"
-    assert registry.get("plfs_state_industry").status == "DATA REQUIRED"
+    assert registry.get("state_gsva_plfs_shares").status == "PARTIAL"
+
+
+def test_state_rlp():
+    shares = pd.DataFrame({"state": ["A", "B"], "gsva_agri_pct": [20.0, 10.0], "gsva_ind_pct": [30.0, 40.0],
+                           "gsva_serv_pct": [50.0, 50.0], "plfs_agri_pct": [40.0, 0.0], "plfs_ind_pct": [20.0, 50.0],
+                           "plfs_serv_pct": [40.0, 50.0]})
+    r = S.state_rlp(shares).set_index("state")
+    assert r.loc["A", "rlp_agri"] == 0.5 and r.loc["A", "rlp_ind"] == 1.5 and r.loc["A", "rlp_serv"] == 1.25
+    # non-farm output per worker (80/60) over farm (0.5)
+    assert abs(r.loc["A", "nonagri_to_agri"] - (80 / 60) / 0.5) < 1e-12
+    assert pd.isna(r.loc["B", "rlp_agri"]) and pd.isna(r.loc["B", "nonagri_to_agri"])  # zero workers: blank
+
+
+def test_shipped_state_shares_sum_to_100():
+    from data_sources import loaders
+    r = S.state_rlp(loaders.load_state_sector_shares())
+    assert r["gsva_sum"].between(99.5, 100.5).all() and r["plfs_sum"].between(99.5, 100.5).all()
     assert registry.registry_problems() == []
 
 
@@ -255,9 +271,9 @@ def test_page_renders_with_mocked_data_and_widgets(monkeypatch):
     text = _all_text(at)
     assert "DATA UNAVAILABLE — the World Bank API" not in text
     assert "In 2008, agriculture employed 50.0% of workers in Ind but produced 21.0% of GDP" in text
-    assert "DATA REQUIRED" in text
-    assert len(at.get("plotly_chart")) >= 9
-    assert len(at.get("download_button")) == 3
+    assert "State sector shares supplied by the project author" in text
+    assert len(at.get("plotly_chart")) >= 10
+    assert len(at.get("download_button")) == 4      # 3 World Bank exports + the state table
 
     at.toggle(key="st_rescaled").set_value(True).run()
     assert not at.exception, at.exception
@@ -280,12 +296,11 @@ def test_page_renders_offline_without_numbers(monkeypatch):
     assert not at.exception, at.exception
     errors = " ".join(str(e.value) for e in at.error)
     assert "DATA UNAVAILABLE — the World Bank API could not be reached" in errors
-    assert "DATA REQUIRED" in errors
     text = _all_text(at)
     assert "What is structural transformation?" in text and "Relative labour productivity" in text
-    assert "state_gsva_by_sector.csv" in text
+    assert "State sector shares supplied by the project author" in text   # file-based, works offline
     assert "In 20" not in text                      # no generated findings
-    assert len(at.get("plotly_chart")) == 0          # no charts without data
-    assert len(at.get("download_button")) == 0
+    assert len(at.get("plotly_chart")) == 1          # only the state chart (from a file) without the API
+    assert len(at.get("download_button")) == 1      # only the state table
     at.toggle(key="st_rescaled").set_value(True).run()
     assert not at.exception, at.exception

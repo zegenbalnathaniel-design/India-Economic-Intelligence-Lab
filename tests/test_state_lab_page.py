@@ -9,7 +9,7 @@ import pytest
 st_testing = pytest.importorskip("streamlit.testing.v1")
 AppTest = st_testing.AppTest
 
-PAGE = str(Path(__file__).resolve().parents[1] / "app" / "pages" / "3_State_Economy_Lab.py")
+PAGE = str(Path(__file__).resolve().parents[1] / "app" / "views" / "3_State_Economy_Lab.py")
 TIMEOUT = 180
 
 

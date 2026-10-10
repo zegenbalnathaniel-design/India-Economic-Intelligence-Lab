@@ -71,7 +71,7 @@ def test_composition_settings_flow_through():
 
 def test_page_runs():
     from streamlit.testing.v1 import AppTest
-    at = AppTest.from_file(str(Path(__file__).resolve().parents[1] / "app/pages/16_Research_Library.py"), default_timeout=120).run()
+    at = AppTest.from_file(str(Path(__file__).resolve().parents[1] / "app/views/16_Research_Library.py"), default_timeout=120).run()
     assert not at.exception, at.exception
     for k in lib.INVESTIGATIONS:
         at.selectbox[0].set_value(k).run()
