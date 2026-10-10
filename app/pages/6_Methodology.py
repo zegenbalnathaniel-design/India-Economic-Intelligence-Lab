@@ -179,7 +179,48 @@ st.markdown(
     "year. The all-states series is shown alongside and labelled as not like-for-like.\n\n"
     "**β-convergence** regresses each state's average annual growth over the whole window on its "
     "log initial income (one observation per state); a significantly negative slope means poorer "
-    "states grew faster. Both are descriptive: they say nothing about why."
+    "states grew faster. Both are descriptive: they say nothing about why.\n\n"
+    "The State Economy Lab also offers the standard deviation of log income (the default there), an "
+    "unweighted cross-state Gini, max/min and P90/P10, with a stated rule: the trend change over the "
+    "window, as a % of the mean, under 5% either way is *stable*. A robustness check repeats σ on a "
+    "second balanced panel — every state, ending in the last year they all report — so a headline "
+    "never rests on one choice of states. β can be run over any window with classical or HC1 errors; "
+    "speed of convergence is `λ = −ln(1 + b·T) / T` and half-life `ln 2 / λ`, defined only for a negative "
+    "slope (read it together with the slope's p-value)."
+)
+
+
+# ---- Structural transformation
+st.header("Relative labour productivity")
+st.latex(r"\text{RLP}_{s,t} = \frac{\text{value-added share}_{s,t}}{\text{employment share}_{s,t}}")
+st.markdown(
+    "Computed for agriculture, industry and services from World Bank series for the same economy and "
+    "year only. A value above 1 means a worker in that sector produces more than the economy-wide "
+    "average. Value-added shares are of GDP at market prices, so the three sum to less than 100; an "
+    "optional, labelled rescaling divides by their total. Employment shares are ILO modelled estimates."
+)
+
+
+# ---- Regression workbench
+st.header("Regression workbench")
+st.markdown(
+    "Multiple OLS (statsmodels) on an explicit inner join of real series, after per-variable "
+    "transforms (log only when every value is positive; differences and percent changes only between "
+    "consecutive periods). Standard errors: classical, HC1, or Newey–West. Diagnostics: Breusch–Pagan, "
+    "Jarque–Bera, Durbin–Watson, Breusch–Godfrey, VIF, ADF (small-sample warning) and a "
+    "spurious-regression check for trending levels. Every dropped observation is listed with its "
+    "reason; exports include a JSON record of every setting and library version."
+)
+
+
+# ---- Transmission simulator
+st.header("Macro transmission simulator")
+st.markdown(
+    "Each link is `Δ outcome = parameter × Δ shock`, with parameters only from cited studies "
+    "(`data/raw/transmission/parameters.csv`, with the quote and how it was checked). Links without a "
+    "cited value stay blank until a value is entered; identities (e.g. a capex rise adds the same share "
+    "of GDP to the deficit) are exact. Links are not combined into a general-equilibrium model, so "
+    "outputs are HYPOTHETICAL illustrations of published sensitivities, not forecasts."
 )
 
 
@@ -225,6 +266,9 @@ st.markdown(
     "| Group shares, Gini lower bound | **World Inequality Lab** shares; Gini new here | Redistribution scenario |\n"
     "| Convergence (σ balanced panel, β) | New here | None |\n"
     "| Research Library investigations | New here | Inflation and g (composition effect) |\n"
+    "| Relative labour productivity | Standard (McMillan & Rodrik 2011) | Economies, years |\n"
+    "| Regression workbench | New here | Variables, transforms, SE type, sample |\n"
+    "| Transmission simulator links | Cited RBI / NIPFP studies | Shock size, any parameter |\n"
     "| Illustrative bank panel | New here (synthetic) | Replace CSV to reproduce with real data |"
 )
 

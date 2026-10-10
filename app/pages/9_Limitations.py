@@ -24,6 +24,8 @@ import streamlit as st
 
 from app.components.theme import setup, kicker, callout, footnote
 from app.components import hairline_display
+from analysis import convergence
+from data_sources import loaders
 
 
 setup("Limitations")
@@ -138,6 +140,80 @@ banking_lim = pd.DataFrame([
 st.dataframe(banking_lim, hide_index=True, width="stretch")
 
 
+def _robustness_text() -> str:
+    rob = convergence.sigma_robustness(loaders.load_nsdp_spliced())
+    full = rob[rob["panel"].str.startswith("full")]
+    alt = rob[rob["panel"].str.startswith("all states")]
+    if full.empty or alt.empty:
+        return "Balanced panel by default; the all-states comparison is shown in the State Economy Lab"
+    n_all, n_bal = int(alt["n_states"].iloc[0]), int(full["n_states"].iloc[0])
+    rising = int((alt["verdict"] == "rising").sum())
+    cv = alt.set_index("measure").loc["cv", "verdict"]
+    return (f"Headline uses the balanced panel ({n_bal} states with data in every year to {full['end'].iloc[0]}); "
+            f"{n_all - n_bal} states are dropped for missing the last year. Keeping all {n_all} states to "
+            f"{alt['end'].iloc[0]}, {rising} of {len(alt)} dispersion measures rise and the CV is {cv} — "
+            "both comparisons are shown")
+
+
+st.header("States, housing and structural change")
+regional_lim = pd.DataFrame([
+    {"Limitation": "The convergence verdict depends on which states are compared",
+     "Where it bites": "σ-convergence headline (Home, State Lab, Research Library)",
+     "Mitigation": _robustness_text()},
+    {"Limitation": "Unweighted across states",
+     "Where it bites": "σ and β treat a small state the same as Uttar Pradesh",
+     "Mitigation": "Stated on the page; population-weighted dispersion needs a state population series "
+                   "(DATA REQUIRED)"},
+    {"Limitation": "Spliced constant-price series",
+     "Where it bites": "Real per-capita NSDP across the 2004-05 and 2011-12 bases",
+     "Mitigation": "Splice method documented; the as-published base-year blocks can be used instead"},
+    {"Limitation": "β regression is a small cross-section with no controls",
+     "Where it bites": "β slope, speed of convergence, half-life",
+     "Mitigation": "n, SE (classical or HC1), CI and p shown; no half-life when the slope is not significant"},
+    {"Limitation": "Housing affordability uses state income, not city household income",
+     "Where it bites": "Price-to-income in NCR satellite and other cities richer than their state",
+     "Mitigation": "Labelled as a state-income proxy throughout; RESIDEX prices are assessment prices, "
+                   "not transactions"},
+    {"Limitation": "Employment shares are ILO modelled estimates, not PLFS",
+     "Where it bites": "Structural Transformation Lab: relative labour productivity, sector gaps",
+     "Mitigation": "Labelled ILO modelled; value-added shares are of GDP at market prices, so sectors sum "
+                   "to less than 100 and the residual is shown"},
+    {"Limitation": "Live World Bank series",
+     "Where it bites": "Structural Transformation, Inequality & Financialisation, India Macro & World",
+     "Mitigation": "If the API cannot be reached the page says DATA UNAVAILABLE; no cached or invented values"},
+])
+st.dataframe(regional_lim, hide_index=True, width="stretch")
+
+
+st.header("Financialisation, the simulator and the regression workbench")
+tools_lim = pd.DataFrame([
+    {"Limitation": "No household-group breakdown of financial assets",
+     "Where it bites": "Whether financial gains are broad-based",
+     "Mitigation": "AIDIS by wealth group, AMFI folios/SIPs and NSDL/CDSL demat data are DATA REQUIRED; "
+                   "folios and demat accounts are not unique investors"},
+    {"Limitation": "Billionaire lists and WIL top shares are not independent",
+     "Where it bites": "Correlation of Forbes wealth with the Top 0.1% share",
+     "Mitigation": "Stated next to the result; WIL uses rich lists for the top tail"},
+    {"Limitation": "Simulator parameters come from different studies, periods and methods",
+     "Where it bites": "Every Macro Transmission Simulator output",
+     "Mitigation": "Labelled HYPOTHETICAL; links are added up linearly with no general-equilibrium "
+                   "consistency; some defaults are single-episode ratios, not general elasticities"},
+    {"Limitation": "Simulator citations were checked through search results, not the source documents",
+     "Where it bites": "All cited defaults",
+     "Mitigation": "Each row records the quote and how it was checked; values that could not be confirmed "
+                   "were removed and trade elasticities are left blank (DATA REQUIRED)"},
+    {"Limitation": "Regression workbench is OLS on short samples",
+     "Where it bites": "Coefficients, p-values, R²",
+     "Mitigation": "Robust (HC1, Newey–West) errors, diagnostics, a spurious-regression check for trending "
+                   "series; no causal or panel methods"},
+    {"Limitation": "Research Library text is generated by fixed rules",
+     "Where it bites": "Findings and interpretation in each investigation",
+     "Mitigation": "Every sentence is built from computed values; facts, statistics, interpretation and "
+                   "hypotheses are kept apart; nothing claims cause and effect"},
+])
+st.dataframe(tools_lim, hide_index=True, width="stretch")
+
+
 st.header("What the site does not claim")
 st.markdown(
     "- It does **not** claim to identify the causal effect of monetary "
@@ -147,7 +223,9 @@ st.markdown(
     "inequality.\n"
     "- It does **not** provide personalised financial advice.\n"
     "- It does **not** present iBFPI as an established or industry-standard "
-    "index."
+    "index.\n"
+    "- It does **not** forecast: the Macro Transmission Simulator shows "
+    "hypothetical shocks with cited sensitivities, not predictions."
 )
 
 
@@ -171,6 +249,16 @@ st.dataframe(pd.DataFrame([
                "household-level version needs the microdata (registered login at microdata.gov.in)"},
     {"Item": "Sensitivity over composite weights and direction coefficients", "Status": "DONE",
      "Detail": "Banking Lab → Robustness"},
+    {"Item": "State population series", "Status": "NEEDS DATA",
+     "Detail": "Population-weighted convergence measures"},
+    {"Item": "State GVA by sector and PLFS employment by industry by state", "Status": "NEEDS DATA",
+     "Detail": "State productivity and industrialisation (RBI Handbook / MoSPI; PLFS)"},
+    {"Item": "AIDIS asset composition by wealth group; AMFI, NSDL, CDSL series", "Status": "NEEDS DATA",
+     "Detail": "Who holds financial assets; upload templates are in data_sources/financialisation_uploads.py"},
+    {"Item": "Simulator parameters checked against the source documents", "Status": "NEEDS CHECK",
+     "Detail": "Open each cited RBI / NIPFP document and confirm the quoted figure"},
+    {"Item": "City household income", "Status": "NEEDS DATA",
+     "Detail": "Replaces the state-income proxy in the Housing Lab"},
 ]), hide_index=True, width="stretch")
 
 footnote(
