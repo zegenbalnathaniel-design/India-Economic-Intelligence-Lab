@@ -222,24 +222,6 @@ st.markdown(
 )
 
 
-st.header("What would materially strengthen the research")
-st.dataframe(pd.DataFrame([
-    {"Item": "Real bank filings replacing the illustrative panel", "Status": "NEEDS DATA",
-     "Detail": "Quarterly PPNR, total assets, CET1, net charge-offs, LCR and unrealised bond losses for the "
-               "five banks, 2018–2024 (Basel III Pillar 3 disclosures and results)"},
-    {"Item": "Macro controls in the bank regression", "Status": "NEEDS DATA",
-     "Detail": "Quarterly GDP growth and CPI series for the fixed-effects regression of iBFPI on the repo rate"},
-    {"Item": "RBI MPC event studies", "Status": "NEEDS DATA",
-     "Detail": "Every MPC meeting date since 2018, including holds (rate changes 2018-2026 are now loaded) and bank data more frequent "
-               "than quarterly, so a decision's effect can be separated from the rest of the quarter"},
-    {"Item": "Year-by-year state population", "Status": "NEEDS DATA",
-     "Detail": "Population-weighted convergence over 2004-05 to 2022-23 (only 2026 projections are loaded)"},
-    {"Item": "AIDIS asset composition by wealth group; AMFI, NSDL, CDSL series", "Status": "NEEDS DATA",
-     "Detail": "Who holds financial assets; upload templates are in data_sources/financialisation_uploads.py"},
-    {"Item": "Simulator parameters checked against the source documents", "Status": "NEEDS CHECK",
-     "Detail": "Open each cited RBI / NIPFP document and confirm the quoted figure"},
-]), hide_index=True, width="stretch")
-
 footnote(
     "This is a research showcase. If a claim looks stronger than the "
     "evidence should permit, please flag it — a research portfolio should "
