@@ -458,7 +458,7 @@ def _raw_rows() -> list[dict]:
     for r in sp.itertuples(index=False):
         v = _to_number(r.percapita_nsdp_constant_prices_inr_SPLICED)
         rows.append(_rows(normalise_state(r.state), "nsdp_pc_constant_spliced", r.financial_year, v,
-                          _blank_note(v, str(r.method))))
+                          ("blank in source" if np.isnan(v) else str(r.method))))
 
     # Current-price NSDP, RBI screenshot.
     cur = loaders.load_nsdp_current()
