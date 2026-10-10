@@ -37,30 +37,31 @@ Runs on Python 3.11+. No API keys, no external services.
 ```
 india-economic-intelligence-lab/
 │
-├── app/                    Streamlit UI (Home + 6 pages)
-│   ├── Home.py
-│   ├── components/         theme + shared UI helpers
-│   └── pages/              1_Wealth_Inequality_Lab.py ... 6_About.py
+├── app/                    Streamlit UI
+│   ├── Home.py             entry point: grouped sidebar navigation (st.navigation)
+│   ├── home_page.py        the home page
+│   ├── components/         theme, chart export, navigation, sources panel, 3D figures, briefs
+│   ├── assets/             built JS bundles for the 3D figures (terrain, turntable, hairlines)
+│   └── pages/              the 15 Labs, tools and reference pages
 │
-├── analysis/               Domain logic
-│   ├── wealth.py           composition effect, r − g
-│   └── banking.py          iBFPI robust z-score, Spearman, regime split
+├── analysis/               domain logic (pure functions, tested)
+│   ├── wealth.py, inequality.py, financialisation.py
+│   ├── banking.py          iBFPI, robustness, fixed-effects regression
+│   ├── regional.py, convergence.py, states.py
+│   ├── housing.py, structural.py, transmission.py, macro_monthly.py
+│   ├── relationships.py, hypotheses.py, econometrics.py, workbench_catalogue.py
+│   └── research_library.py investigations behind the Research Library
 │
 ├── data/
-│   ├── raw/                (empty — user-supplied)
-│   ├── processed/          bank_panel.csv, repo_rate.csv
-│   └── cache/              (empty — future API-cached pulls)
+│   ├── raw/                source files (RBI, NHB, PLFS, HCES, WIL, author papers, ...)
+│   └── processed/          bank_panel.csv (ILLUSTRATIVE), repo_rate.csv
 │
-├── data_sources/           Loaders + illustrative-panel builder
-├── models/                 (reserved for future extensions)
-├── tests/                  Unit tests for analysis modules (pytest)
-├── docs/                   Notes on figures and methodology
+├── data_sources/           loaders, evidence ledger (registry.py, meta_*.py),
+│                           validation checks, World Bank client
+├── tests/                  pytest suite (analysis, data, ledger, pages, navigation)
 │
-├── README.md
-├── methodology.md
-├── data_dictionary.md
+├── README.md, methodology.md, data_dictionary.md, DATA_REGISTRY.md
 ├── requirements.txt
-├── .env.example
 └── LICENSE
 ```
 
@@ -68,8 +69,25 @@ india-economic-intelligence-lab/
 
 ## Site structure
 
-| Page | Purpose |
-| --- | --- |
+| Section | Page | Purpose |
+| --- | --- | --- |
+| — | Home | Terrain and turntable entry points, research index, live convergence card. |
+| Labs | Wealth & Inequality Lab | WIL income/wealth groups · composition effect · Monte Carlo · r − g · Paper A Figures 1–2. |
+| Labs | Inequality & Financialisation Lab | Lorenz curves, Gini lower bounds, household assets, financial deepening (World Bank, live). |
+| Labs | Banking & Monetary Policy Lab | iBFPI on an ILLUSTRATIVE panel · repo-rate comparison · regime split · robustness. |
+| Labs | State Economy Lab | σ/β convergence on a balanced panel · tile map · workbench · state indicators. |
+| Labs | Housing Intelligence Lab | NHB RESIDEX prices against a documented state-income proxy. |
+| Labs | Structural Transformation Lab | Sector output vs employment, relative labour productivity, peers (World Bank, live). |
+| Models & tools | Economic Relationships & Regression | Hypothesis library, correlations, multiple-regression workbench with diagnostics. |
+| Models & tools | Macro Transmission Simulator | HYPOTHETICAL shocks propagated with cited parameters only. |
+| Models & tools | India Macro & World | Latest monthly indicators and World Bank comparisons. |
+| Research | Research Library | Investigations computed from the data, downloadable as research briefs. |
+| Research | The Papers | The two underlying papers and how far the data supports them. |
+| Research | Methodology · Limitations | Every formula and assumption; what the site can and cannot say. |
+| About | Data & Evidence Ledger | Every dataset's source, status, units, transformations, limitations; validation report. |
+| About | About | Stack, reproducibility, licence, citation. |
+
+--- | --- |
 | Home | Introduction and the three research themes: wealth, banking, method. |
 | Wealth & Inequality Lab | Income → wealth framework · composition effect · asset allocation · r − g. |
 | Banking & Monetary Policy Lab | iBFPI construction · aggregate & per-bank time series · repo-rate comparison · regime split. |

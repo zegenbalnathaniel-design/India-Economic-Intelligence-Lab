@@ -90,7 +90,7 @@ with st.sidebar:
         regime = st.radio("Who bears the oil shock?", T.OIL_REGIMES, key=f"{PREFIX}oil_regime",
                           help="The cited CPI and growth effects assume full pass-through; the cited fiscal cost "
                                "assumes the government absorbs everything. The two are polar cases.")
-    st.button("Reset to cited defaults", on_click=_reset_all, use_container_width=True, key=f"{PREFIX}reset_btn")
+    st.button("Reset to cited defaults", on_click=_reset_all, width="stretch", key=f"{PREFIX}reset_btn")
     st.caption("Reset restores the shock size and every parameter to the cited values (blank where none was verified).")
 
 
@@ -276,7 +276,7 @@ def diagram(scn: str, results: list[T.Result]) -> go.Figure:
 
 with diagram_box:
     st.header(f"1 · The chain — {SC.title.lower()}")
-    st.plotly_chart(diagram(scenario, res_a), use_container_width=True, key=f"{PREFIX}diagram_{scenario}")
+    st.plotly_chart(diagram(scenario, res_a), width="stretch", key=f"{PREFIX}diagram_{scenario}")
     n_q = sum(r.status == T.QUANTIFIED for r in res_a)
     n_n = sum(r.status == T.NEEDS_PARAMETER for r in res_a)
     st.caption(
@@ -328,7 +328,7 @@ with results_box:
         if part.empty:
             continue
         st.subheader(title)
-        st.dataframe(_fmt_table(part), hide_index=True, use_container_width=True)
+        st.dataframe(_fmt_table(part), hide_index=True, width="stretch")
 
     chart = table[table["unit"].isin(["pp", "pp of GDP"])]
     if not chart.empty:
@@ -351,7 +351,7 @@ with results_box:
             xaxis_title="percentage points (pp, or pp of GDP)", yaxis=dict(autorange="reversed", automargin=True),
             legend=dict(orientation="h", y=1.02, x=0),
         )
-        st.plotly_chart(fig, use_container_width=True, key=f"{PREFIX}bars_{scenario}")
+        st.plotly_chart(fig, width="stretch", key=f"{PREFIX}bars_{scenario}")
         st.caption("Bars at zero labelled 'needs parameter' or 'not applied' have no value — they are not zero effects. "
                    "Links measured in % or US$ bn are in the tables above only.")
 
@@ -436,17 +436,17 @@ payload = T.export_payload(scenario, shock, params_a, params_b, table, regime)
 e1, e2 = st.columns(2)
 with e1:
     st.download_button("Download inputs, outputs & citations (CSV)", T.export_csv(payload).encode("utf-8"),
-                       file_name=f"transmission_{scenario}.csv", mime="text/csv", use_container_width=True,
+                       file_name=f"transmission_{scenario}.csv", mime="text/csv", width="stretch",
                        key=f"{PREFIX}dl_csv")
 with e2:
     st.download_button("Download inputs, outputs & citations (JSON)", T.export_json(payload).encode("utf-8"),
                        file_name=f"transmission_{scenario}.json", mime="application/json",
-                       use_container_width=True, key=f"{PREFIX}dl_json")
+                       width="stretch", key=f"{PREFIX}dl_json")
 st.caption("Both files carry the HYPOTHETICAL label, the shock, both parameter sets (edited values are marked "
            "USER-SET and lose the citation), every output with its status, and the qualitative links.")
 
 with st.expander("The full parameters file (every default, its citation and how it was checked)"):
-    st.dataframe(PARAMS, hide_index=True, use_container_width=True)
+    st.dataframe(PARAMS, hide_index=True, width="stretch")
 
 sources_panel("transmission_parameters")
 footnote(

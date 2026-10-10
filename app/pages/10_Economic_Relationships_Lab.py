@@ -288,7 +288,7 @@ overview = _overview(include_tentative_state)
 ov_show = overview.drop(columns=["id"]).copy()
 ov_show["Spearman ρ"] = ov_show["Spearman ρ"].map(lambda v: _fmt(v, 2))
 ov_show["p-value"] = ov_show["p-value"].map(_fmt_p)
-st.dataframe(ov_show, use_container_width=True, hide_index=True)
+st.dataframe(ov_show, width="stretch", hide_index=True)
 
 sig = [(p is not None and np.isfinite(p) and p < rel.ALPHA) for p in overview["p-value"]]
 fig_ov = go.Figure(go.Bar(
@@ -306,7 +306,7 @@ fig_ov.update_layout(
     xaxis_title="Spearman ρ", xaxis_range=[-1.05, 1.05], height=60 + 28 * len(overview),
     yaxis=dict(autorange="reversed"), margin=dict(l=20),
 )
-st.plotly_chart(fig_ov, use_container_width=True)
+st.plotly_chart(fig_ov, width="stretch")
 st.caption(
     f"Computed live from the loaders with each hypothesis's default transforms, in levels. Strength "
     f"thresholds on |ρ|: < {rel.WEAK_BELOW} weak, {rel.WEAK_BELOW}–{rel.STRONG_FROM} moderate, "
@@ -645,7 +645,7 @@ if not aligned.dropped.empty:
     else:
         dropped_show[key_col] = dropped_show[key_col].map(_key_str)
     with st.expander(f"Dropped observations ({aligned.n_dropped})", expanded=not is_ts and aligned.n_dropped <= 12):
-        st.dataframe(dropped_show, use_container_width=True, hide_index=True)
+        st.dataframe(dropped_show, width="stretch", hide_index=True)
 
 indicator_note(
     "the alignment step",
@@ -817,7 +817,7 @@ if is_ts:
     ])
     cc1, cc2 = st.columns([3, 2])
     with cc1:
-        st.dataframe(comp, use_container_width=True, hide_index=True)
+        st.dataframe(comp, width="stretch", hide_index=True)
     with cc2:
         outcome = rel.differencing_outcome(lv_v, df_v)
         stat_card("Survives differencing?", outcome.replace("_", " ").capitalize(),
@@ -828,7 +828,7 @@ if is_ts:
         {"Series": f"Y: {y_meta['short']}", "Spearman ρ with time": _fmt(y_trend.rho, 2),
          "p": _fmt_p(y_trend.p), "Trending?": y_trend.direction if y_trend.trending else "no"},
     ])
-    st.dataframe(trend_rows, use_container_width=True, hide_index=True)
+    st.dataframe(trend_rows, width="stretch", hide_index=True)
     warn_trend = rel.spurious_trend_warning(x_trend, y_trend, x_meta["short"], y_meta["short"])
     if warn_trend:
         callout("<b>Spurious-correlation risk.</b> " + warn_trend, kind="warn")
@@ -840,7 +840,7 @@ if is_ts:
         with st.expander(f"Observations without a first difference ({len(diff.dropped)})"):
             dd = diff.dropped.copy()
             dd[key_col] = dd[key_col].map(_key_str)
-            st.dataframe(dd, use_container_width=True, hide_index=True)
+            st.dataframe(dd, width="stretch", hide_index=True)
 
 warn = rel.sample_size_warning(n)
 if warn:
@@ -959,7 +959,7 @@ fig.update_layout(
     title=f"{y_axis} vs {x_axis} (n = {n})", xaxis_title=x_axis, yaxis_title=y_axis,
     height=480, showlegend=True,
 )
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, width="stretch")
 st.caption("Hover over a point to see which " + ("period" if is_ts else ("city" if key_col == "city" else "state"))
            + " it is. The ringed point is the observation whose removal changes Spearman ρ the most.")
 
@@ -973,7 +973,7 @@ if fit.ok:
     fig_r.add_hline(y=0, line=dict(color=MUTED, dash="dot"))
     fig_r.update_layout(title="Residuals (actual Y − fitted Y) against X", xaxis_title=x_axis,
                         yaxis_title="Residual", height=360, showlegend=False)
-    st.plotly_chart(fig_r, use_container_width=True)
+    st.plotly_chart(fig_r, width="stretch")
     order = np.argsort(-np.abs(fit.residuals))[:3]
     st.caption(
         "Largest residuals (furthest from the line): "
@@ -1001,7 +1001,7 @@ if is_ts:
     fig_t.update_yaxes(title_text=x_axis, secondary_y=False)
     fig_t.update_yaxes(title_text=y_axis, secondary_y=True, showgrid=False)
     fig_t.update_layout(title="Both series over the analysis sample", height=380, hovermode="x unified")
-    st.plotly_chart(fig_t, use_container_width=True)
+    st.plotly_chart(fig_t, width="stretch")
 
     if not rel.consecutive_periods(list(data[key_col])):
         callout("The aligned periods are <b>not consecutive</b> (there are gaps), so a lag of k "
@@ -1025,7 +1025,7 @@ if is_ts:
     ))
     fig_l.update_layout(title=f"{method.title()} correlation of X(t) with Y(t+k)", xaxis_title=f"k ({unit}s)",
                         yaxis_title="correlation", yaxis_range=[-1.05, 1.05], height=360)
-    st.plotly_chart(fig_l, use_container_width=True)
+    st.plotly_chart(fig_l, width="stretch")
     valid = lag_df.dropna(subset=["r"])
     if not valid.empty:
         best = valid.loc[valid["r"].abs().idxmax()]
@@ -1046,7 +1046,7 @@ if is_ts:
         fig_w.add_hline(y=0, line=dict(color=MUTED, dash="dot"))
         fig_w.update_layout(title=f"Rolling {window}-{unit} {method.title()} correlation (labelled at window end)",
                             yaxis_title="correlation", yaxis_range=[-1.05, 1.05], height=340)
-        st.plotly_chart(fig_w, use_container_width=True)
+        st.plotly_chart(fig_w, width="stretch")
     else:
         st.info("Too few observations for a rolling correlation (needs at least 6).")
 
@@ -1088,7 +1088,7 @@ if y_tf != "none" or form == "differences":
 if fit.ok:
     table["fitted Y"] = fit.fitted
     table["residual"] = fit.residuals
-st.dataframe(table, use_container_width=True, hide_index=True)
+st.dataframe(table, width="stretch", hide_index=True)
 
 if not is_ts and nsdp_cur_years_used:
     flagged = nsdp_cur[nsdp_cur["transcription_flag"].notna() & nsdp_cur["state"].isin(data[key_col])]
@@ -1118,7 +1118,7 @@ meta = {
 summary = rel.regression_summary_table(corr, fit, meta=meta)
 summary["value"] = summary["value"].astype(str)
 with st.expander("Regression summary table"):
-    st.dataframe(summary, use_container_width=True, hide_index=True)
+    st.dataframe(summary, width="stretch", hide_index=True)
 
 slug = f"{x_var_id}_vs_{y_var_id}_{form}".replace(" ", "_")
 d1, d2, d3 = st.columns(3)

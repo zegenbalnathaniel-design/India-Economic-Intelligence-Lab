@@ -116,11 +116,11 @@ st.subheader("5 · Results")
 figures = []
 for spec in inv.charts:
     fig = build_chart(inv, spec)
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
     figures.append(prepare_figure_for_export(fig)[0])
 for name, df in inv.tables.items():
     with st.expander(f"Table: {name} ({len(df)} rows)"):
-        st.dataframe(df, use_container_width=True, hide_index=True)
+        st.dataframe(df, width="stretch", hide_index=True)
 
 c1, c2 = st.columns(2)
 with c1:

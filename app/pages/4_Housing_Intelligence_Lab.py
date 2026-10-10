@@ -115,7 +115,7 @@ if selected:
         sub = housing.sort_quarters(price_levels[price_levels["city"] == city])
         fig.add_trace(go.Scatter(x=sub["quarter"], y=sub["composite_price_inr_per_sqm"], name=city, mode="lines"))
     fig.update_layout(title="Composite price, ₹ per sq.m.", xaxis_title="Quarter", yaxis_title="₹/sq.m.", height=450)
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
     st.caption("Source: NHB RESIDEX, actual price levels (not an index) — Jun-2013 to Sep-2024.")
 else:
     st.info("Select at least one city to see its price trend.")
@@ -144,7 +144,7 @@ with st.expander(f"Data quality — how much of the underlying RESIDEX series wa
     ))
     usable_chart.update_layout(title="Usable-records share, phase-1 city residential apartments (%)",
                                 xaxis_title="Quarter", yaxis_title="% usable", height=320)
-    st.plotly_chart(usable_chart, use_container_width=True)
+    st.plotly_chart(usable_chart, width="stretch")
 
 st.markdown("---")
 
@@ -224,7 +224,7 @@ fig2.add_hline(
 fig2.update_layout(title=f"Price-to-income ratio by city ({unit_size:.0f} sq.m. reference unit, {income_source.upper()} income proxy)", xaxis_title="",
                     yaxis_title="Price / annual income (proxy)", height=600,
                     xaxis=dict(tickangle=-60, automargin=True))
-st.plotly_chart(fig2, use_container_width=True)
+st.plotly_chart(fig2, width="stretch")
 
 st.dataframe(
     aff[["city", "state", "quarter", "price_per_sqm", "unit_price", "annual_income_proxy", "price_to_income", "emi_monthly", "emi_to_income_pct"]]
@@ -233,7 +233,7 @@ st.dataframe(
         "price_per_sqm": "₹{:,.0f}", "unit_price": "₹{:,.0f}", income_col_label: "₹{:,.0f}",
         "price_to_income": "{:.2f}", "emi_monthly": "₹{:,.0f}", "emi_to_income_pct": "{:.1f}%",
     }),
-    use_container_width=True, hide_index=True,
+    width="stretch", hide_index=True,
 )
 
 indicator_note(
@@ -360,7 +360,7 @@ else:
         cmp_fig.add_bar(name=city_b, x=["Price-to-income (×)", "EMI / income (%)"],
                          y=[res_b.price_to_income, res_b.emi_to_income_pct])
         cmp_fig.update_layout(barmode="group", title=f"{city_a} vs. {city_b}", height=360)
-        st.plotly_chart(cmp_fig, use_container_width=True)
+        st.plotly_chart(cmp_fig, width="stretch")
 
         if res_a.state == res_b.state:
             st.caption(
@@ -434,7 +434,7 @@ try:
     fig_rpipi = go.Figure(go.Scatter(x=rpipi_result.series["financial_year"], y=rpipi_result.series["rpipi"], mode="lines+markers", name="RPIPI"))
     fig_rpipi.add_hline(y=100, line_dash="dash", annotation_text="100 = price & income grew equally since base year", annotation_position="top left")
     fig_rpipi.update_layout(title=f"{rpipi_city}: RPIPI, base {rpipi_result.base_financial_year}=100", xaxis_title="Financial year", yaxis_title="RPIPI", height=420)
-    st.plotly_chart(fig_rpipi, use_container_width=True)
+    st.plotly_chart(fig_rpipi, width="stretch")
 
     if rpipi_result.status != "ok":
         st.warning(f"Insufficient overlap for a meaningful trend: {rpipi_result.status}.")
@@ -530,14 +530,14 @@ try:
         title=f"ICHASI cross-section stress score, {stress_result.quarter} ({stress_result.annual_interest_rate*100:.1f}% rate, {stress_result.loan_years:.0f}y, {stress_result.down_payment_pct*100:.0f}% down)",
         xaxis_title="", yaxis_title="Stress score (0–100)", height=500,
     )
-    st.plotly_chart(fig_stress, use_container_width=True)
+    st.plotly_chart(fig_stress, width="stretch")
     st.caption(
         f"Clipped to the {stress_result.clip_low_pctile:.0f}th–{stress_result.clip_high_pctile:.0f}th percentile of "
         f"price-to-income ratios at {stress_result.quarter} before rescaling to 0–100."
     )
     st.dataframe(
         stress_result.scores.style.format({"price_to_income": "{:.2f}", "pti_clipped": "{:.2f}", "stress_score_0_100": "{:.1f}"}),
-        use_container_width=True, hide_index=True,
+        width="stretch", hide_index=True,
     )
 except ValueError as exc:
     st.error(str(exc))

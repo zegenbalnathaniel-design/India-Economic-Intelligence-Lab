@@ -114,7 +114,7 @@ def render() -> None:
     ids = list(by_id)
     with st.expander(f"Variable catalogue — {len(cat)} variables at this level (with n)"):
         tbl = wc.catalogue_table(level)
-        st.dataframe(tbl.drop(columns=["level"]), use_container_width=True, hide_index=True)
+        st.dataframe(tbl.drop(columns=["level"]), width="stretch", hide_index=True)
         st.caption("Not offered: " + "; ".join(f"**{a}** — {b}" for a, b in wc.NOT_OFFERED) + ".")
 
     y_default, x_default = DEFAULTS[level]
@@ -195,11 +195,11 @@ def render() -> None:
         stat_card("Keys seen", f"{al.n_universe}", "in any selected source")
     summ = al.reason_summary()
     if not summ.empty:
-        st.dataframe(summ.rename(columns={"category": "why dropped"}), use_container_width=True, hide_index=True)
+        st.dataframe(summ.rename(columns={"category": "why dropped"}), width="stretch", hide_index=True)
     if not al.dropped.empty:
         with st.expander(f"All dropped observations ({al.n_dropped}) and why"):
-            st.dataframe(al.dropped, use_container_width=True, hide_index=True)
-    st.dataframe(al.coverage, use_container_width=True, hide_index=True)
+            st.dataframe(al.dropped, width="stretch", hide_index=True)
+    st.dataframe(al.coverage, width="stretch", hide_index=True)
     if al.possible_name_mismatches:
         callout("<b>Possible name mismatches — not joined:</b> "
                 + "; ".join(f"'{a}' vs '{b}'" for a, b in al.possible_name_mismatches), kind="warn")
@@ -227,7 +227,7 @@ def render() -> None:
         pc_show[c] = pc_show[c].map(lambda v: _fmt(v, 3))
     for c in ("Pearson p", "Spearman p"):
         pc_show[c] = pc_show[c].map(_fmt_p)
-    st.dataframe(pc_show, use_container_width=True, hide_index=True)
+    st.dataframe(pc_show, width="stretch", hide_index=True)
     st.caption(f"Computed on the {al.n} aligned {obs_noun}, variables as transformed. Spearman p-values are "
                f"exact permutation p-values when n ≤ {rel.EXACT_SPEARMAN_MAX_N}. Pairwise correlations ignore "
                "the other variables; the regression below does not.")
@@ -256,7 +256,7 @@ def render() -> None:
     show["t"] = show["t"].map(lambda v: _fmt(v, 2))
     show["p-value"] = show["p-value"].map(_fmt_p)
     st.markdown(f"**Dependent variable:** {al.y.term} · {al.y.unit or 'units as loaded'}")
-    st.dataframe(show, use_container_width=True, hide_index=True)
+    st.dataframe(show, width="stretch", hide_index=True)
     m1, m2, m3, m4 = st.columns(4)
     with m1:
         stat_card("n", f"{fit.n}", f"df model {int(fit.df_model)} · df resid {int(fit.df_resid)}")
@@ -306,7 +306,7 @@ def render() -> None:
     fig.update_xaxes(title_text="theoretical normal quantile", row=1, col=3)
     fig.update_yaxes(title_text="residual", row=1, col=1)
     fig.update_layout(height=380, showlegend=False, title=f"Residual diagnostics — {al.y.term} (n = {fit.n})")
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
     st.caption("A funnel in the left panel suggests heteroskedasticity; a curve suggests a missing transform. "
                "Points far from the dashed line in the QQ plot are non-normal residuals (often outliers).")
 
@@ -316,7 +316,7 @@ def render() -> None:
         diags.append(em.breusch_godfrey(fit, hac_lags or em.newey_west_lags(fit.n), consecutive=al.consecutive))
     dt = pd.DataFrame([{"test": d.test, "checks": d.purpose, "statistic": _fmt(d.statistic, 3),
                         "p-value": _fmt_p(d.p_value), "result": d.verdict, "detail": d.detail} for d in diags])
-    st.dataframe(dt, use_container_width=True, hide_index=True)
+    st.dataframe(dt, width="stretch", hide_index=True)
     st.markdown("\n".join(f"- **{d.test}.** {d.interpretation}" for d in diags))
 
     vif_df = pd.DataFrame()
@@ -325,7 +325,7 @@ def render() -> None:
         st.markdown("**Multicollinearity (VIF)**")
         vshow = vif_df.drop(columns=["term"]).copy()
         vshow["VIF"] = vshow["VIF"].map(lambda v: _fmt(v, 2) if np.isfinite(v) else "∞")
-        st.dataframe(vshow, use_container_width=True, hide_index=True)
+        st.dataframe(vshow, width="stretch", hide_index=True)
         st.caption(em.vif_interpretation(vif_df))
 
     adf_rows = []
@@ -359,7 +359,7 @@ def render() -> None:
                             "ADF statistic": _fmt(r.statistic, 2), "p-value": _fmt_p(r.p_value),
                             "5% critical": _fmt(r.crit_5pct, 2), "lags (AIC)": str(r.used_lag) if r.used_lag is not None else "—",
                             "result": r.verdict} for t, form, r in adf_rows])
-        st.dataframe(at, use_container_width=True, hide_index=True)
+        st.dataframe(at, width="stretch", hide_index=True)
         small = [f"{t} ({form}, n = {r.n})" for t, form, r in adf_rows if r.status in ("too_small", "not_computed")]
         if small:
             st.warning("ADF not meaningful for: " + "; ".join(small) + f". With fewer than {em.ADF_MIN_N} "
@@ -425,6 +425,6 @@ def render() -> None:
         st.download_button("Reproducibility record (JSON)", em.record_to_json(record).encode("utf-8"),
                            file_name=f"reproducibility_{slug}.json", mime="application/json", key="wb_dl_json")
     with st.expander("Aligned analysis data"):
-        st.dataframe(data_tab, use_container_width=True, hide_index=True)
+        st.dataframe(data_tab, width="stretch", hide_index=True)
     with st.expander("Reproducibility record (JSON preview)"):
         st.json(record, expanded=False)

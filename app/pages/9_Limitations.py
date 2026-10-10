@@ -103,7 +103,7 @@ wealth_lim = pd.DataFrame([
      "Where it bites": "Real-world household wealth is measured with error",
      "Mitigation in the MVP": "Model uses target values, not marked-to-market"},
 ])
-st.dataframe(wealth_lim, hide_index=True, use_container_width=True)
+st.dataframe(wealth_lim, hide_index=True, width="stretch")
 
 
 st.header("Banking & monetary policy module")
@@ -135,7 +135,7 @@ banking_lim = pd.DataFrame([
      "Where it bites": "Only extant large private/public banks are in the panel — small/failed banks are absent",
      "Mitigation in the MVP": "Documented; scope is stated as five specific banks"},
 ])
-st.dataframe(banking_lim, hide_index=True, use_container_width=True)
+st.dataframe(banking_lim, hide_index=True, width="stretch")
 
 
 st.header("What the site does not claim")
@@ -171,7 +171,7 @@ st.dataframe(pd.DataFrame([
                "household-level version needs the microdata (registered login at microdata.gov.in)"},
     {"Item": "Sensitivity over composite weights and direction coefficients", "Status": "DONE",
      "Detail": "Banking Lab → Robustness"},
-]), hide_index=True, use_container_width=True)
+]), hide_index=True, width="stretch")
 
 footnote(
     "This is a research showcase. If a claim looks stronger than the "

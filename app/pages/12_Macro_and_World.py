@@ -86,7 +86,7 @@ with st.sidebar:
         "Peer economies", list(WB.PEER_COUNTRIES), default=list(WB.DEFAULT_PEERS),
         format_func=lambda c: WB.PEER_COUNTRIES[c], key="wb_peers", max_selections=6,
     )
-    if st.button("Refresh from the API", use_container_width=True, key="wb_refresh"):
+    if st.button("Refresh from the API", width="stretch", key="wb_refresh"):
         _fetch.clear()
         st.rerun()
     st.caption("Results are cached for 6 hours. Refresh forces a new call.")
@@ -150,7 +150,7 @@ with g1:
     ifig.add_hline(y=0, line_color=MUTED, line_width=1)
     ifig.update_layout(height=360, title="IIP growth by sector, Aug 2026 (y/y)", yaxis_title="% y/y",
                        showlegend=False)
-    st.plotly_chart(chart_source(ifig, "MoSPI IIP quick estimates, Aug 2026"), use_container_width=True, key="now_iip")
+    st.plotly_chart(chart_source(ifig, "MoSPI IIP quick estimates, Aug 2026"), width="stretch", key="now_iip")
     i_now, i_ago = MM.value(mm, "IIP_GENERAL_INDEX", "2026-08"), MM.value(mm, "IIP_GENERAL_INDEX", "2025-08")
     st.caption(
         f"Check: index {i_now:.1f} vs {i_ago:.1f} a year earlier implies "
@@ -170,7 +170,7 @@ with g2:
     ))
     efig.update_layout(height=360, title="Measured inflation vs what households report",
                        yaxis=dict(title="%", range=[0, 12]), showlegend=False)
-    st.plotly_chart(chart_source(efig, "MoSPI CPI (Aug 2026); RBI Inflation Expectations Survey of Households (Sep 2026)"), use_container_width=True, key="now_expect")
+    st.plotly_chart(chart_source(efig, "MoSPI CPI (Aug 2026); RBI Inflation Expectations Survey of Households (Sep 2026)"), width="stretch", key="now_expect")
     st.caption(
         "The grey bars are survey medians from the RBI's household survey (Sep 2026, 19 cities) — "
         "sentiment, not an RBI forecast. The gap between them and measured CPI is itself "
@@ -185,21 +185,21 @@ with st.expander("RBI policy rate — decisions, daily and monthly tables"):
     )
     st.dataframe(dec.assign(decision_date=dec["decision_date"].dt.date,
                             effective_date=dec["effective_date"].dt.date),
-                 hide_index=True, use_container_width=True)
+                 hide_index=True, width="stretch")
     first_day = (last_dec["effective_date"] - pd.Timedelta(days=last_dec["effective_date"].day - 1))
     daily = MM.daily_policy_rate(dec, first_day, TODAY)
     st.caption(f"Daily rate in force, {first_day:%d %b} → {TODAY:%d %b %Y} (blank = no decision loaded yet):")
     st.dataframe(daily.rename_axis("date").reset_index().assign(date=lambda d: d["date"].dt.date),
-                 hide_index=True, use_container_width=True, height=220)
-    st.dataframe(MM.monthly_policy_rate(daily, TODAY), hide_index=True, use_container_width=True)
+                 hide_index=True, width="stretch", height=220)
+    st.dataframe(MM.monthly_policy_rate(daily, TODAY), hide_index=True, width="stretch")
 
 cal = MM.calendar_status(loaders.load_release_calendar(), TODAY)
 st.markdown("**Coming up**")
 st.dataframe(cal.assign(scheduled_release_date=cal["scheduled_release_date"].dt.date),
-             hide_index=True, use_container_width=True)
+             hide_index=True, width="stretch")
 
 with st.expander("All monthly figures, with status and source"):
-    st.dataframe(mm, hide_index=True, use_container_width=True)
+    st.dataframe(mm, hide_index=True, width="stretch")
     st.download_button("Download (CSV)", mm.to_csv(index=False).encode("utf-8"),
                        file_name="india_macro_monthly.csv", mime="text/csv", key="now_dl")
 
@@ -237,7 +237,7 @@ except WB.WorldBankError as exc:
             {"Indicator": m.label, "WDI code": m.code, "Unit": m.unit, "Definition": m.definition}
             for m in WB.INDICATORS.values()
         ]),
-        hide_index=True, use_container_width=True,
+        hide_index=True, width="stretch",
     )
     st.stop()
 
@@ -310,7 +310,7 @@ if code in ("NY.GDP.MKTP.KD.ZG", "BN.CAB.XOKA.GD.ZS"):
     fig.add_hline(y=0, line_color=MUTED, line_width=1)
 fig.update_layout(height=440, yaxis_title=meta.unit, xaxis_title=None, legend_title_text=None,
                   title=f"{meta.label} ({meta.unit})")
-st.plotly_chart(chart_source(fig, "World Bank WDI API"), use_container_width=True, key="wb_line")
+st.plotly_chart(chart_source(fig, "World Bank WDI API"), width="stretch", key="wb_line")
 st.caption("Gaps in a line are years the World Bank reports as missing — they are not filled in.")
 indicator_note(meta.label, f"**Definition.** {meta.definition}\n\n**Source & caveats.** {meta.source_note}\n\n"
                f"[WDI page for {meta.code}]({meta.url})")
@@ -343,7 +343,7 @@ else:
     ))
     bfig.update_layout(height=max(300, 56 * len(rows) + 100), yaxis=dict(autorange="reversed", automargin=True),
                        xaxis_title=WB.INDICATORS[cmp_code].unit, title=LABEL[cmp_code], showlegend=False)
-    st.plotly_chart(chart_source(bfig, "World Bank WDI API"), use_container_width=True, key="wb_bar")
+    st.plotly_chart(chart_source(bfig, "World Bank WDI API"), width="stretch", key="wb_bar")
     years = {y for _, _, y, _ in rows if y}
     if len(years) > 1:
         st.caption(f"Latest years differ across countries ({min(years)}–{max(years)}), shown in brackets — "
@@ -363,16 +363,16 @@ st.header("D · The data behind this page")
 wide = data.pivot_table(index=["country", "year"], columns="indicator", values="value", aggfunc="first",
                         dropna=False).rename(columns=LABEL).reset_index()
 st.dataframe(wide.sort_values(["country", "year"], ascending=[True, False]), hide_index=True,
-             use_container_width=True, height=360)
+             width="stretch", height=360)
 d1, d2 = st.columns(2)
 with d1:
     st.download_button("Download tidy data (CSV)", data.to_csv(index=False).encode("utf-8"),
                        file_name=f"wdi_{start}_{end}.csv", mime="text/csv", key="wb_dl_tidy",
-                       use_container_width=True)
+                       width="stretch")
 with d2:
     st.download_button("Download latest-vs-previous table (CSV)", lvp.to_csv(index=False).encode("utf-8"),
                        file_name=f"wdi_latest_{start}_{end}.csv", mime="text/csv", key="wb_dl_lvp",
-                       use_container_width=True)
+                       width="stretch")
 
 with st.expander("Methodology & limitations"):
     st.markdown(

@@ -567,7 +567,7 @@ with tab_conv:
                 xaxis_title="Financial year", yaxis_title=f"{mdef.label} ({mdef.unit})", height=430,
                 legend=dict(orientation="h", y=1.02, yanchor="bottom"),
             )
-            st.plotly_chart(fig_sigma, use_container_width=True, key="sigma_chart")
+            st.plotly_chart(fig_sigma, width="stretch", key="sigma_chart")
 
             with st.container(border=True):
                 st.markdown(f"**How the verdict is decided.** {C.sigma_rule_text(sig.threshold_pct)}")
@@ -686,7 +686,7 @@ with tab_conv:
                        f"({f.n} states, log scale)"),
                 xaxis_title=f"Initial real per-capita NSDP, {conv_start} (₹ at 2011-12 prices, log scale)",
                 xaxis_type="log", yaxis_title="Average annual growth (% a year)", height=480)
-            st.plotly_chart(fig_beta, use_container_width=True, key="beta_chart")
+            st.plotly_chart(fig_beta, width="stretch", key="beta_chart")
 
             with st.expander("Regression details & formulas"):
                 st.markdown(
@@ -709,7 +709,7 @@ with tab_conv:
                         avg_annual_growth_pct=lambda d: d["avg_annual_growth_pct"].round(3),
                     ).rename(columns={"initial_value": f"₹ {conv_start}", "final_value": f"₹ {conv_end}",
                                       "log_initial": "ln initial", "avg_annual_growth_pct": "avg growth % / yr"}),
-                    hide_index=True, use_container_width=True,
+                    hide_index=True, width="stretch",
                 )
             if len(beta.excluded):
                 st.caption(
@@ -759,7 +759,7 @@ with tab_conv:
                 st.dataframe(conv_ranks.rename(columns={
                     "rank_start": f"Rank {conv_start}", "rank_end": f"Rank {conv_end}",
                     "places": "Places gained (+) / lost (−)", "n_compared": "States compared"}),
-                    hide_index=True, use_container_width=True)
+                    hide_index=True, width="stretch")
     else:
         st.info("Research notes appear once the window above has enough data.")
 
@@ -817,7 +817,7 @@ with tab_tile:
         "gold (highest); rank 1 = highest value"
         + (" — for unemployment that means the highest rate." if tile_ind == "plfs_unemployment" else ".")
     )
-    st.plotly_chart(tile_map_figure(tf, tmeta.label, tmeta.unit, tile_period), use_container_width=True,
+    st.plotly_chart(tile_map_figure(tf, tmeta.label, tmeta.unit, tile_period), width="stretch",
                     key="tile_chart")
     st.caption(C.TILE_CAPTION)
     n_tile_data = int(tf["value"].notna().sum())
@@ -889,7 +889,7 @@ with tab_wb:
         fig_idx.add_hline(y=100, line_dash="dot", line_color=MUTED)
         fig_idx.update_layout(title=f"Real per-capita NSDP, index {wb_base} = 100 (constant 2011-12 prices, spliced)",
                               xaxis_title="Financial year", yaxis_title=f"Index ({wb_base} = 100)", height=420)
-        st.plotly_chart(fig_idx, use_container_width=True, key="wb_index_chart")
+        st.plotly_chart(fig_idx, width="stretch", key="wb_index_chart")
         no_idx = {s: idx_reasons.get(s) or S.missing_reason(panel, s, "nsdp_pc_constant_spliced") or "no data"
                   for s in wb_states if s not in idx_wide.index or idx_wide.loc[s].isna().all()}
         if no_idx:
@@ -915,7 +915,7 @@ with tab_wb:
                                            hovertemplate=f"{s}<br>%{{x}}: %{{y:.2f}}%<extra></extra>"))
         fig_g.update_layout(title="Annual real growth of per-capita NSDP, % change on previous financial year",
                             xaxis_title="Financial year", yaxis_title="% a year", height=420, barmode="group")
-        st.plotly_chart(fig_g, use_container_width=True, key="wb_growth_chart")
+        st.plotly_chart(fig_g, width="stretch", key="wb_growth_chart")
         st.caption("Growth into 2011-12 compares a 2011-12-base value with a linked 2004-05-base value, so it "
                    "depends on the link factor. A blank year means one of the two years has no value.")
 
@@ -932,7 +932,7 @@ with tab_wb:
                 cur_absent.append(s)
         fig_c.update_layout(title="Per-capita NSDP at current prices (nominal ₹, RBI newer vintage)",
                             xaxis_title="Financial year", yaxis_title="₹ per person, per year (nominal)", height=420)
-        st.plotly_chart(fig_c, use_container_width=True, key="wb_current_chart")
+        st.plotly_chart(fig_c, width="stretch", key="wb_current_chart")
         if cur_absent:
             st.caption("Not in the current-price table: " + "; ".join(
                 f"{s} — {S.missing_reason(panel, s, 'nsdp_pc_current_rbi')}" for s in cur_absent))
@@ -1039,7 +1039,7 @@ with tab_income:
             + ". To rank by any other state indicator (current prices, unemployment, urban MPCE) "
             "or any single year, use the **Rank any indicator** tab."
         )
-        st.dataframe(ranked, use_container_width=True, hide_index=True)
+        st.dataframe(ranked, width="stretch", hide_index=True)
 
     st.markdown("---")
 
@@ -1085,7 +1085,7 @@ with tab_income:
     unemp_sorted = unemp[unemp["state"] != "India"].sort_values("unemployment_rate_usual_status_15plus_2023_24", ascending=False)
     fig_u = go.Figure(go.Bar(x=unemp_sorted["state"], y=unemp_sorted["unemployment_rate_usual_status_15plus_2023_24"]))
     fig_u.update_layout(title="Unemployment rate by state, 2023-24 (usual status, 15+)", xaxis_title="", yaxis_title="%", height=450)
-    st.plotly_chart(fig_u, use_container_width=True, key="unemp_chart")
+    st.plotly_chart(fig_u, width="stretch", key="unemp_chart")
 
 # =========================================================================
 # Tab 3 — State lookup & compare
@@ -1171,7 +1171,7 @@ with tab_lookup:
         wide = cmp.pivot(index="label", columns="state", values="shown").reindex(
             index=[LABEL[k] for k in cmp_inds], columns=cmp_states)
         wide.index.name = "Indicator"
-        st.dataframe(wide, use_container_width=True)
+        st.dataframe(wide, width="stretch")
         gaps = cmp[cmp["value"].isna()]
         if not gaps.empty:
             st.caption("No data: " + "; ".join(
@@ -1203,7 +1203,7 @@ with tab_lookup:
                 else:
                     c_bar, c_line = st.container(), None
                 with c_bar:
-                    st.plotly_chart(fig, use_container_width=True, key=f"cmp_bar_{key}")
+                    st.plotly_chart(fig, width="stretch", key=f"cmp_bar_{key}")
                     if cbm is None:
                         st.caption(S.NO_BENCHMARK if not any(benchmarks["indicator"] == key)
                                    else "National figure not drawn: states shown are from different years.")
@@ -1226,7 +1226,7 @@ with tab_lookup:
                     lf.update_layout(title=f"{cmeta.label} over time", height=380, yaxis_title=cmeta.unit,
                                      xaxis_title="Financial year")
                     with c_line:
-                        st.plotly_chart(lf, use_container_width=True, key=f"cmp_line_{key}")
+                        st.plotly_chart(lf, width="stretch", key=f"cmp_line_{key}")
                         if absent:
                             st.caption("Not in this series (no line drawn): " + ", ".join(
                                 f"{s} — {S.missing_reason(panel, s, key)}" for s in absent))
@@ -1260,7 +1260,7 @@ with tab_rank:
         benchmark=rbm, benchmark_label=f"National (source): {fmt(rbm, rmeta.unit)}" if rbm is not None else "",
         title=f"{rmeta.label}, {rank_period}", height=max(420, 24 * len(ranked_ind) + 120),
     )
-    st.plotly_chart(rank_fig, use_container_width=True, key="rank_chart")
+    st.plotly_chart(rank_fig, width="stretch", key="rank_chart")
     rank_view = pd.DataFrame({
         "Rank": ranked_ind["rank"].map(lambda r: "—" if pd.isna(r) else str(int(r))),
         "State/UT": ranked_ind["state"],
@@ -1268,7 +1268,7 @@ with tab_rank:
         "Status": ranked_ind["status"],
         "Note": ranked_ind["note"],
     })
-    st.dataframe(rank_view, hide_index=True, use_container_width=True)
+    st.dataframe(rank_view, hide_index=True, width="stretch")
 
 # =========================================================================
 # Tab 5 — Change over time
@@ -1327,7 +1327,7 @@ with tab_change:
             title=f"CAGR of {hmeta.label}, {window[0]} → {window[1]}", height=max(380, 24 * len(hc) + 120),
         )
         hfig.update_layout(xaxis_title="% per year")
-        st.plotly_chart(hfig, use_container_width=True, key="hist_chart")
+        st.plotly_chart(hfig, width="stretch", key="hist_chart")
         hist_view = pd.DataFrame({
             "State/UT": hc["state"],
             "First": [f"{fmt(v, hmeta.unit)} ({p})" if pd.notna(v) else "no data"
@@ -1340,7 +1340,7 @@ with tab_change:
             "CAGR": hc["cagr_pct"].map(lambda v: "—" if pd.isna(v) else f"{v:+.2f}% / yr"),
             "Note": hc["note"],
         })
-        st.dataframe(hist_view, hide_index=True, use_container_width=True)
+        st.dataframe(hist_view, hide_index=True, width="stretch")
 
     indicator_note(
         "CAGR", "**What it is.** The constant yearly growth rate that would take the first value "
@@ -1371,7 +1371,7 @@ with tab_inv:
     )[["label", "period", "n_periods", "n_states", "unit", "status", "national_benchmark", "source", "source_file"]]
     inv_view.columns = ["Indicator", "Period", "Years", "States/UTs with data", "Unit", "Status",
                         "National benchmark", "Source", "File"]
-    st.dataframe(inv_view, hide_index=True, use_container_width=True)
+    st.dataframe(inv_view, hide_index=True, width="stretch")
     callout(
         "<b>Two NSDP current-price vintages.</b> The RBI table (2011-12 → 2024-25) and the older "
         "<code>state_gsdp_nsdp_percapita.csv</code> disagree by ~1-2% for about 20 states in "

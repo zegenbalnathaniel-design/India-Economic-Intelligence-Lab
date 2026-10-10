@@ -82,7 +82,7 @@ with st.sidebar:
     )
     st.markdown("---")
     wdi_start, wdi_end = st.slider("World Bank years", 1960, THIS_YEAR, (1990, THIS_YEAR), key="fin_years")
-    if st.button("Refresh from the API", use_container_width=True, key="fin_refresh"):
+    if st.button("Refresh from the API", width="stretch", key="fin_refresh"):
         _fetch_code.clear()
         st.rerun()
     st.caption("World Bank results are cached for 6 hours. WIL and Paper A figures are stored files.")
@@ -150,7 +150,7 @@ fig_lz.update_layout(
     yaxis=dict(title=f"Cumulative % of {'income' if is_inc else 'wealth'}", range=[0, 100], ticksuffix="%"),
     legend=dict(orientation="h", y=-0.18),
 )
-st.plotly_chart(chart_source(fig_lz, WIL_SRC), use_container_width=True, key="fin_lorenz")
+st.plotly_chart(chart_source(fig_lz, WIL_SRC), width="stretch", key="fin_lorenz")
 if not lz_years:
     st.info("Pick at least one year to draw.")
 st.caption(
@@ -188,7 +188,7 @@ if len(gw_tail) > 1:
                                hovertemplate="Wealth %{x}: %{y:.3f} (tentative)<extra></extra>"))
 fig_g.update_layout(height=400, title="Lower-bound Gini from the WIL group shares, 1951–2023",
                     yaxis=dict(title="Gini (lower bound)", range=[0, 1]), legend=dict(orientation="h", y=-0.15))
-st.plotly_chart(chart_source(fig_g, WIL_SRC), use_container_width=True, key="fin_gini")
+st.plotly_chart(chart_source(fig_g, WIL_SRC), width="stretch", key="fin_gini")
 st.caption("Before 2002 wealth has one point per survey (1961, 1971, 1981, 1991); lines only connect the dots — "
            "nothing is interpolated. Dotted = 2023, marked tentative by the authors.")
 
@@ -213,7 +213,7 @@ with col1:
     fig_iw.update_layout(height=400, title=f"Income vs wealth Lorenz curves, {c_year}",
                          xaxis=dict(title="Cumulative % of adults", ticksuffix="%"),
                          yaxis=dict(title="Cumulative % held", ticksuffix="%"), legend=dict(orientation="h", y=-0.2))
-    st.plotly_chart(chart_source(fig_iw, WIL_SRC), use_container_width=True, key="fin_iw_lorenz")
+    st.plotly_chart(chart_source(fig_iw, WIL_SRC), width="stretch", key="fin_iw_lorenz")
 with col2:
     fig_t = go.Figure()
     for col, name, colour, dash in (("income_top_10", "Income · Top 10%", GOLD, "solid"),
@@ -225,7 +225,7 @@ with col2:
                                    hovertemplate=f"{name} %{{x}}: %{{y:.1f}}%<extra></extra>"))
     fig_t.update_layout(height=400, title="Top 10% and Top 1% shares: income vs wealth",
                         yaxis=dict(title="% of total", rangemode="tozero"), legend=dict(orientation="h", y=-0.2))
-    st.plotly_chart(chart_source(fig_t, WIL_SRC), use_container_width=True, key="fin_iw_tops")
+    st.plotly_chart(chart_source(fig_t, WIL_SRC), width="stretch", key="fin_iw_tops")
 row = cc.set_index("year").loc[c_year]
 k1, k2, k3, k4 = st.columns(4)
 with k1:
@@ -241,7 +241,7 @@ with k4:
 st.caption(f"Common years: {len(common_years)} ({common_years[0]}–{common_years[-1]}); wealth before 2002 is "
            "survey years only. The 2023 wealth row (tentative) has no income counterpart.")
 with st.expander("Table: income vs wealth concentration by year"):
-    st.dataframe(cc, hide_index=True, use_container_width=True)
+    st.dataframe(cc, hide_index=True, width="stretch")
     st.download_button("Download (CSV)", _csv(cc), file_name="wil_income_vs_wealth_concentration.csv",
                        mime="text/csv", key="fin_dl_cc")
 
@@ -273,13 +273,13 @@ with b1:
     fig_c.update_layout(height=320, title="Average Indian household's assets, by type",
                         xaxis=dict(title="% of household assets", range=[0, 90]),
                         yaxis=dict(autorange="reversed"), showlegend=False)
-    st.plotly_chart(chart_source(fig_c, "Paper A Table 1; shares from RBI (2017)"), use_container_width=True,
+    st.plotly_chart(chart_source(fig_c, "Paper A Table 1; shares from RBI (2017)"), width="stretch",
                     key="fin_comp")
 with b2:
     st.dataframe(pd.DataFrame({
         "Asset": comp["asset"], "Share of assets": comp["share_pct"].map(lambda v: f"{v:g}%"),
         "Nominal return, 1991–2021 (per year)": comp["return_text"],
-    }), hide_index=True, use_container_width=True)
+    }), hide_index=True, width="stretch")
     st.caption(f"Shares add to {F.composition_sum(comp):g}%. Durable goods have no return figure in the paper "
                "(stated only as negative), so none is plotted — not zero.")
 callout(
@@ -321,11 +321,11 @@ def data_required_panel(name: str, title: str, key: str) -> None:
     else:
         st.success(f"`{c.relpath}` loaded ({len(df):,} rows) — user-supplied; register it in "
                    "data_sources/meta_financialisation.py. **Safeguard:** " + c.safeguard)
-        st.dataframe(df, hide_index=True, use_container_width=True, height=240)
+        st.dataframe(df, hide_index=True, width="stretch", height=240)
     with st.expander(f"Loader contract · {c.relpath}"):
         st.dataframe(pd.DataFrame({"column": list(c.columns), "type": list(c.columns.values()),
                                    "required": ["optional" if k in c.optional else "required" for k in c.columns]}),
-                     hide_index=True, use_container_width=True)
+                     hide_index=True, width="stretch")
         st.download_button("Download empty CSV template (header only)", _csv(UP.template(name)),
                            file_name=c.path.name, mime="text/csv", key=f"fin_tpl_{key}")
         st.caption("Full contract and safeguards: data_sources/financialisation_uploads.py.")
@@ -358,7 +358,7 @@ if wdi_down:
     )
     st.dataframe(pd.DataFrame([{"WDI code": m.code, "Indicator": m.label, "Unit": m.unit,
                                 "Definition": m.definition} for m in WF.INDICATORS.values()]),
-                 hide_index=True, use_container_width=True)
+                 hide_index=True, width="stretch")
 else:
     retrieved = wdi_all["retrieved_at"].dropna().max() if not wdi_all.empty else None
     st.caption(f"Retrieved {retrieved or '—'} (UTC) · India · {wdi_start}–{wdi_end}. Each series is fetched "
@@ -366,7 +366,7 @@ else:
 st.dataframe(status.rename(columns={"code": "WDI code", "indicator": "Indicator", "status": "Status",
                                     "observations": "Observations", "first_year": "First year",
                                     "latest_year": "Latest year", "detail": "Detail"}),
-             hide_index=True, use_container_width=True)
+             hide_index=True, width="stretch")
 
 if not wdi_down:
     st.subheader("Account ownership (Global Findex)")
@@ -385,7 +385,7 @@ if not wdi_down:
                             yaxis=dict(title="% of adults (group)", range=[0, 100]),
                             legend=dict(orientation="h", y=-0.18))
         st.plotly_chart(chart_source(fig_a, "World Bank Global Findex via WDI API (live)"),
-                        use_container_width=True, key="fin_acct")
+                        width="stretch", key="fin_acct")
         st.caption("Markers are survey years; dotted lines only connect them — no value between surveys is estimated.")
     gap = F.participation_gap(S[WF.RICHEST_60], S[WF.POOREST_40])
     if gap.empty:
@@ -398,7 +398,7 @@ if not wdi_down:
                               yaxis_title="percentage points", xaxis=dict(title="Findex survey year", type="category"),
                               showlegend=False)
         st.plotly_chart(chart_source(fig_gap, "World Bank Global Findex via WDI API (live); gap calculated here"),
-                        use_container_width=True, key="fin_gap")
+                        width="stretch", key="fin_gap")
 
     st.subheader("Financial depth")
     depth_codes = [c for c in WF.DEPTH_CODES if not S[c].empty]
@@ -417,7 +417,7 @@ if not wdi_down:
                                        hovertemplate=f"{s.label} %{{x}}: %{{y:.1f}}% of GDP<extra></extra>"))
         fig_d.update_layout(height=420, title="Private credit and stock-market capitalisation, India (% of GDP)",
                             yaxis=dict(title="% of GDP", rangemode="tozero"), legend=dict(orientation="h", y=-0.18))
-        st.plotly_chart(chart_source(fig_d, "World Bank WDI API (live)"), use_container_width=True, key="fin_depth")
+        st.plotly_chart(chart_source(fig_d, "World Bank WDI API (live)"), width="stretch", key="fin_depth")
         st.caption("Gaps are years the World Bank reports as missing — not filled in.")
     for c in codes:
         m = WF.INDICATORS[c]
@@ -501,7 +501,7 @@ fig_q2.update_layout(height=420, title=f"Stock-market size vs the WIL {top_choic
                      yaxis=dict(title="% of net wealth", rangemode="tozero"),
                      yaxis2=dict(title="% of GDP", overlaying="y", side="right", showgrid=False, rangemode="tozero"),
                      legend=dict(orientation="h", y=-0.18))
-st.plotly_chart(chart_source(fig_q2, "WIL Table C.1; World Bank WDI API (live)"), use_container_width=True,
+st.plotly_chart(chart_source(fig_q2, "WIL Table C.1; World Bank WDI API (live)"), width="stretch",
                 key="fin_q2")
 if ch_mt is not None:
     st.markdown(
@@ -523,7 +523,7 @@ callout(
     kind="warn",
 )
 with st.expander("Aligned data used for question 2"):
-    st.dataframe(al_mt, hide_index=True, use_container_width=True)
+    st.dataframe(al_mt, hide_index=True, width="stretch")
     st.download_button("Download (CSV)", _csv(al_mt), file_name=f"market_cap_vs_wil_{top_col}.csv",
                        mime="text/csv", key="fin_dl_q2")
 
@@ -565,7 +565,7 @@ else:
                         yaxis=dict(title=A["unit"]),
                         yaxis2=dict(title=B["unit"], overlaying="y", side="right", showgrid=False),
                         legend=dict(orientation="h", y=-0.2))
-    st.plotly_chart(chart_source(fig_e, f"{A['source']}; {B['source']}"), use_container_width=True, key="fin_cmp")
+    st.plotly_chart(chart_source(fig_e, f"{A['source']}; {B['source']}"), width="stretch", key="fin_cmp")
     st.caption("Gaps are years a source does not report; lines are not joined across them and nothing is filled.")
     r_e, ch_e = F.pearson(aligned), F.overlap_change(aligned)
     n_both = int(aligned["both_observed"].sum())
@@ -578,7 +578,7 @@ else:
     with s3:
         stat_card("Correlation of levels", "n < 5" if r_e is None else f"r = {r_e['r']:.2f}",
                   "" if r_e is None else f"n = {r_e['n']} · descriptive only")
-    st.dataframe(aligned, hide_index=True, use_container_width=True, height=260)
+    st.dataframe(aligned, hide_index=True, width="stretch", height=260)
     st.download_button("Download aligned table (CSV)", _csv(aligned), file_name="aligned_comparison.csv",
                        mime="text/csv", key="fin_dl_cmp")
 if "tentative" in wealth.columns:
@@ -588,32 +588,32 @@ st.markdown("**All data shown on this page**")
 dl = st.columns(4)
 with dl[0]:
     st.download_button("WIL income shares (B.1)", _csv(income), file_name="wil_tableB1_income_shares.csv",
-                       mime="text/csv", key="fin_dl_b1", use_container_width=True)
+                       mime="text/csv", key="fin_dl_b1", width="stretch")
 with dl[1]:
     st.download_button("WIL wealth shares (C.1)", _csv(wealth), file_name="wil_tableC1_wealth_shares.csv",
-                       mime="text/csv", key="fin_dl_c1", use_container_width=True)
+                       mime="text/csv", key="fin_dl_c1", width="stretch")
 with dl[2]:
     gini_both = g_inc.rename(columns={"gini_lower_bound": "income_gini_lb"}).merge(
         g_w.rename(columns={"gini_lower_bound": "wealth_gini_lb", "tentative": "wealth_tentative"}),
         on="year", how="outer").sort_values("year")
     st.download_button("Lower-bound Ginis", _csv(gini_both), file_name="wil_lower_bound_gini.csv",
-                       mime="text/csv", key="fin_dl_gini", use_container_width=True)
+                       mime="text/csv", key="fin_dl_gini", width="stretch")
 with dl[3]:
     st.download_button("Lorenz points (selected)", _csv(lz), file_name="lorenz_points.csv",
-                       mime="text/csv", key="fin_dl_lz", use_container_width=True)
+                       mime="text/csv", key="fin_dl_lz", width="stretch")
 dl2 = st.columns(4)
 with dl2[0]:
     st.download_button("Asset composition", _csv(comp), file_name="paperA_asset_composition.csv",
-                       mime="text/csv", key="fin_dl_comp", use_container_width=True)
+                       mime="text/csv", key="fin_dl_comp", width="stretch")
 with dl2[1]:
     st.download_button("WDI series (tidy)", _csv(wdi_all), file_name=f"wdi_financial_{wdi_start}_{wdi_end}.csv",
-                       mime="text/csv", key="fin_dl_wdi", use_container_width=True, disabled=wdi_all.empty)
+                       mime="text/csv", key="fin_dl_wdi", width="stretch", disabled=wdi_all.empty)
 with dl2[2]:
     st.download_button("WDI per-series status", _csv(status), file_name="wdi_financial_status.csv",
-                       mime="text/csv", key="fin_dl_status", use_container_width=True)
+                       mime="text/csv", key="fin_dl_status", width="stretch")
 with dl2[3]:
     st.download_button("Account-ownership gap", _csv(gap), file_name="findex_ownership_gap.csv",
-                       mime="text/csv", key="fin_dl_gap", use_container_width=True, disabled=gap.empty)
+                       mime="text/csv", key="fin_dl_gap", width="stretch", disabled=gap.empty)
 
 
 # ===========================================================================

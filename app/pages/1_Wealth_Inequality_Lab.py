@@ -159,7 +159,7 @@ view = pd.DataFrame({
     "Share of wealth": [_cell(v, s, lambda x: f"{x:.1f}%") for v, s in
                         zip(wil_table["wealth_share"], wil_table["wealth_share_status"])],
 })
-st.dataframe(view, hide_index=True, use_container_width=True)
+st.dataframe(view, hide_index=True, width="stretch")
 with st.expander("\\* How the starred values are calculated, and the very top"):
     notes = [f"- **{r['group']} {what}** = {r[f'{key}_formula']}"
              for _, r in wil_table.iterrows()
@@ -175,7 +175,7 @@ with st.expander("\\* How the starred values are calculated, and the very top"):
                  .rename(columns={"adults": "Adults", "income_share_pct": "Income share %",
                                   "avg_income_inr": "Avg income", "wealth_share_pct": "Wealth share %",
                                   "avg_wealth_inr": "Avg wealth", "group": "Group"}),
-                 hide_index=True, use_container_width=True)
+                 hide_index=True, width="stretch")
 
 # Side-by-side groups only, so the bars are comparable (they partition 100%).
 part = wil_table[wil_table["group"].isin(["Bottom 50%", "Middle 40%", "Top 10%"])]
@@ -193,7 +193,7 @@ fig_share.update_layout(
     title="Each group's share of adults, income and wealth, 2022-23",
     legend=dict(orientation="h", y=-0.15),
 )
-st.plotly_chart(fig_share, use_container_width=True, key="wil_shares")
+st.plotly_chart(fig_share, width="stretch", key="wil_shares")
 st.caption(
     "Read across each group: if income and wealth were shared equally, the gold and red bars "
     "would match the grey one. The Top 10% are 10% of adults but hold 57.7% of income and 65.0% "
@@ -213,7 +213,7 @@ fig_mult.update_layout(
                tickvals=[0.3, 1, 3, 10, 30, 100], ticktext=["0.3×", "1×", "3×", "10×", "30×", "100×"]),
     yaxis=dict(autorange="reversed"), title="Average income vs the national average, 2022-23", showlegend=False,
 )
-st.plotly_chart(fig_mult, use_container_width=True, key="wil_mult")
+st.plotly_chart(fig_mult, width="stretch", key="wil_mult")
 st.caption("Grey bar = calculated (Upper middle). Log scale, so the 0.3× and 95.8× bars both fit; "
            "1× is the national average.")
 
@@ -252,7 +252,7 @@ if is_income:
 fig_t.update_layout(height=460, yaxis=dict(title="% of total", rangemode="tozero"), xaxis_title=None,
                     title=("Pre-tax national income shares" if is_income else "Net wealth shares"),
                     legend=dict(orientation="h", y=-0.12))
-st.plotly_chart(fig_t, use_container_width=True, key="wil_time")
+st.plotly_chart(fig_t, width="stretch", key="wil_time")
 if is_income:
     st.caption("Table B.1. Top 10% overtook the Middle 40% in the early 2000s.")
 else:
@@ -275,7 +275,7 @@ else:
         f"{y1}": ch["end_pct"].map(lambda v: f"{v:.1f}%"),
         "Change": ch["change_pp"].map(lambda v: f"{v:+.1f} pp"),
         "Relative change": ch["change_rel_pct"].map(lambda v: f"{v:+.0f}%"),
-    }), hide_index=True, use_container_width=True)
+    }), hide_index=True, width="stretch")
     st.caption("Changes are calculated here from the two printed values.")
 
 vh = wil_vhnwi
@@ -290,7 +290,7 @@ fig_b.update_layout(height=400, title="The billionaire raj: Forbes USD billionai
                     yaxis2=dict(title="% of NNI", overlaying="y", side="right", showgrid=False,
                                 range=[0, 30], tickmode="array", tickvals=[0, 10, 20, 30], ticksuffix="%"),
                     legend=dict(orientation="h", y=-0.15))
-st.plotly_chart(fig_b, use_container_width=True, key="wil_billionaires")
+st.plotly_chart(fig_b, width="stretch", key="wil_billionaires")
 st.caption("Table C.2. Hurun's broader list (net wealth above ₹1,000 crore) had 1,103 people holding "
            "27.5% of national income in 2022.")
 
@@ -310,7 +310,7 @@ fig_g.add_trace(go.Scatter(x=gw_tail["year"], y=gw_tail["gini_lower_bound"], mod
                            hovertemplate="Wealth %{x}: %{y:.3f} (tentative)<extra></extra>"))
 fig_g.update_layout(height=380, yaxis=dict(title="Gini (lower bound)", range=[0, 1]),
                     title="Gini coefficient implied by the WIL group shares", legend=dict(orientation="h", y=-0.15))
-st.plotly_chart(fig_g, use_container_width=True, key="wil_gini")
+st.plotly_chart(fig_g, width="stretch", key="wil_gini")
 gi = g_inc.set_index("year")["gini_lower_bound"]
 gwi = g_w.set_index("year")["gini_lower_bound"]
 st.caption(
@@ -348,7 +348,7 @@ with sc2:
         "Group": list(inequality.SERIES.values()),
         "Actual 2022": [f"{base_shares[k]:.1f}%" for k in inequality.SERIES],
         "Scenario": [f"{new_shares[k]:.1f}%" for k in inequality.SERIES],
-    }), hide_index=True, use_container_width=True)
+    }), hide_index=True, width="stretch")
     stat_card("Gini (lower bound)", f"{g_before:.3f} → {g_after:.3f}", f"{g_after - g_before:+.3f}")
 st.caption(
     "A mechanical scenario, not a policy forecast: it moves shares on paper and recomputes the Gini. The Top "
@@ -761,7 +761,7 @@ path_fig.update_layout(
     xaxis_title="Year", yaxis_title="Wealth (₹)",
     hovermode="x unified", height=380,
 )
-st.plotly_chart(chart_source(path_fig, "Simulation under the assumptions set on this page — not data"), use_container_width=True)
+st.plotly_chart(chart_source(path_fig, "Simulation under the assumptions set on this page — not data"), width="stretch")
 
 # Composition chart
 comp = result.composition.rename(columns=wealth.ASSET_LABELS)
@@ -774,7 +774,7 @@ comp_fig.update_layout(
     xaxis_title="Year", yaxis_title="Balance (₹, nominal)",
     hovermode="x unified", height=380,
 )
-st.plotly_chart(chart_source(comp_fig, "Simulation under the assumptions set on this page — not data"), use_container_width=True)
+st.plotly_chart(chart_source(comp_fig, "Simulation under the assumptions set on this page — not data"), width="stretch")
 
 with st.expander("What am I looking at?"):
     st.markdown(
@@ -890,7 +890,7 @@ if corr_mode == "Set correlations":
     )
     labels = [wealth.ASSET_LABELS[k] for k in wealth.ASSET_KEYS]
     base = pd.DataFrame(np.eye(len(labels)), index=labels, columns=labels)
-    edited = st.data_editor(base, key="mc_corr_editor", use_container_width=True,
+    edited = st.data_editor(base, key="mc_corr_editor", width="stretch",
                             column_config={c: st.column_config.NumberColumn(c, min_value=-1.0, max_value=1.0,
                                                                             step=0.05, format="%.2f")
                                            for c in labels})
@@ -948,7 +948,7 @@ mc_fig.update_layout(
     xaxis_title="Year", yaxis_title="Wealth (₹, nominal)",
     hovermode="x unified", height=380,
 )
-st.plotly_chart(chart_source(mc_fig, "Simulation under the assumptions set on this page — not data"), use_container_width=True)
+st.plotly_chart(chart_source(mc_fig, "Simulation under the assumptions set on this page — not data"), width="stretch")
 
 p5, p25, p50, p75, p95 = np.percentile(mc.final_nominal, [5, 25, 50, 75, 95])
 q1, q2, q3, q4, q5 = st.columns(5)
@@ -1029,7 +1029,7 @@ display["Real return"] = display["Real return"].map(fmt_pct)
 display["Volatility"] = display["Volatility"].map(fmt_pct)
 display["Final nominal"] = display["Final nominal"].map(_rupee)
 display["Final real"] = display["Final real"].map(_rupee)
-st.dataframe(display, hide_index=True, use_container_width=True)
+st.dataframe(display, hide_index=True, width="stretch")
 
 bar = go.Figure()
 bar.add_bar(x=compare["Asset"], y=compare["Final real"], name="Final real wealth", marker_color=GOLD)
@@ -1037,7 +1037,7 @@ bar.update_layout(
     title="Final wealth if concentrated in one asset (real terms)",
     yaxis_title="₹ (real)", xaxis_title="", height=360, showlegend=False,
 )
-st.plotly_chart(chart_source(bar, "Simulation under the assumptions set on this page — not data"), use_container_width=True)
+st.plotly_chart(chart_source(bar, "Simulation under the assumptions set on this page — not data"), width="stretch")
 
 callout(
     "Do not read this as a ranking of assets. Under the assumptions you have "
@@ -1157,7 +1157,7 @@ fig_rg.update_layout(height=340, xaxis=dict(title="Real return, % a year (1991�
                                             range=[min(-2, rmg["real"].min() * 100 - 1), max(14, rmg["real"].max() * 100 + 6)]),
                      yaxis=dict(autorange="reversed"), showlegend=False,
                      title="Real return of each asset vs real growth g")
-st.plotly_chart(chart_source(fig_rg, "Author's paper, Table 1 (returns 1991-2021, Wahengbam 2023); inflation and g as set on this page"), use_container_width=True, key="rg_assets")
+st.plotly_chart(chart_source(fig_rg, "Author's paper, Table 1 (returns 1991-2021, Wahengbam 2023); inflation and g as set on this page"), width="stretch", key="rg_assets")
 beats = rmg[rmg["r_minus_g"] > 0]["asset"].tolist()
 st.markdown(
     f"**At these settings, {('only ' + ', '.join(beats)) if beats else 'no asset'} "
@@ -1185,7 +1185,7 @@ for a in ("Listed equity", "Typical household portfolio", "Bank deposits"):
 fig_div.update_layout(height=360, yaxis_title="Real value of ₹1 (×)", xaxis_title="Years",
                       title="₹1 of capital vs ₹1 of national income, in real terms",
                       legend=dict(orientation="h", y=-0.2), hovermode="x unified")
-st.plotly_chart(chart_source(fig_div, "Author's paper, Table 1; illustrative compounding at the rates set on this page"), use_container_width=True, key="rg_paths")
+st.plotly_chart(chart_source(fig_div, "Author's paper, Table 1; illustrative compounding at the rates set on this page"), width="stretch", key="rg_paths")
 hh_r = rmg.set_index("asset").loc["Typical household portfolio", "real"]
 st.caption(
     f"After {horizon} years, national income has grown {(1+g_real)**horizon:.1f}× in real terms; the typical "
@@ -1261,7 +1261,7 @@ fig2.update_layout(height=520, xaxis=dict(title="Years of saving", range=[0, yrs
                    yaxis_title="Accumulated wealth (₹ crore, nominal)",
                    title="The composition effect: why identical savers end up unequal",
                    legend=dict(orientation="h", y=-0.18), hovermode="x unified")
-st.plotly_chart(chart_source(fig2, "Author's paper, Figure 2 (returns 1991-2021, Wahengbam 2023; RBI 2017 asset shares)"), use_container_width=True, key="paper_fig2")
+st.plotly_chart(chart_source(fig2, "Author's paper, Figure 2 (returns 1991-2021, Wahengbam 2023; RBI 2017 asset shares)"), width="stretch", key="paper_fig2")
 
 chk = pd.DataFrame([
     {"Series": n, "Return (paper)": f"{PAPER_R[n]*100:.1f}%",
@@ -1270,7 +1270,7 @@ chk = pd.DataFrame([
     for n in paths
 ])
 with st.expander("Check against the paper's printed figure"):
-    st.dataframe(chk, hide_index=True, use_container_width=True)
+    st.dataframe(chk, hide_index=True, width="stretch")
     st.caption("Future value of ₹1 lakh saved at the end of each year: FV = 1 lakh × ((1 + r)^30 − 1) ÷ r. "
                "Equity recomputes to ₹3.23 crore against the printed ₹3.24 crore (rounding); the rest match. "
                "Returns: Wahengbam (2023, CSEP), 1991–2021; household weights: RBI (2017) — 77% property, 11% "
@@ -1324,7 +1324,7 @@ fig_rank.update_layout(height=420, yaxis=dict(autorange="reversed", automargin=T
                        xaxis=dict(title="Final wealth (₹ crore, nominal)",
                                   range=[0, rank["final_nominal"].max() / 1e7 * 1.35]),
                        showlegend=False, title=f"Final wealth after {e_years} years of saving ₹1 lakh a year")
-st.plotly_chart(chart_source(fig_rank, "Author's paper, Table 1 returns; future value of ₹1 lakh a year"), use_container_width=True, key="fig2_rank")
+st.plotly_chart(chart_source(fig_rank, "Author's paper, Table 1 returns; future value of ₹1 lakh a year"), width="stretch", key="fig2_rank")
 
 callout(
     f"<b>The answer, on the paper's numbers: the more of the saving held in listed equity, the more wealth "

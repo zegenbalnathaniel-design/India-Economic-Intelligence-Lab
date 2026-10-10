@@ -38,11 +38,11 @@ def paper_viewer(filename: str, title: str, key: str) -> None:
         st.download_button(
             f"Download the full paper (PDF, {path.stat().st_size / 1e6:.1f} MB)",
             data=path.read_bytes(), file_name=filename, mime="application/pdf",
-            key=f"dl_{key}", use_container_width=True,
+            key=f"dl_{key}", width="stretch",
         )
     with c2:
         st.link_button(
-            "Open in a new tab", f"app/static/papers/{filename}", use_container_width=True,
+            "Open in a new tab", f"app/static/papers/{filename}", width="stretch",
         )
     if st.toggle("Read it here", key=f"view_{key}"):
         st.markdown(
@@ -171,7 +171,7 @@ evaluation = pd.DataFrame([
         "Verdict": "MIXED",
     },
 ])
-st.dataframe(evaluation, hide_index=True, use_container_width=True)
+st.dataframe(evaluation, hide_index=True, width="stretch")
 
 callout(
     "The evaluation intentionally avoids compressing evidence into a "

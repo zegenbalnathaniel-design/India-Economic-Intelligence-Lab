@@ -79,7 +79,7 @@ with st.sidebar:
         "Peer economies", list(WB.PEER_COUNTRIES), default=list(DEFAULT_PEERS),
         format_func=lambda c: WB.PEER_COUNTRIES[c], key="st_peers", max_selections=6,
     )
-    if st.button("Refresh from the API", use_container_width=True, key="st_refresh"):
+    if st.button("Refresh from the API", width="stretch", key="st_refresh"):
         _fetch.clear()
         st.rerun()
     st.caption("Results are cached for 6 hours. Refresh forces a new call.")
@@ -214,7 +214,7 @@ else:
         fig.update_layout(barmode="group", height=420, yaxis_title="%",
                           title=f"{cname(focus)}, {fy}: share of output vs share of jobs by sector",
                           legend=dict(orientation="h", y=-0.15))
-        st.plotly_chart(fig, use_container_width=True, key="st_share_bar")
+        st.plotly_chart(fig, width="stretch", key="st_share_bar")
         cols = st.columns(3)
         for col, (_, r) in zip(cols, snap.iterrows()):
             with col:
@@ -241,7 +241,7 @@ else:
         sfig.update_layout(height=400, title=f"{cname(focus)}: output and employment shares over time",
                            legend=dict(orientation="h", y=-0.18))
         sfig.update_yaxes(title_text="%", row=1, col=1)
-        st.plotly_chart(sfig, use_container_width=True, key="st_share_time")
+        st.plotly_chart(sfig, width="stretch", key="st_share_time")
 
         gfig = go.Figure()
         for sector in S.SECTORS:
@@ -253,7 +253,7 @@ else:
         gfig.add_hline(y=0, line_color=MUTED, line_width=1)
         gfig.update_layout(height=380, yaxis_title="percentage points", legend=dict(orientation="h", y=-0.18),
                            title=f"{cname(focus)}: output share minus employment share (the gap)")
-        st.plotly_chart(gfig, use_container_width=True, key="st_gap_time")
+        st.plotly_chart(gfig, width="stretch", key="st_gap_time")
         st.caption("Gaps in lines are years where either share is missing — they are not filled in.")
 indicator_note(
     "the output–employment gap",
@@ -305,7 +305,7 @@ else:
     if rescaled:
         tbl["VA share rescaled to 3-sector total (%, DERIVED)"] = snap["va_share_rescaled"].round(2)
         tbl["RLP rescaled (vs GVA per worker, DERIVED)"] = snap["rlp_rescaled"].round(3)
-    st.dataframe(tbl, hide_index=True, use_container_width=True)
+    st.dataframe(tbl, hide_index=True, width="stretch")
 
     rfig = go.Figure()
     rfig.add_trace(go.Bar(x=snap["sector"], y=snap["rlp"], name="Published basis (vs GDP per worker)",
@@ -323,7 +323,7 @@ else:
     rfig.update_layout(barmode="group", height=400, yaxis_title="ratio to economy average",
                        title=f"{cname(focus)}, {fy}: relative labour productivity by sector",
                        legend=dict(orientation="h", y=-0.15), showlegend=rescaled)
-    st.plotly_chart(rfig, use_container_width=True, key="st_rlp_bar")
+    st.plotly_chart(rfig, width="stretch", key="st_rlp_bar")
     w_pub = S.weighted_rlp(snap)
     w_res = S.weighted_rlp(snap, rescaled=True)
     st.caption(
@@ -345,7 +345,7 @@ else:
     basis = "rescaled to GVA (DERIVED)" if rescaled else "published basis"
     tfig.update_layout(height=380, yaxis_title="ratio to economy average", legend=dict(orientation="h", y=-0.18),
                        title=f"{cname(focus)}: relative labour productivity over time ({basis})")
-    st.plotly_chart(tfig, use_container_width=True, key="st_rlp_time")
+    st.plotly_chart(tfig, width="stretch", key="st_rlp_time")
 indicator_note(
     "relative labour productivity", "**Formula.** RLP = (sector VA as % of GDP) ÷ (sector employment as % of "
     "total employment), both for the same country and year. Computed only when both exist and employment "
@@ -385,7 +385,7 @@ else:
                               hovertemplate="Sum %{x}: %{y:.1f}% of GDP<extra></extra>"))
     cfig.update_layout(height=420, yaxis_title="% of GDP", legend=dict(orientation="h", y=-0.18),
                        title=f"{cname(focus)}: value added by sector, % of GDP")
-    st.plotly_chart(cfig, use_container_width=True, key="st_comp_time")
+    st.plotly_chart(cfig, width="stretch", key="st_comp_time")
     st.caption("Manufacturing is part of industry and is drawn separately, not added to the sum. The sum "
                "line is shown only for years with all three sectors; the distance to 100 is net taxes on products "
                "and other adjustments.")
@@ -393,7 +393,7 @@ else:
         y0, y1 = st.select_slider("Compare two years", options=va_years, value=(va_years[0], va_years[-1]),
                                   key=f"st_comp_years_{focus}")
         ch = S.composition_change(table, focus, int(y0), int(y1))
-        st.dataframe(ch.round(2), hide_index=True, use_container_width=True)
+        st.dataframe(ch.round(2), hide_index=True, width="stretch")
         st.caption("Changes are in percentage points of the share; employment cells are blank where the ILO "
                    "series has no value for that year.")
     else:
@@ -423,7 +423,7 @@ else:
                                   hovertemplate=f"{cname(iso)} %{{x}}: %{{y:.1f}}% of GDP<extra></extra>"))
     mfig.update_layout(height=420, yaxis_title="% of GDP", legend=dict(orientation="h", y=-0.18),
                        title="Manufacturing value added, % of GDP")
-    st.plotly_chart(mfig, use_container_width=True, key="st_manuf_time")
+    st.plotly_chart(mfig, width="stretch", key="st_manuf_time")
     prow = []
     for iso in countries:
         p = S.peak_and_latest(data, S.MANUF, iso)
@@ -434,7 +434,7 @@ else:
                      "Highest in window": f"{p['peak_value']:.1f}% ({p['peak_year']})",
                      "Latest": f"{p['latest_value']:.1f}% ({p['latest_year']})",
                      "Latest − highest (pp)": round(p["change_from_peak_pp"], 1)})
-    st.dataframe(pd.DataFrame(prow), hide_index=True, use_container_width=True)
+    st.dataframe(pd.DataFrame(prow), hide_index=True, width="stretch")
 
     pfig = go.Figure()
     for iso in countries:
@@ -449,7 +449,7 @@ else:
     pfig.update_layout(height=440, xaxis=dict(type="log", title="GDP per person employed, constant PPP $ (log scale)"),
                        yaxis_title="manufacturing VA, % of GDP", legend=dict(orientation="h", y=-0.2),
                        title="Manufacturing share against output per worker (paths over the selected years)")
-    st.plotly_chart(pfig, use_container_width=True, key="st_manuf_path")
+    st.plotly_chart(pfig, width="stretch", key="st_manuf_path")
     st.caption("Each point is a year in which both series exist; at what output per worker each path turns "
                "down is the comparison the premature-deindustrialisation question is about.")
 
@@ -477,7 +477,7 @@ else:
         lfig.update_layout(height=400, yaxis=dict(title="% of population 15+", range=[0, 100]),
                            legend=dict(orientation="h", y=-0.18),
                            title=f"{cname(focus)}: labour force participation by sex (ILO modelled)")
-        st.plotly_chart(lfig, use_container_width=True, key="st_lfp_focus")
+        st.plotly_chart(lfig, width="stretch", key="st_lfp_focus")
         last = lf.dropna(subset=["female", "male"])
         if not last.empty:
             r = last.iloc[-1]
@@ -495,7 +495,7 @@ else:
         ffig.update_layout(height=400, yaxis=dict(title="% of women 15+", range=[0, 100]),
                            legend=dict(orientation="h", y=-0.18),
                            title="Female labour force participation, India and peers (ILO modelled)")
-        st.plotly_chart(ffig, use_container_width=True, key="st_lfp_peers")
+        st.plotly_chart(ffig, width="stretch", key="st_lfp_peers")
 
     vfig = go.Figure()
     for iso in countries:
@@ -508,7 +508,7 @@ else:
     vfig.update_layout(height=400, yaxis=dict(title="% of total employment", range=[0, 100]),
                        legend=dict(orientation="h", y=-0.18),
                        title="Vulnerable employment: own-account and contributing family workers (ILO modelled)")
-    st.plotly_chart(vfig, use_container_width=True, key="st_vuln")
+    st.plotly_chart(vfig, width="stretch", key="st_vuln")
 indicator_note(
     "vulnerable employment",
     "**What it is.** Own-account workers plus contributing family workers, as a share of all employed — "
@@ -552,7 +552,7 @@ else:
                        yaxis=dict(title="employment in agriculture, % of total (ILO modelled)"),
                        legend=dict(orientation="h", y=-0.2),
                        title="Agriculture's share of jobs against GDP per person employed")
-    st.plotly_chart(xfig, use_container_width=True, key="st_peer_scatter")
+    st.plotly_chart(xfig, width="stretch", key="st_peer_scatter")
     if not pair.empty:
         yrs = set(pair["year"])
         if len(yrs) > 1:
@@ -570,7 +570,7 @@ else:
                 "Agri. RLP (latest complete year)": (f"{snap_i.iloc[0]['rlp']:.2f} ({int(snap_i.iloc[0]['year'])})"
                                                      if snap_i is not None else "no data"),
             })
-        st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True)
+        st.dataframe(pd.DataFrame(rows), hide_index=True, width="stretch")
     ppp_names = data.loc[data["indicator"] == S.GDP_PER_WORKER, "indicator_name"].dropna().unique()
     if len(ppp_names):
         st.caption(f"PPP basis as named by the API: *{ppp_names[0]}*.")
@@ -639,26 +639,26 @@ else:
     wide = data.pivot_table(index=["country", "year"], columns="indicator", values="value", aggfunc="first",
                             dropna=False).reset_index()
     st.dataframe(wide.sort_values(["country", "year"], ascending=[True, False]), hide_index=True,
-                 use_container_width=True, height=320)
+                 width="stretch", height=320)
     d1, d2, d3 = st.columns(3)
     with d1:
         st.download_button(
             "Fetched data (CSV)",
             S.csv_with_header(data, settings, "WDI observations as fetched (tidy)").encode("utf-8"),
             file_name=f"structural_wdi_{start}_{end}.csv", mime="text/csv", key="st_dl_raw",
-            use_container_width=True)
+            width="stretch")
     with d2:
         st.download_button(
             "Derived sector table (CSV)",
             S.csv_with_header(table, settings, "Derived: shares, gaps, sums, relative labour productivity "
                                                "(rlp = va_share / emp_share; *_rescaled = DERIVED rescaling)").encode("utf-8"),
             file_name=f"structural_derived_{start}_{end}.csv", mime="text/csv", key="st_dl_derived",
-            use_container_width=True)
+            width="stretch")
     with d3:
         st.download_button(
             "Settings (JSON)", json.dumps(S.settings_record(settings), indent=2).encode("utf-8"),
             file_name=f"structural_settings_{start}_{end}.json", mime="application/json", key="st_dl_json",
-            use_container_width=True)
+            width="stretch")
     st.caption("CSV files start with `#` lines recording the settings; read them with "
                "`pandas.read_csv(path, comment='#')`.")
 
@@ -669,7 +669,7 @@ st.header("Method, indicators and limitations")
 st.dataframe(
     pd.DataFrame([{"Indicator": m.label, "WDI code": m.code, "Unit": m.unit, "Definition": m.definition}
                   for m in S.INDICATORS.values()]),
-    hide_index=True, use_container_width=True,
+    hide_index=True, width="stretch",
 )
 with st.expander("Methodology & limitations"):
     st.markdown(

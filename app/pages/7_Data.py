@@ -49,7 +49,7 @@ for col, (stt, n) in zip(lc, status_counts.items()):
         stat_card(stt, f"{n}", "dataset(s)")
 show_cols = {"name": "Dataset", "publisher": "Publisher", "status": "Status", "period": "Period",
              "units": "Units", "frequency": "Frequency", "added": "Added", "used_on": "Used on"}
-st.dataframe(ledger[list(show_cols)].rename(columns=show_cols), hide_index=True, use_container_width=True)
+st.dataframe(ledger[list(show_cols)].rename(columns=show_cols), hide_index=True, width="stretch")
 pick = st.selectbox("Full record for", ledger["id"], format_func=lambda i: registry.get(i).name, key="ledger_pick")
 sources_panel(pick, title="Selected dataset — full record")
 st.download_button("Download the evidence ledger (CSV)", ledger.to_csv(index=False).encode("utf-8"),
@@ -85,7 +85,7 @@ for col, k, sub in zip(vc, ["ERROR", "WARN", "INFO", "OK"],
     with col:
         stat_card(k, f"{int(sev.get(k, 0))}", sub)
 level = st.multiselect("Show", ["ERROR", "WARN", "INFO", "OK"], default=["ERROR", "WARN", "INFO"], key="val_levels")
-st.dataframe(report[report["severity"].isin(level)], hide_index=True, use_container_width=True)
+st.dataframe(report[report["severity"].isin(level)], hide_index=True, width="stretch")
 st.download_button("Download the validation report (CSV)", report.to_csv(index=False).encode("utf-8"),
                    file_name="ieil_validation_report.csv", mime="text/csv", key="dl_validation")
 callout(
@@ -113,7 +113,7 @@ registry = pd.DataFrame([
     {"Source": "Federal Reserve FRED", "Url": "https://fred.stlouisfed.org",
      "Used for": "US comparison (JP Morgan paper)", "Frequency": "Daily / Monthly", "Access": "Open API"},
 ])
-st.dataframe(registry, hide_index=True, use_container_width=True)
+st.dataframe(registry, hide_index=True, width="stretch")
 
 
 st.header("What ships in this build")
@@ -131,10 +131,10 @@ source_badge("Illustrative", "Reproducible with `python -m data_sources.build_il
 c1, c2 = st.columns(2)
 with c1:
     st.subheader("Bank panel (preview)")
-    st.dataframe(load_bank_panel().head(12), hide_index=True, use_container_width=True)
+    st.dataframe(load_bank_panel().head(12), hide_index=True, width="stretch")
 with c2:
     st.subheader("RBI repo rate (preview)")
-    st.dataframe(load_repo_rate().head(12), hide_index=True, use_container_width=True)
+    st.dataframe(load_repo_rate().head(12), hide_index=True, width="stretch")
 
 
 st.header("Units, direction, frequency")
@@ -146,7 +146,7 @@ units = pd.DataFrame([
     {"Field": "unrealised_loss_to_cet1", "Units": "Decimal fraction of CET1", "Direction": "−1"},
     {"Field": "repo_rate", "Units": "% (annualised)", "Direction": "— (regressor)"},
 ])
-st.dataframe(units, hide_index=True, use_container_width=True)
+st.dataframe(units, hide_index=True, width="stretch")
 
 
 st.header("Refresh & retrieval")

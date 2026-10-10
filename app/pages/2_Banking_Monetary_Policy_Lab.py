@@ -299,7 +299,7 @@ with st.expander("Direction coefficients"):
         {"Indicator": banking.INDICATOR_LABELS[k], "Direction D": banking.INDICATOR_DIRECTION[k]}
         for k in banking.INDICATOR_DIRECTION
     ])
-    st.dataframe(dcoef, hide_index=True, use_container_width=True)
+    st.dataframe(dcoef, hide_index=True, width="stretch")
 
 indicator_note(
     "the direction coefficients",
@@ -346,7 +346,7 @@ agg_fig.update_layout(
     yaxis_title="iBFPI (robust z-units)",
     xaxis_title="", height=360, hovermode="x unified",
 )
-st.plotly_chart(agg_fig, use_container_width=True)
+st.plotly_chart(agg_fig, width="stretch")
 
 with st.expander("What am I looking at?"):
     st.markdown(
@@ -371,7 +371,7 @@ pb_fig.update_layout(
     yaxis_title="iBFPI (robust z-units)",
     xaxis_title="", height=380, hovermode="x unified",
 )
-st.plotly_chart(pb_fig, use_container_width=True)
+st.plotly_chart(pb_fig, width="stretch")
 
 
 # ---------- Indicator inspector ----------------------------------------------
@@ -389,7 +389,7 @@ for tab, key in zip(tabs, banking.INDICATOR_DIRECTION):
             yaxis_title="Native units (see data dictionary)",
             xaxis_title="", height=320, hovermode="x unified",
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
         st.caption(
             f"Direction coefficient D = {banking.INDICATOR_DIRECTION[key]:+d}. "
             "Values are standardised per bank before entering the iBFPI."
@@ -441,7 +441,7 @@ fig.add_scatter(x=merged["period"], y=merged["repo_rate"], name="RBI repo rate (
 fig.update_yaxes(title_text="iBFPI (robust z-units)", secondary_y=False)
 fig.update_yaxes(title_text="Repo rate (%)", secondary_y=True)
 fig.update_layout(title="iBFPI vs RBI repo rate", height=380, hovermode="x unified")
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig, width="stretch")
 
 corr = banking.spearman(merged["repo_rate"], merged["ibfpi_system"])
 c1, c2, c3 = st.columns(3)
@@ -482,7 +482,7 @@ reg_fig.update_layout(
     xaxis_title="Repo rate (%)", yaxis_title="iBFPI (robust z-units)",
     height=380,
 )
-st.plotly_chart(reg_fig, use_container_width=True)
+st.plotly_chart(reg_fig, width="stretch")
 
 rc1, rc2, rc3 = st.columns(3)
 with rc1: stat_card("Rising rates · correlation", f"{rising.rho:+.3f}", f"n = {rising.n}, p = {rising.p_value:.3f}")
@@ -554,7 +554,7 @@ st.dataframe(pd.DataFrame([{
     "Model": r.label, "Slope (iBFPI per 1 pp of repo)": f"{r.slope:+.3f}", "Std. error": f"{r.se:.3f}",
     "95% CI": f"[{r.ci_low:+.3f}, {r.ci_high:+.3f}]", "p-value": f"{r.p_value:.4f}", "n": r.n,
     "Standard errors": r.se_type,
-} for r in fe_res]), hide_index=True, use_container_width=True)
+} for r in fe_res]), hide_index=True, width="stretch")
 st.caption(
     "Fixed effects compare each bank only with itself over time, removing permanent differences between "
     "banks. Newey–West standard errors allow this quarter's error to be related to recent quarters', which "
@@ -580,7 +580,7 @@ hfig.add_vline(x=0, line_color=MUTED, line_dash="dash")
 hfig.update_layout(height=340, xaxis=dict(title="Spearman ρ (repo rate vs system iBFPI)", range=[-1, 1]),
                    yaxis_title="number of weightings", showlegend=False,
                    title="ρ under 300 random indicator weightings")
-st.plotly_chart(hfig, use_container_width=True, key="sens_hist")
+st.plotly_chart(hfig, width="stretch", key="sens_hist")
 
 t1, t2 = st.columns(2)
 fmt_tbl = lambda d: d.assign(rho=d["rho"].map(lambda v: f"{v:+.3f}"),
@@ -589,10 +589,10 @@ fmt_tbl = lambda d: d.assign(rho=d["rho"].map(lambda v: f"{v:+.3f}"),
     .rename(columns={"variant": "Variant", "rho": "ρ", "p_value": "p"})
 with t1:
     st.markdown("**Drop one indicator**")
-    st.dataframe(fmt_tbl(loo), hide_index=True, use_container_width=True)
+    st.dataframe(fmt_tbl(loo), hide_index=True, width="stretch")
 with t2:
     st.markdown("**Reverse one direction coefficient**")
-    st.dataframe(fmt_tbl(flips), hide_index=True, use_container_width=True)
+    st.dataframe(fmt_tbl(flips), hide_index=True, width="stretch")
 
 drivers = loo.iloc[1:].assign(shift=lambda d: (d["rho"] - base_rho).abs()).sort_values("shift", ascending=False)
 top2 = drivers.head(2)

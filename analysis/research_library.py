@@ -66,6 +66,18 @@ def balanced_sigma(nsdp: pd.DataFrame, col: str) -> dict:
             "slope": float(lr.slope), "p": float(lr.pvalue), "reading": reading}
 
 
+def _peak_sentence(sigma_table: pd.DataFrame) -> str:
+    """Where the dispersion series peaked, so a linear trend is not read as
+    a steady rise."""
+    t = sigma_table.reset_index(drop=True)
+    i = int(t["cv_pct"].idxmax())
+    peak, last = t.loc[i], t.iloc[-1]
+    if i == len(t) - 1:
+        return f"The balanced-panel CV is at its highest in the latest year, {peak['financial_year']}."
+    return (f"The balanced-panel CV peaked at {peak['cv_pct']:.1f}% in {peak['financial_year']} and was "
+            f"{last['cv_pct']:.1f}% in {last['financial_year']}: the overall trend is upward, but not steady.")
+
+
 def convergence() -> Investigation:
     nsdp = loaders.load_nsdp_spliced()
     col = "percapita_nsdp_constant_prices_inr_SPLICED"
@@ -85,6 +97,7 @@ def convergence() -> Investigation:
         f"Balanced panel ({bal['n_states']} states with data in every year): the coefficient of variation of "
         f"real per-capita NSDP was {bal['first_cv']:.1f}% in {bal['first_year']} and {bal['last_cv']:.1f}% in "
         f"{bal['last_year']}.",
+        _peak_sentence(bal["table"]),
         f"All available states: {first['cv_pct']:.1f}% ({int(first['n_states'])} states, {first['financial_year']}) "
         f"vs {last['cv_pct']:.1f}% ({int(last['n_states'])} states, {last['financial_year']}) — not like-for-like, "
         "because coverage changes.",
