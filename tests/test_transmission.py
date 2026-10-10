@@ -149,7 +149,7 @@ def test_oil_hand_calculation_and_regimes(full_a):
 def test_rupee_import_price_identity_and_trade_balance(full_a):
     res = T.run("rupee", 5.0, full_a)
     assert _val(res, "import_prices").value == 5.0
-    assert _val(res, "cpi").value == pytest.approx(0.35)
+    assert _val(res, "cpi").value == pytest.approx(0.20)
     # 0.05 * (20*0.2 - 24*(1-0.1)) = 0.05 * (4 - 21.6) = -0.88
     assert _val(res, "trade_balance_sr").value == pytest.approx(-0.88)
     # 0.05 * (20*0.8 - 24*0.4) = 0.05 * 6.4 = 0.32 -> J-curve: worse then better
@@ -275,13 +275,13 @@ def test_page_smoke_all_scenarios_and_widgets():
     at.radio(key="tm_scenario").set_value("rupee").run()
     for k, v in {"tm_D_exports_gdp": 20.0, "tm_D_imports_gdp": 24.0, "tm_A_export_price_elasticity_sr": 0.2,
                  "tm_A_import_price_elasticity_sr": 0.1, "tm_A_export_price_elasticity_lr": 0.8,
-                 "tm_A_import_price_elasticity_lr": 0.6, "tm_B_inr_cpi_bps_per_5pct_depr": 50.0}.items():
+                 "tm_A_import_price_elasticity_lr": 0.6, "tm_A_inr_cpi_bps_per_5pct_depr": 50.0}.items():
         at.number_input(key=k).set_value(v).run()
     assert not at.exception
     assert any("holds" in m.value for m in at.markdown)
     # reset restores cited defaults
     at.button(key="tm_reset_btn").click().run()
     assert not at.exception
-    assert at.number_input(key="tm_B_inr_cpi_bps_per_5pct_depr").value == 20.0
+    assert at.number_input(key="tm_A_inr_cpi_bps_per_5pct_depr").value == 20.0
     assert at.number_input(key="tm_A_export_price_elasticity_sr").value is None
     assert at.slider(key="tm_shock_rupee").value == T.SCENARIOS["rupee"].slider[2]
