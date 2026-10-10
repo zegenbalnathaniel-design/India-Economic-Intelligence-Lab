@@ -22,7 +22,7 @@ import numpy as np
 import pandas as pd
 from scipy import stats
 
-from analysis import housing, inequality, regional, wealth
+from analysis import convergence as conv, housing, inequality, regional, wealth
 from data_sources import loaders
 
 
@@ -69,7 +69,7 @@ def balanced_sigma(nsdp: pd.DataFrame, col: str) -> dict:
 def convergence() -> Investigation:
     nsdp = loaders.load_nsdp_spliced()
     col = "percapita_nsdp_constant_prices_inr_SPLICED"
-    sig = regional.sigma_convergence(nsdp, value_col=col)
+    sig = regional.sigma_convergence(nsdp, value_col=col, balanced=False)
     beta = regional.beta_convergence(nsdp, value_col=col)
     ps = beta.per_state.dropna(subset=["initial_value", "avg_annual_growth_pct"])
     lr = stats.linregress(np.log(ps["initial_value"]), ps["avg_annual_growth_pct"])
@@ -78,6 +78,9 @@ def convergence() -> Investigation:
     bal = balanced_sigma(nsdp, col)
     fast = ps.sort_values("avg_annual_growth_pct", ascending=False)
     years = sorted(nsdp["financial_year"].unique())
+    rob = conv.sigma_robustness(nsdp, value_col=col)
+    rob_tab = rob.assign(measure=rob["measure"].map(lambda m: conv.MEASURES[m].label))
+    alt = rob[rob["panel"].str.startswith("all states")]
     facts = [
         f"Balanced panel ({bal['n_states']} states with data in every year): the coefficient of variation of "
         f"real per-capita NSDP was {bal['first_cv']:.1f}% in {bal['first_year']} and {bal['last_cv']:.1f}% in "
@@ -89,6 +92,14 @@ def convergence() -> Investigation:
         f"({fast.iloc[0]['avg_annual_growth_pct']:.2f}% a year); slowest: {fast.iloc[-1]['state']} "
         f"({fast.iloc[-1]['avg_annual_growth_pct']:.2f}% a year).",
     ]
+    if not alt.empty:
+        rising = alt[alt["verdict"] == "rising"]["measure"].map(lambda m: conv.MEASURES[m].label).tolist()
+        other = alt[alt["verdict"] != "rising"]
+        facts.append(
+            f"Robustness: keeping all {int(alt['n_states'].iloc[0])} states but ending in {alt['end'].iloc[0]}, "
+            f"{len(rising)} of {len(alt)} dispersion measures rise ({', '.join(rising) or 'none'})"
+            + ("; " + ", ".join(f"{conv.MEASURES[m].label} is {v}" for m, v in zip(other['measure'], other['verdict']))
+               if len(other) else "") + ".")
     statistics = [
         f"σ trend, balanced panel: {bal['slope']:+.2f} percentage points of CV a year (OLS on year, "
         f"p = {bal['p']:.3f}) — {bal['reading']}.",
@@ -102,6 +113,9 @@ def convergence() -> Investigation:
     else:
         interp = ["There is no statistically clear relationship between a state's starting income and its "
                   "later growth over this window: the data do not show poorer states catching up."]
+    interp.append("The balanced panel drops the states without data in the last year, several of them "
+                  "high-income; the robustness check shows which measures keep the same reading when they "
+                  "are included.")
     interp.append("σ and β answer different questions: dispersion can stay flat even when some poor states "
                   "grow fast, if others fall behind.")
     return Investigation(
@@ -113,7 +127,7 @@ def convergence() -> Investigation:
         method="σ-convergence: coefficient of variation of real per-capita NSDP across the states observed in "
                "every year (balanced panel), with an OLS trend. β-convergence: OLS of average annual growth over the whole window on log "
                "initial income (one observation per state).",
-        tables={"sigma": bal["table"],
+        tables={"sigma": bal["table"], "sigma_robustness": rob_tab,
                 "beta": ps[["state", "initial_value", "final_value", "avg_annual_growth_pct"]]
                 .sort_values("avg_annual_growth_pct", ascending=False)},
         facts=facts, statistics=statistics, interpretation=interp,
@@ -121,7 +135,9 @@ def convergence() -> Investigation:
                     "(DATA REQUIRED).",
                     "Population-weighted dispersion may differ from the unweighted CV used here (state "
                     "population series: DATA REQUIRED)."],
-        limitations=["NSDP per capita, not GSDP; constant prices spliced across the 2004-05 and 2011-12 bases.",
+        limitations=["The coefficient of variation is sensitive to a few very high-income states; the SD of log "
+                     "income, Gini and P90/P10 are reported alongside it.",
+                     "NSDP per capita, not GSDP; constant prices spliced across the 2004-05 and 2011-12 bases.",
                      "Unweighted across states: a small state counts as much as Uttar Pradesh.",
                      "Migration, price-level differences and boundary changes (e.g. J&K, Telangana) affect comparisons."],
         further_questions=["Did convergence differ before and after 2011-12?",

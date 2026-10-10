@@ -283,6 +283,39 @@ def sigma_dispersion(nsdp_long: pd.DataFrame, start: str, end: str, measure: str
     return res
 
 
+ROBUSTNESS_MEASURES = ("sd_log", "cv", "gini", "p90_p10")
+
+
+def sigma_robustness(nsdp_long: pd.DataFrame, value_col: str = VALUE_COL,
+                     measures: Iterable[str] = ROBUSTNESS_MEASURES) -> pd.DataFrame:
+    """σ verdicts on two balanced panels, so a headline does not rest on one
+    choice: (1) the full span, keeping only states observed in every year;
+    (2) the longest span over which every state observed in the first year
+    is still reported. One row per panel x measure."""
+    wide = wide_panel(nsdp_long, value_col)
+    if wide.empty:
+        return pd.DataFrame(columns=["panel", "start", "end", "n_states", "measure", "first", "last", "verdict"])
+    years = list(wide.columns)
+    start, end_full = years[0], years[-1]
+    first = wide[start].notna()
+    end_all = start
+    for y in years:
+        if wide.loc[first, y].notna().all():
+            end_all = y
+        else:
+            break
+    rows = []
+    for label, end in (("full span, states observed every year", end_full),
+                       ("all states, to the last year they all report", end_all)):
+        if end == start:
+            continue
+        for m in measures:
+            r = sigma_dispersion(nsdp_long, start, end, measure=m, value_col=value_col)
+            rows.append({"panel": label, "start": start, "end": end, "n_states": len(r.included_states),
+                         "measure": m, "first": r.first_value, "last": r.last_value, "verdict": r.verdict})
+    return pd.DataFrame(rows)
+
+
 def classify_trend(change_pct_of_mean: float, threshold_pct: float = STABLE_THRESHOLD_PCT) -> str:
     if change_pct_of_mean is None or pd.isna(change_pct_of_mean):
         return "insufficient data"

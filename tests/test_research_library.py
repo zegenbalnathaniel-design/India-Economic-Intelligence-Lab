@@ -76,3 +76,20 @@ def test_page_runs():
     for k in lib.INVESTIGATIONS:
         at.selectbox[0].set_value(k).run()
         assert not at.exception, (k, at.exception)
+
+
+def test_sigma_robustness_two_panels():
+    from analysis import convergence as conv
+    rob = conv.sigma_robustness(loaders.load_nsdp_spliced())
+    assert set(rob["panel"].str.split(",").str[0]) == {"full span", "all states"}
+    full = rob[rob["panel"].str.startswith("full")]
+    alt = rob[rob["panel"].str.startswith("all states")]
+    assert alt["n_states"].iloc[0] >= full["n_states"].iloc[0]
+    assert set(full["measure"]) == set(conv.ROBUSTNESS_MEASURES)
+
+
+def test_convergence_all_states_line_is_unbalanced():
+    inv = lib.convergence()
+    line = next(f for f in inv.facts if f.startswith("All available states"))
+    counts = [int(n) for n in re.findall(r"\((\d+) states", line)]
+    assert counts[0] != counts[1]  # the unbalanced series really changes composition

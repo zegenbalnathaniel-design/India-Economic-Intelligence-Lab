@@ -21,7 +21,7 @@ reload_stale_modules()
 
 import streamlit as st
 
-from analysis import regional
+from analysis import convergence, regional
 from app.components.theme import setup, kicker, callout, footnote
 from app.components import terrain_hero
 from app.components import turntable_home
@@ -127,8 +127,13 @@ st.markdown("<br>", unsafe_allow_html=True)
 
 # ---------- A real series, drawn on scroll -----------------------------------
 with st.container(key="reveal_graph"):
-    st.subheader("States Converging — Drawn, Not Just Charted")
-    sigma = regional.sigma_convergence(loaders.load_nsdp_spliced())
+    st.subheader("Are States Converging? — Drawn, Not Just Charted")
+    _nsdp = loaders.load_nsdp_spliced()
+    sigma = regional.sigma_convergence(_nsdp)  # balanced panel: states observed in every year
+    _rob = convergence.sigma_robustness(_nsdp)
+    _n_states = int(sigma.by_year["n_states"].iloc[0])
+    _alt = _rob[_rob["panel"].str.startswith("all states")]
+    _alt_rising = int((_alt["verdict"] == "rising").sum())
     gcol1, gcol2 = st.columns([3, 2])
     with gcol1:
         st.markdown(
@@ -139,10 +144,17 @@ with st.container(key="reveal_graph"):
         st.markdown(
             f"**{sigma.direction.upper()}** · {sigma.trend_slope_pct_per_year:+.3f} pp CV/year  \n"
             "Cross-state coefficient of variation of real per-capita NSDP, "
-            f"{sigma.by_year['financial_year'].iloc[0]} to {sigma.by_year['financial_year'].iloc[-1]} "
-            "— the same real RBI Handbook series behind the State Economy Lab, here as a line "
-            "that draws itself in as you scroll to it, not a static picture."
+            f"{sigma.by_year['financial_year'].iloc[0]} to {sigma.by_year['financial_year'].iloc[-1]}, "
+            f"for the {_n_states} states with data in every year — the same real RBI Handbook series "
+            "behind the State Economy Lab, drawn in as you scroll to it."
         )
+        if not _alt.empty:
+            st.caption(
+                f"Robustness: keeping all {int(_alt['n_states'].iloc[0])} states but ending in "
+                f"{_alt['end'].iloc[0]}, {_alt_rising} of {len(_alt)} dispersion measures still rise "
+                f"(the CV {'rises' if (_alt.set_index('measure').loc['cv', 'verdict'] == 'rising') else 'does not'}"
+                "). Full comparison in the State Economy Lab."
+            )
         st.page_link(
             "pages/3_State_Economy_Lab.py",
             label="See the full convergence analysis →",
