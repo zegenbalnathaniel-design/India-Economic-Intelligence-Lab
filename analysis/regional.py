@@ -20,7 +20,7 @@ are (or aren't) included. See docs/methodology for the full caveats.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List
 
 import numpy as np
@@ -40,22 +40,62 @@ def coefficient_of_variation(values) -> float:
 class SigmaConvergenceResult:
     by_year: pd.DataFrame  # columns: financial_year, cv_pct, n_states
     trend_slope_pct_per_year: float
-    direction: str  # "converging", "diverging", or "no clear trend"
+    direction: str  # "converging", "diverging", "no clear trend" or "insufficient data"
+    balanced: bool = True
+    # States dropped from a balanced panel because they lack a value in at
+    # least one year of the input (state -> missing years). Empty when
+    # balanced=False or nothing was dropped.
+    excluded_states: dict = field(default_factory=dict)
 
 
-def sigma_convergence(nsdp_long: pd.DataFrame, value_col: str = "percapita_nsdp_constant_prices_inr_SPLICED") -> SigmaConvergenceResult:
+def balanced_panel(nsdp_long: pd.DataFrame, value_col: str = "percapita_nsdp_constant_prices_inr_SPLICED"):
+    """Keep only states with a non-blank value in *every* financial year
+    present in ``nsdp_long``. Returns (filtered long frame, {excluded state:
+    [years with no value]}). Nothing is filled: a state with any gap is
+    dropped whole, so the set of states is the same in every year."""
+    years = sorted(nsdp_long["financial_year"].unique())
+    wide = nsdp_long.pivot_table(index="state", columns="financial_year", values=value_col, aggfunc="first",
+                                 dropna=False).reindex(columns=years)
+    all_states = sorted(nsdp_long["state"].unique())
+    wide = wide.reindex(index=all_states)
+    excluded = {}
+    for state in all_states:
+        missing = [y for y in years if pd.isna(wide.at[state, y])]
+        if missing:
+            excluded[state] = missing
+    keep = [s for s in all_states if s not in excluded]
+    return nsdp_long[nsdp_long["state"].isin(keep)], excluded
+
+
+def sigma_convergence(nsdp_long: pd.DataFrame, value_col: str = "percapita_nsdp_constant_prices_inr_SPLICED",
+                      balanced: bool = True) -> SigmaConvergenceResult:
     """Cross-sectional CV of per-capita income for every year present,
     plus a simple linear trend (OLS slope of CV on year index) to
     characterise the overall direction over the sample period.
+
+    ``balanced=True`` (default) first restricts to the states that report
+    in every year of the input, so the CV is computed over the *same*
+    states each year. With ``balanced=False`` each year uses whichever
+    states report that year; when coverage changes (the spliced NSDP
+    series has 32 states in 2004-05 but 21 in 2022-23) the trend then
+    mixes real changes in dispersion with changes in which states are
+    counted, and can even flip sign -- on the full spliced series the
+    unbalanced CV trend is slightly negative, the balanced one clearly
+    positive.
     """
+    excluded: dict = {}
+    data = nsdp_long
+    if balanced and not nsdp_long.empty:
+        data, excluded = balanced_panel(nsdp_long, value_col)
     rows = []
-    for year, grp in nsdp_long.groupby("financial_year"):
+    for year, grp in data.groupby("financial_year"):
         cv = coefficient_of_variation(grp[value_col])
         rows.append({"financial_year": year, "cv_pct": cv, "n_states": grp[value_col].notna().sum()})
-    by_year = pd.DataFrame(rows)
+    by_year = pd.DataFrame(rows, columns=["financial_year", "cv_pct", "n_states"])
     by_year = by_year[by_year["n_states"] >= 5].sort_values("financial_year").reset_index(drop=True)
     if by_year.empty or by_year["cv_pct"].notna().sum() < 2:
-        return SigmaConvergenceResult(by_year=by_year, trend_slope_pct_per_year=float("nan"), direction="insufficient data")
+        return SigmaConvergenceResult(by_year=by_year, trend_slope_pct_per_year=float("nan"),
+                                      direction="insufficient data", balanced=balanced, excluded_states=excluded)
 
     valid = by_year.dropna(subset=["cv_pct"])
     t = np.arange(len(valid))
@@ -66,7 +106,8 @@ def sigma_convergence(nsdp_long: pd.DataFrame, value_col: str = "percapita_nsdp_
         direction = "converging"
     else:
         direction = "diverging"
-    return SigmaConvergenceResult(by_year=by_year, trend_slope_pct_per_year=slope, direction=direction)
+    return SigmaConvergenceResult(by_year=by_year, trend_slope_pct_per_year=slope, direction=direction,
+                                  balanced=balanced, excluded_states=excluded)
 
 
 @dataclass
