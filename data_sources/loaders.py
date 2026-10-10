@@ -111,16 +111,24 @@ def load_gross_capital_formation() -> pd.DataFrame:
 
 @lru_cache(maxsize=8)
 def load_residex_price_levels() -> pd.DataFrame:
-    """Actual price levels (INR/sqm) by city, quarter and unit-size tier,
-    50 cities, Jun-2013 to Sep-2024."""
-    return pd.read_csv(RAW_DIR / "nhb_residex" / "city_price_levels_by_unit_size_2013_2024.csv")
+    """Actual price levels (INR per sq. ft of carpet area) by city, quarter and unit-size tier,
+    50 cities, Jun-2013 to Sep-2024. The NHB export writes 0 for quarters
+    before a city entered RESIDEX (nine cities, Jun-2013 to Mar-2018); those
+    zeros are returned as missing, never as a price of zero."""
+    df = pd.read_csv(RAW_DIR / "nhb_residex" / "city_price_levels_by_unit_size_2013_2024.csv")
+    cols = [c for c in df.columns if c.endswith("_inr_per_sqft")]
+    df[cols] = df[cols].mask(df[cols] == 0)
+    return df
 
 
 @lru_cache(maxsize=8)
 def load_residex_index() -> pd.DataFrame:
     """Composite housing price index by city/quarter, 2013-2024. Base
     quarter Mar-2018=100, inferred empirically from the data itself."""
-    return pd.read_csv(RAW_DIR / "nhb_residex" / "city_composite_index_2013_2024.csv")
+    df = pd.read_csv(RAW_DIR / "nhb_residex" / "city_composite_index_2013_2024.csv")
+    # The NHB export writes 0 before a city entered RESIDEX: missing, not zero.
+    df["composite_index"] = df["composite_index"].mask(df["composite_index"] == 0)
+    return df
 
 
 def residex_cities() -> list[str]:
@@ -245,6 +253,25 @@ def load_aidis_debt_headline() -> pd.DataFrame:
     (reference date 30 June 2018): incidence and average amount of debt,
     rural and urban, and the highest/lowest states. Per-row status."""
     return pd.read_csv(RAW_DIR / "aidis" / "aidis77_debt_headline.csv")
+
+
+@lru_cache(maxsize=2)
+def load_aidis_author_supplied() -> pd.DataFrame:
+    """Further AIDIS (NSS 77th round) figures supplied by the project author:
+    wealth levels, debt ratios, state figures and credit gaps by social group.
+    `qualifier` says whether a value is exact, approximate, a bound or a range
+    (`value`..`value_high`)."""
+    return pd.read_csv(RAW_DIR / "aidis" / "aidis77_author_supplied.csv")
+
+
+@lru_cache(maxsize=2)
+def load_city_household_income() -> pd.DataFrame:
+    """Average annual household income by city (PRICE & Tata Sons, 'The Many
+    Urban Indias', 2026), as supplied. `residex_city` is the explicit match to
+    the NHB RESIDEX city name (blank = no RESIDEX city); `cross_check` records
+    how each figure compares with press coverage of the report."""
+    return pd.read_csv(RAW_DIR / "price_tata" / "city_household_income.csv", keep_default_na=False,
+                       na_values={"avg_annual_household_income_lakh": [""]})
 
 
 # ---------------------------------------------------------------------------

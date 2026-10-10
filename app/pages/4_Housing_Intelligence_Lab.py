@@ -45,27 +45,28 @@ with st.sidebar:
         "- F · Data required"
     )
     st.markdown("---")
-    st.caption("Prices: VERIFIED (NHB RESIDEX) · Income: PARTIAL (state proxy) or VERIFIED-but-consumption (HCES MPCE)")
+    st.caption("Prices: NHB RESIDEX (₹ per sq. ft of carpet area) · Income: city household income (PARTIAL, "
+               "author-supplied) or a state per-person proxy")
 
 kicker("HOUSING INTELLIGENCE · INDIA")
 st.title("Is housing outpacing income across Indian cities?")
 st.markdown(
-    "Real NHB RESIDEX price data for 50 cities (2013-2024), paired with state per-capita "
-    "NSDP as an **explicit, documented income proxy** — there is no city-level household "
-    "income in any source available to this project yet. Every number derived from the "
-    "proxy is labelled as such below; none of it should be read as true city-level income."
+    "Real NHB RESIDEX price data for 50 cities (2013-2024), paired with **average annual household "
+    "income by city** (PRICE & Tata Sons, *The Many Urban Indias*, 2026) for the 28 RESIDEX cities it "
+    "covers. Two state-level, per-person measures remain available as labelled alternatives; they are "
+    "not household income and give much higher ratios."
 )
-source_badge("NHB RESIDEX (city prices)", "RBI Handbook (state income, proxy)")
+source_badge("NHB RESIDEX (city prices)", "PRICE & Tata Sons (city household income)", "RBI Handbook (state proxy)")
 
 # Hero: the 12 cities with the highest price-to-income ratio at the page's
-# default settings (70 sq.m. home, state per-capita NSDP as income proxy).
+# default settings (70 sq.m. home, city average household income).
 _hero = housing.affordability_across_cities(
     loaders.load_residex_price_levels(), loaders.load_nsdp_current(),
-    mpce_urban=loaders.load_hces_urban_mpce(),
+    city_income=loaders.load_city_household_income(), income_source="city",
 ).head(12)
 _hero_caps = [
     f"#{i} {r.city} ({r.state}, {r.quarter})\nPrice of a {housing.DEFAULT_UNIT_SIZE_SQM:.0f} sq.m. home = "
-    f"{r.price_to_income:.1f} years of state per-capita income*"
+    f"{r.price_to_income:.1f} years of average household income*"
     for i, r in enumerate(_hero.itertuples(), start=1)
 ]
 fig_col, text_col = st.columns([5, 4], vertical_alignment="center")
@@ -77,22 +78,18 @@ with text_col:
         "Each locker is one of the 12 RESIDEX cities where a "
         f"{housing.DEFAULT_UNIT_SIZE_SQM:.0f} sq.m. home costs the most years of income. "
         "**Hover a locker** to open it.\n\n"
-        "\\* Income here is the **state's** per-capita NSDP, not city household "
-        "income. That overstates stress in cities richer than their state (Noida, "
-        "Ghaziabad, Greater Noida use Uttar Pradesh's average), so read the ranking "
-        "as price pressure against a state benchmark. Section B lets you change the "
-        "home size and the income measure."
+        "\\* Income is the city's **average** annual household income (PRICE & Tata Sons, "
+        "2025-26 estimates). An average is pulled up by high earners, so a typical "
+        "household faces a higher ratio than shown. Cities without a figure are not "
+        "ranked. Section B lets you change the home size and the income measure."
     )
 
 callout(
-    "⚠️ **No city-level household income exists in this dataset.** Price-to-income and "
-    "EMI-to-income figures below use **state-average per-capita NSDP** as a stand-in for "
-    "city income. This systematically **overstates** housing stress in cities whose actual "
-    "incomes run well above their state average — most visibly Delhi-NCR satellite cities "
-    "(Noida, Ghaziabad, Greater Noida), which are priced on Delhi-adjacent demand but "
-    "proxied with Uttar Pradesh's state-average income. Read the ranking below as "
-    "*price pressure relative to a state benchmark*, not as a literal affordability verdict "
-    "on any one city.",
+    "**Which income?** The default is the city's average annual household income from the PRICE & Tata "
+    "Sons report — figures supplied by the project author; a few conflict with press coverage of the "
+    "report (see the cross-check column in section B). The two state-level alternatives are **per person**, "
+    "not per household, so they make every home look several times less affordable; use them to compare "
+    "cities, not as a verdict on any one city.",
     kind="warn",
 )
 
@@ -101,6 +98,7 @@ st.markdown("---")
 price_levels = loaders.load_residex_price_levels()
 nsdp_current = loaders.load_nsdp_current()
 mpce_urban = loaders.load_hces_urban_mpce()
+city_income = loaders.load_city_household_income()
 usable_records = loaders.load_residex_usable_records()
 
 # ---------- A. Real price trend ------------------------------------------
@@ -113,8 +111,8 @@ if selected:
     fig = go.Figure()
     for city in selected:
         sub = housing.sort_quarters(price_levels[price_levels["city"] == city])
-        fig.add_trace(go.Scatter(x=sub["quarter"], y=sub["composite_price_inr_per_sqm"], name=city, mode="lines"))
-    fig.update_layout(title="Composite price, ₹ per sq.m.", xaxis_title="Quarter", yaxis_title="₹/sq.m.", height=450)
+        fig.add_trace(go.Scatter(x=sub["quarter"], y=sub["composite_price_inr_per_sqft"], name=city, mode="lines"))
+    fig.update_layout(title="Composite price, ₹ per sq. ft (carpet area)", xaxis_title="Quarter", yaxis_title="₹/sq. ft", height=450)
     st.plotly_chart(fig, width="stretch")
     st.caption("Source: NHB RESIDEX, actual price levels (not an index) — Jun-2013 to Sep-2024.")
 else:
@@ -150,18 +148,17 @@ st.markdown("---")
 
 # ---------- B. City affordability ranking ---------------------------------
 st.header("B · Price-to-income, all cities")
-income_source_label = st.radio(
-    "Income proxy",
-    ["State per-capita NSDP (current prices)", "State/UT urban per-capita MPCE (HCES 2023-24)"],
-    index=0,
-    help="Neither is true city-level household income — see the caveat below whichever you pick.",
-)
-income_source = "nsdp" if income_source_label.startswith("State per-capita NSDP") else "mpce"
+INCOME_OPTIONS = {
+    "City average household income (PRICE & Tata Sons, 2025-26)": "city",
+    "State per-capita NSDP (current prices) — per person": "nsdp",
+    "State/UT urban per-capita MPCE (HCES 2023-24) — per person, consumption": "mpce",
+}
+income_source_label = st.radio("Income measure", list(INCOME_OPTIONS), index=0,
+                               help="Only the first is household income; the other two are per person.")
+income_source = INCOME_OPTIONS[income_source_label]
+INCOME_SHORT = {"city": "city household income", "nsdp": "state NSDP per person", "mpce": "state MPCE per person"}
 
-if income_source == "nsdp":
-    callout(housing.INCOME_PROXY_CAVEATS["nsdp"], kind="warn")
-else:
-    callout(housing.INCOME_PROXY_CAVEATS["mpce"], kind="warn")
+callout(housing.INCOME_PROXY_CAVEATS[income_source], kind="warn")
 
 indicator_note(
     "EMI and price-to-income",
@@ -202,12 +199,13 @@ rate = st.slider("Mortgage rate (%)", 5.0, 14.0, 8.5) / 100
 tenure = st.slider("Loan tenure (years)", 5, 30, 20)
 
 aff = housing.affordability_across_cities(
-    price_levels, nsdp_current, mpce_urban=mpce_urban, unit_size_sqm=unit_size,
+    price_levels, nsdp_current, mpce_urban=mpce_urban, city_income=city_income, unit_size_sqm=unit_size,
     down_payment_pct=down_payment_pct, annual_interest_rate=rate, loan_years=tenure,
     income_source=income_source,
 )
 
-income_col_label = "annual_income (STATE PROXY, NSDP)" if income_source == "nsdp" else "annual_income (STATE/UT PROXY, MPCE x12 — consumption, not income)"
+income_col_label = {"city": "annual_household_income (city average)", "nsdp": "annual_income (STATE PROXY, NSDP per person)",
+                    "mpce": "annual_income (STATE/UT PROXY, MPCE x12 per person — consumption, not income)"}[income_source]
 
 # Long RESIDEX names (e.g. "Bidhan Nagar (Excluding Rajarhat)") were being
 # clipped at the plot edge; shorten the tick label only -- hover keeps the
@@ -221,16 +219,19 @@ fig2.add_hline(
     y=5, line_dash="dash", annotation_text="P/I = 5 (commonly cited stress threshold)",
     annotation_position="top right", annotation=dict(bgcolor="rgba(17,19,26,0.85)"),
 )
-fig2.update_layout(title=f"Price-to-income ratio by city ({unit_size:.0f} sq.m. reference unit, {income_source.upper()} income proxy)", xaxis_title="",
+fig2.update_layout(title=f"Price-to-income ratio by city ({unit_size:.0f} sq.m. reference unit, {INCOME_SHORT[income_source]})", xaxis_title="",
                     yaxis_title="Price / annual income (proxy)", height=600,
                     xaxis=dict(tickangle=-60, automargin=True))
 st.plotly_chart(fig2, width="stretch")
 
 st.dataframe(
-    aff[["city", "state", "quarter", "price_per_sqm", "unit_price", "annual_income_proxy", "price_to_income", "emi_monthly", "emi_to_income_pct"]]
+    (aff.merge(city_income[["residex_city", "cross_check"]].rename(columns={"residex_city": "city"}), on="city", how="left")
+     if income_source == "city" else aff.assign(cross_check=""))
+    [["city", "state", "quarter", "price_per_sqft", "unit_price", "annual_income_proxy", "price_to_income", "emi_monthly",
+      "emi_to_income_pct", "cross_check"]]
     .rename(columns={"annual_income_proxy": income_col_label})
     .style.format({
-        "price_per_sqm": "₹{:,.0f}", "unit_price": "₹{:,.0f}", income_col_label: "₹{:,.0f}",
+        "price_per_sqft": "₹{:,.0f}", "unit_price": "₹{:,.0f}", income_col_label: "₹{:,.0f}",
         "price_to_income": "{:.2f}", "emi_monthly": "₹{:,.0f}", "emi_to_income_pct": "{:.1f}%",
     }),
     width="stretch", hide_index=True,
@@ -294,7 +295,7 @@ if not compare_mode:
         result = housing.city_affordability(
             price_levels, nsdp_current, city, unit_size_sqm=unit_size,
             down_payment_pct=down_payment_pct, annual_interest_rate=rate, loan_years=tenure,
-            income_source=income_source, mpce_urban=mpce_urban,
+            income_source=income_source, mpce_urban=mpce_urban, city_income=city_income,
         )
         income_used = custom_income if custom_income > 0 else result.annual_income_proxy
         emi_monthly = housing.emi(result.unit_price * (1 - down_payment_pct), rate, tenure)
@@ -303,16 +304,19 @@ if not compare_mode:
 
         c1, c2, c3, c4 = st.columns(4)
         with c1:
-            stat_card("Unit price", f"₹{result.unit_price:,.0f}", f"{unit_size:.0f} sq.m. @ ₹{result.price_per_sqm:,.0f}/sq.m.")
+            stat_card("Unit price", f"₹{result.unit_price:,.0f}", f"{unit_size:.0f} sq.m. @ ₹{result.price_per_sqft:,.0f}/sq. ft")
         with c2:
             stat_card("Monthly EMI", f"₹{emi_monthly:,.0f}", f"{rate*100:.1f}% · {tenure}y")
         with c3:
-            stat_card("Price-to-income", f"{pi:.2f}×", income_source.upper() + " proxy" if custom_income == 0 else "your input")
+            stat_card("Price-to-income", f"{pi:.2f}×", INCOME_SHORT[income_source] if custom_income == 0 else "your input")
         with c4:
-            stat_card("EMI / income", f"{emi_pct:.1f}%", income_source.upper() + " proxy" if custom_income == 0 else "your input")
+            stat_card("EMI / income", f"{emi_pct:.1f}%", INCOME_SHORT[income_source] if custom_income == 0 else "your input")
 
         if custom_income == 0:
-            if income_source == "nsdp":
+            if income_source == "city":
+                st.caption(f"Using {city}'s average annual household income (₹{result.annual_income_proxy:,.0f}/yr, "
+                           "PRICE & Tata Sons). Enter your own household income above to override.")
+            elif income_source == "nsdp":
                 st.caption(f"Using {result.state}'s per-capita NSDP (₹{result.annual_income_proxy:,.0f}/yr) as the income proxy for {city}. Enter your own household income above to override.")
             else:
                 st.caption(f"Using {result.state}'s urban per-capita MPCE annualised (₹{result.annual_income_proxy:,.0f}/yr — consumption, not income) as the proxy for {city}. Enter your own household income above to override.")
@@ -333,7 +337,7 @@ else:
             return housing.city_affordability(
                 price_levels, nsdp_current, name, unit_size_sqm=unit_size,
                 down_payment_pct=down_payment_pct, annual_interest_rate=rate, loan_years=tenure,
-                income_source=income_source, mpce_urban=mpce_urban,
+                income_source=income_source, mpce_urban=mpce_urban, city_income=city_income,
             ), None
         except (KeyError, ValueError) as exc:
             return None, str(exc)
@@ -348,10 +352,10 @@ else:
                 st.error(err)
                 continue
             st.markdown(f"**{name}** ({res.state})")
-            stat_card("Unit price", f"₹{res.unit_price:,.0f}", f"{unit_size:.0f} sq.m. @ ₹{res.price_per_sqm:,.0f}/sq.m.")
+            stat_card("Unit price", f"₹{res.unit_price:,.0f}", f"{unit_size:.0f} sq.m. @ ₹{res.price_per_sqft:,.0f}/sq. ft")
             stat_card("Monthly EMI", f"₹{res.emi_monthly:,.0f}", f"{rate*100:.1f}% · {tenure}y")
-            stat_card("Price-to-income", f"{res.price_to_income:.2f}×", f"{income_source.upper()} proxy")
-            stat_card("EMI / income", f"{res.emi_to_income_pct:.1f}%", f"{income_source.upper()} proxy")
+            stat_card("Price-to-income", f"{res.price_to_income:.2f}×", INCOME_SHORT[income_source])
+            stat_card("EMI / income", f"{res.emi_to_income_pct:.1f}%", INCOME_SHORT[income_source])
 
     if res_a is not None and res_b is not None:
         cmp_fig = go.Figure()
@@ -522,7 +526,7 @@ if low_pctile >= high_pctile:
 try:
     stress_result = housing.stress_index_cross_section(
         price_levels, nsdp_current, unit_size_sqm=unit_size, down_payment_pct=down_payment_pct,
-        annual_interest_rate=rate, loan_years=tenure, income_source=income_source, mpce_urban=mpce_urban,
+        annual_interest_rate=rate, loan_years=tenure, income_source=income_source, mpce_urban=mpce_urban, city_income=city_income,
         low_pctile=low_pctile, high_pctile=high_pctile,
     )
     fig_stress = go.Figure(go.Bar(x=stress_result.scores["city"], y=stress_result.scores["stress_score_0_100"]))
@@ -565,7 +569,7 @@ with st.expander("Methodology & limitations"):
 
 **Price-to-income**: `unit_price / annual_income`. **EMI-to-income**: `monthly_EMI / monthly_income`.
 
-**Unit price**: `price_per_sq.m. × reference_dwelling_size`. The reference size (default 70 sq.m., adjustable) is a modelling choice, not a measured average dwelling size for any specific city.
+**Unit price**: `price_per_sq.ft × reference_dwelling_size (sq.m.) × 10.7639`. RESIDEX prices are ₹ per sq. ft of carpet area (NHB RESIDEX methodology white paper). The reference size (default 70 sq.m., adjustable) is a modelling choice, not a measured average dwelling size for any specific city.
 
 **RPIPI** (section D): `100 × (HPI_t/HPI_0) / (Y_t/Y_0)`, base period = earliest financial year both the RESIDEX composite index and the NSDP series cover for that city.
 

@@ -356,13 +356,31 @@ with d4:
               "per household · not confirmed exactly")
 st.dataframe(aidis[["metric", "area", "group", "value", "unit", "status", "source"]],
              hide_index=True, width="stretch")
+
+aidis_more = loaders.load_aidis_author_supplied()
+
+
+def _shown(r) -> str:
+    v, hi, q = r["value"], r["value_high"], str(r["qualifier"])
+    num = (lambda x: f"{x:,.0f}" if abs(x) >= 1000 else f"{x:g}")
+    if pd.notna(hi):
+        txt = f"{num(v)}–{num(hi)}"
+        return f"≥ {txt}" if "at least" in q else txt
+    return {"at most": f"≤ {num(v)}", "at least": f"≥ {num(v)}", "approximate": f"≈ {num(v)}"}.get(q, num(v))
+
+
+st.markdown("**Wealth, debt and credit by group — further AIDIS figures supplied by the author**")
+for topic, grp in aidis_more.groupby("topic", sort=False):
+    st.caption(topic)
+    st.dataframe(grp.assign(figure=grp.apply(_shown, axis=1))[["metric", "area", "group", "figure", "unit",
+                                                                "qualifier", "note"]],
+                 hide_index=True, width="stretch")
 callout(
     "**Reading these.** Incidence is the share of households with any outstanding debt; the average amount is "
-    "over all households, indebted or not. These are headline averages, **not by wealth group**, so they cannot "
-    "show whether poorer households carry costlier, informal debt — that needs AIDIS tables by asset class or "
-    "the unit-level data (DATA REQUIRED). Figures supplied for wealth-decile net worth, debt-asset ratios, asset "
-    "values, other states and caste gaps were **not loaded** because they could not be confirmed against the "
-    "survey or a named analysis of it.",
+    "over all households, indebted or not. Supplied figures are kept as written — approximate values, bounds "
+    "(≤, ≥) and ranges are not turned into point estimates. The credit-gap estimates by social group come from "
+    "studies the material does not name, and decile thresholds are not group averages. A full picture of who "
+    "holds which assets and debts needs AIDIS tables by asset class or the unit-level data.",
     kind="caveat",
 )
 
@@ -673,5 +691,5 @@ footnote(
     "consumption-Gini series are DATA REQUIRED. Lorenz points, Ginis, gaps, changes and correlations are "
     "calculated on this site. See DATA_REGISTRY.md."
 )
-sources_panel("wil_india", "paper_a", "aidis77_debt_headline", "wdi_financial_inclusion", "wdi_financial_depth", "amfi_mf_folios_sip",
+sources_panel("wil_india", "paper_a", "aidis77_debt_headline", "aidis77_author_supplied", "wdi_financial_inclusion", "wdi_financial_depth", "amfi_mf_folios_sip",
               "nsdl_demat_accounts", "cdsl_demat_accounts", "aidis77_asset_composition", "consumption_gini_series")

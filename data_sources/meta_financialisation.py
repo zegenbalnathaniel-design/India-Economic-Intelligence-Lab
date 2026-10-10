@@ -114,6 +114,27 @@ DATASETS: list[Dataset] = [
         used_on=_PAGE,
     ),
     Dataset(
+        id="aidis77_author_supplied",
+        name="AIDIS 2019 wealth, debt and credit-gap figures (author-supplied)",
+        publisher="NSS 77th round AIDIS material, compiled and supplied by the project author",
+        url="https://www.mospi.gov.in/sites/default/files/press_release/press_note-AIDIS-240821.pdf", status="PARTIAL",
+        period="Reference date 30 June 2018 (survey January-December 2019)",
+        units="Rs lakh / Rs per household; % of households, debt or wealth; percentage points",
+        coverage="All-India rural/urban, selected states, deciles and social groups", frequency="Survey round",
+        files=("data/raw/aidis/aidis77_author_supplied.csv",), added="2026-10-10",
+        transformations="Entered as supplied. Ranges and bounds kept as written (value, value_high, qualifier); "
+                        "nothing is turned into a point estimate. The 66.1% / 87.1% institutional shares are "
+                        "recorded as overall rural / urban shares, as secondary coverage of AIDIS reports them.",
+        missing="Deciles other than the bottom and top, and composition by asset type for each group, are not "
+                "in the supplied material.",
+        methodology="The author states these figures are verified; this project has not checked them against "
+                    "the AIDIS report tables.",
+        limitations="Several values are approximate, bounds or ranges. The credit-gap estimates by social group "
+                    "come from studies the material does not name. Decile thresholds are not the same thing as "
+                    "group averages.",
+        used_on=_PAGE,
+    ),
+    Dataset(
         id="consumption_gini_series",
         name="Consumption inequality (Gini) series comparable over time",
         publisher="Ministry of Statistics and Programme Implementation — Household Consumption Expenditure Survey",

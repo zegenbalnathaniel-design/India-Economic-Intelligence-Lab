@@ -278,31 +278,40 @@ def composition_effect(inflation: float = 0.065, g_real: float = 0.065) -> Inves
 
 # ---------------------------------------------------------------------------
 def housing_affordability() -> Investigation:
+    ci = loaders.load_city_household_income()
     aff = housing.affordability_across_cities(loaders.load_residex_price_levels(), loaders.load_nsdp_current(),
-                                              mpce_urban=loaders.load_hces_urban_mpce())
+                                              city_income=ci, income_source="city")
     pi = aff["price_to_income"].dropna()
     over5 = aff[aff["price_to_income"] > 5]
+    top = aff.iloc[0]
+    flagged = ci[ci["cross_check"].str.startswith(("conflict", "coverage conflicts", "not separately"))]["residex_city"]
     return Investigation(
         id="housing", title="Housing price pressure across cities",
-        question="How many years of income does a home cost across Indian cities?",
+        question="How many years of household income does a home cost across Indian cities?",
         motivation="Price-to-income is the simplest affordability gauge; dispersion across cities shows where "
                    "housing stress concentrates.",
-        data=["nhb_residex", "rbi_nsdp_current"],
-        method=f"Price of a {housing.DEFAULT_UNIT_SIZE_SQM:.0f} sq. m. home (RESIDEX price level, latest quarter) ÷ "
-               "the state's per-capita NSDP (current prices) — a state income proxy.",
-        tables={"cities": aff[["city", "state", "quarter", "price_to_income"]]},
+        data=["nhb_residex", "city_household_income"],
+        method=f"Price of a {housing.DEFAULT_UNIT_SIZE_SQM:.0f} sq. m. (carpet) home — RESIDEX price per sq. ft, "
+               "latest quarter, × size in sq. ft — ÷ the city's average annual household income (PRICE & Tata "
+               "Sons). Only cities with both are compared.",
+        tables={"cities": aff[["city", "state", "quarter", "price_to_income", "emi_to_income_pct"]]},
         facts=[f"Across {len(pi)} cities the median price-to-income ratio is {pi.median():.1f}× "
-               f"(range {pi.min():.1f}× to {pi.max():.1f}×).",
-               f"{len(over5)} cities exceed 5×: " + ", ".join(over5['city'].head(8)) + ("…" if len(over5) > 8 else "") + "."],
-        statistics=[f"Interquartile range {pi.quantile(.25):.1f}×–{pi.quantile(.75):.1f}×."],
-        interpretation=["High ratios in NCR satellite cities partly reflect the proxy: their incomes run above "
-                        "Uttar Pradesh's average. Read as price pressure against a state benchmark."],
-        hypotheses=["With city household income (not available), the ranking may change materially — DATA REQUIRED."],
-        limitations=["State per-capita income, not city household income.", "RESIDEX assessment prices, not transactions."],
+               f"(range {pi.min():.1f}× to {pi.max():.1f}×); highest: {top['city']} ({top['price_to_income']:.1f}×).",
+               f"{len(over5)} cities exceed 5×" + (": " + ", ".join(over5['city'].head(8)) if len(over5) else "") + "."],
+        statistics=[f"Interquartile range {pi.quantile(.25):.1f}×–{pi.quantile(.75):.1f}×; median EMI "
+                    f"{aff['emi_to_income_pct'].median():.0f}% of income at 8.5% over 20 years with 20% down."],
+        interpretation=["Average household income is pulled up by high earners, so a typical household faces a "
+                        "higher ratio than shown — read the ranking, not the level, as the robust part."],
+        hypotheses=["Ratios computed with a median household income would be higher and might reorder cities "
+                    "(median incomes by city: DATA REQUIRED)."],
+        limitations=["Income figures supplied by the author; some conflict with, or are not separately reported in, "
+                     "press coverage of the report"
+                     + (f" ({', '.join(flagged)})" if len(flagged) else "") + ".",
+                     "RESIDEX assessment prices (Sep-2024) and 2025-26 income estimates are not the same year."],
         further_questions=["Has price pressure risen faster than income since 2013? (Housing Lab, RPIPI)"],
         charts=[{"table": "cities", "x": "city", "y": "price_to_income", "kind": "bar",
-                 "title": "Price-to-income ratio by city (state income proxy)"}],
-        settings={"unit_size_sqm": housing.DEFAULT_UNIT_SIZE_SQM, "income_source": "nsdp"},
+                 "title": "Price-to-income ratio by city (average household income)"}],
+        settings={"unit_size_sqm": housing.DEFAULT_UNIT_SIZE_SQM, "income_source": "city"},
     )
 
 

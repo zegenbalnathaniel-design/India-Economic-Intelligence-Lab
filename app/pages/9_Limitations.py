@@ -162,10 +162,11 @@ regional_lim = pd.DataFrame([
     {"Limitation": "β regression is a small cross-section with no controls",
      "Where it bites": "β slope, speed of convergence, half-life",
      "Mitigation": "n, SE (classical or HC1), CI and p shown; no half-life when the slope is not significant"},
-    {"Limitation": "Housing affordability uses state income, not city household income",
-     "Where it bites": "Price-to-income in NCR satellite and other cities richer than their state",
-     "Mitigation": "Labelled as a state-income proxy throughout; RESIDEX prices are assessment prices, "
-                   "not transactions"},
+    {"Limitation": "City household income is an average, for 28 of the 50 RESIDEX cities",
+     "Where it bites": "Price-to-income and EMI-to-income in the Housing Lab",
+     "Mitigation": "Averages are pulled up by high earners, so ratios understate a typical household's burden; "
+                   "other cities can only use the per-person state proxies. RESIDEX prices are assessment "
+                   "prices (₹ per sq. ft of carpet area), not transactions"},
     {"Limitation": "Employment shares are ILO modelled estimates, not PLFS",
      "Where it bites": "Structural Transformation Lab: relative labour productivity, sector gaps",
      "Mitigation": "Labelled ILO modelled; value-added shares are of GDP at market prices, so sectors sum "

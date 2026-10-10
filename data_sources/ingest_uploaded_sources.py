@@ -51,8 +51,8 @@ print("RESIDEX index 2025-2026:", idx_new.shape, "cities:", idx_new['City'].nuni
 
 # --- NHB RESIDEX: actual price levels by city/quarter/unit-size tier ---
 prices = pd.read_html(f"{UP}/01440ee5-Residex_Data_2.xls")[0].drop_duplicates()
-prices.columns = ["city", "quarter", "composite_price_inr_per_sqm", "price_le_60sqm_inr_per_sqm",
-                   "price_60_110sqm_inr_per_sqm", "price_gt_110sqm_inr_per_sqm"]
+prices.columns = ["city", "quarter", "composite_price_inr_per_sqft", "price_le_60sqm_inr_per_sqft",
+                   "price_60_110sqm_inr_per_sqft", "price_gt_110sqm_inr_per_sqft"]
 prices.to_csv("data/raw/nhb_residex/city_price_levels_by_unit_size_2013_2024.csv", index=False)
 print("RESIDEX price levels:", prices.shape, "cities:", prices['city'].nunique())
 

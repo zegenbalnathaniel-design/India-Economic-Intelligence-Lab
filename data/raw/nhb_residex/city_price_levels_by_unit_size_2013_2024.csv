@@ -1,4 +1,4 @@
-city,quarter,composite_price_inr_per_sqm,price_le_60sqm_inr_per_sqm,price_60_110sqm_inr_per_sqm,price_gt_110sqm_inr_per_sqm
+city,quarter,composite_price_inr_per_sqft,price_le_60sqm_inr_per_sqft,price_60_110sqm_inr_per_sqft,price_gt_110sqm_inr_per_sqft
 Mumbai,Jun-2013,20896,18333.0,19192,33624.0
 Mumbai,Sep-2013,21250,18586.0,19769,33640.0
 Mumbai,Dec-2013,21608,18802.0,20340,33813.0

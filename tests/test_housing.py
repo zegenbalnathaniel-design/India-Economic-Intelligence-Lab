@@ -7,6 +7,7 @@ import pandas as pd
 import pytest
 
 from analysis import housing
+from data_sources import loaders
 
 
 def test_parse_residex_quarter_handles_format_variants():
@@ -77,7 +78,7 @@ def _mini_price_levels() -> pd.DataFrame:
     return pd.DataFrame({
         "city": ["Mumbai", "Mumbai", "Pune"],
         "quarter": ["Jun-2024", "Sep-2024", "Sep-2024"],
-        "composite_price_inr_per_sqm": [100000, 105000, 60000],
+        "composite_price_inr_per_sqft": [100000, 105000, 60000],
     })
 
 
@@ -93,7 +94,7 @@ def test_city_affordability_uses_latest_quarter_by_default():
     result = housing.city_affordability(_mini_price_levels(), _mini_nsdp_current(), "Mumbai")
     assert result.quarter == "Sep-2024"
     assert result.state == "Maharashtra"
-    assert result.price_per_sqm == 105000
+    assert result.price_per_sqft == 105000
     assert result.income_is_state_proxy is True
 
 
@@ -109,7 +110,7 @@ def test_city_affordability_unknown_city_raises():
 
 def test_city_affordability_price_to_income_consistent_with_formula():
     result = housing.city_affordability(_mini_price_levels(), _mini_nsdp_current(), "Mumbai", unit_size_sqm=70.0)
-    expected_unit_price = 105000 * 70.0
+    expected_unit_price = 105000 * 70.0 * housing.SQFT_PER_SQM  # ₹ per sq ft × sq m × sq ft per sq m
     expected_pi = expected_unit_price / result.annual_income_proxy
     assert math.isclose(result.unit_price, expected_unit_price)
     assert math.isclose(result.price_to_income, expected_pi)
@@ -314,7 +315,7 @@ def _stress_price_levels() -> pd.DataFrame:
     return pd.DataFrame({
         "city": ["Mumbai", "Pune", "Nashik", "Nagpur", "Kolkata"],
         "quarter": ["Sep-2024"] * 5,
-        "composite_price_inr_per_sqm": [100000, 90000, 80000, 70000, 60000],
+        "composite_price_inr_per_sqft": [100000, 90000, 80000, 70000, 60000],
     })
 
 
@@ -344,7 +345,7 @@ def test_stress_index_percentile_clip_contains_extreme_outlier():
     # must not crush every other city's score toward 0.
     price_levels = pd.concat([
         _stress_price_levels(),
-        pd.DataFrame({"city": ["Bhiwadi"], "quarter": ["Sep-2024"], "composite_price_inr_per_sqm": [5_000_000]}),
+        pd.DataFrame({"city": ["Bhiwadi"], "quarter": ["Sep-2024"], "composite_price_inr_per_sqft": [5_000_000]}),
     ], ignore_index=True)
     nsdp = pd.concat([
         _stress_nsdp_current(),
@@ -379,3 +380,22 @@ def test_stress_index_rate_disclosure_present_and_labelled():
 def test_stress_index_defaults_to_latest_common_quarter_when_omitted():
     result = housing.stress_index_cross_section(_stress_price_levels(), _stress_nsdp_current())
     assert result.quarter == "Sep-2024"
+
+
+def test_residex_prices_are_per_sqft():
+    # NHB's acceptable carpet-area price range outside Mumbai is ₹1,500-40,000 per sq ft
+    # (RESIDEX methodology white paper); read as per sq m most cities would fall below it.
+    p = loaders.load_residex_price_levels()
+    non_mumbai = p[p["city"] != "Mumbai"]["composite_price_inr_per_sqft"].dropna()
+    assert non_mumbai.between(1500, 40000).mean() > 0.95
+
+
+def test_city_household_income_source():
+    ci = loaders.load_city_household_income()
+    res = housing.city_affordability(loaders.load_residex_price_levels(), loaders.load_nsdp_current(), "Mumbai",
+                                     income_source="city", city_income=ci)
+    lakh = float(ci.loc[ci["residex_city"] == "Mumbai", "avg_annual_household_income_lakh"].iloc[0])
+    assert res.annual_income_proxy == lakh * 1e5
+    with pytest.raises(ValueError):  # no figure: never borrowed from a neighbouring city
+        housing.city_affordability(loaders.load_residex_price_levels(), loaders.load_nsdp_current(), "Thane",
+                                   income_source="city", city_income=ci)

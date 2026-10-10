@@ -144,16 +144,43 @@ DATASETS: list[Dataset] = [
         publisher="National Housing Bank — RESIDEX",
         url="https://residex.nhbonline.org.in/", status="PARTIAL",
         period="Jun-2013 to Sep-2024 (index and price levels); Jun-2025 to Jun-2026 (index)",
-        units="Composite index (base not stated in file); price levels in ₹ per sq. m.",
+        units="Composite index (base not stated in file); price levels in ₹ per sq. ft of carpet area "
+              "(NHB RESIDEX methodology white paper; size bands in sq. m.)",
         coverage="50 cities", frequency="Quarterly",
         files=("data/raw/nhb_residex/city_composite_index_2013_2024.csv",
                "data/raw/nhb_residex/city_composite_index_2025_2026.csv",
                "data/raw/nhb_residex/city_price_levels_by_unit_size_2013_2024.csv",
                "data/raw/nhb_residex/assessment_price_usable_records_quarterly.csv"),
         added="2026-10-08",
-        transformations="HTML-in-.xls parsed, duplicate table removed, wide→long reshape.",
-        limitations="Index base year not confirmed from the file; assessment prices (not transactions); gap Oct-2024–Mar-2025.",
+        transformations="HTML-in-.xls parsed, duplicate table removed, wide→long reshape. Zeros in the NHB export "
+                        "(nine cities, Jun-2013 to Mar-2018, before they entered RESIDEX) are loaded as missing.",
+        limitations="Index base year not confirmed from the file; assessment prices (not transactions); gap "
+                    "Oct-2024–Mar-2025. Until 2026-10-10 the project read the prices as ₹ per sq. m., which "
+                    "understated every home price about 10.8 times.",
         used_on=("Housing Intelligence Lab", "Economic Relationships Lab"),
+    ),
+    Dataset(
+        id="city_household_income",
+        name="Average annual household income by city (PRICE & Tata Sons, 'The Many Urban Indias')",
+        publisher="People Research on India's Consumer Economy (PRICE) and Tata Sons; figures supplied by the "
+                  "project author",
+        url="https://www.tribuneindia.com/news/chandigarh/chandigarh-tops-india-in-household-spending-ranks-among-top-cities-on-income-parameter-price-tata-sons-report/",
+        status="PARTIAL",
+        period="2025-26 estimates (report published 2026)", units="₹ lakh per household per year (average)",
+        coverage="32 cities (28 match a RESIDEX city)", frequency="One report",
+        files=("data/raw/price_tata/city_household_income.csv",), added="2026-10-10",
+        transformations="Entered as supplied; residex_city is an explicit name match (Gurgaon→Gurugram, "
+                        "Visakhapatnam→Vizag, Chandigarh→Chandigarh (Tricity)); no fuzzy matching.",
+        missing="RESIDEX cities without a figure (e.g. Thane, Navi Mumbai, Bhopal) get no city income; they are not "
+                "given a neighbouring city's value.",
+        methodology="The author states the figures are verified. Cross-check against press coverage of the report: "
+                    "Bengaluru, Chandigarh, Delhi, Vadodara match; Pune conflicts (₹23.2 lakh reported); Mumbai has "
+                    "conflicting coverage (₹24.2 / ₹25.7 lakh); Gurgaon, Noida and Ghaziabad are not reported "
+                    "separately in the coverage found (the report groups Delhi-NCR). See the cross_check column.",
+        limitations="Average, not median, household income — pulled up by high earners. Survey-based estimates. "
+                    "Later than the RESIDEX price quarter (Sep-2024). Chandigarh's figure is matched to the RESIDEX "
+                    "'Chandigarh (Tricity)' series, which also covers Mohali and Panchkula.",
+        used_on=("Housing Intelligence Lab", "Research Library"),
     ),
     Dataset(
         id="real_pc_nni",

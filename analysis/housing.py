@@ -41,10 +41,16 @@ CITY_TO_STATE: Dict[str, str] = {
 
 RESIDEX_BASE_QUARTER = "Mar-2018"  # inferred empirically from the index data; see DATA_REGISTRY.md
 
-# A representative dwelling size used to turn a per-sq.m. price into a
-# total price. 70 sq.m. (~754 sq.ft) is a commonly used reference for a
-# modest 2BHK apartment in Indian metros -- an explicit, overridable
-# assumption, not a measured figure.
+# NHB RESIDEX price levels are in INR per sq. ft of carpet area (NHB RESIDEX
+# methodology white paper, Dec 2023: "Carpet Area Price per sq.ft.", with
+# acceptable ranges of 1,500-40,000 outside Mumbai). The size bands in the
+# source table are in sq. m., which is why the unit size below is in sq. m.
+SQFT_PER_SQM = 10.7639
+
+# A representative dwelling size used to turn a per-sq.ft price into a
+# total price. 70 sq.m. (~754 sq.ft) of carpet area is a commonly used
+# reference for a modest 2BHK apartment in Indian metros -- an explicit,
+# overridable assumption, not a measured figure.
 DEFAULT_UNIT_SIZE_SQM = 70.0
 
 
@@ -157,6 +163,13 @@ INCOME_PROXY_CAVEATS: Dict[str, str] = {
         "average monthly per-capita CONSUMPTION EXPENDITURE, not income, and state/UT-level, "
         "not city-level.)"
     ),
+    "city": (
+        "Average annual household income for the city (PRICE & Tata Sons, 'The Many Urban Indias', 2026 — "
+        "figures supplied by the project author; some conflict with press coverage of the report, see the "
+        "cross-check column). An average, not a median, so it understates the burden for a typical household; "
+        "its year (2025-26 estimates) is later than the RESIDEX price quarter. Cities without a figure are left "
+        "out rather than given a neighbour's."
+    ),
 }
 
 
@@ -165,7 +178,7 @@ class CityAffordability:
     city: str
     state: str
     quarter: str
-    price_per_sqm: float
+    price_per_sqft: float
     unit_price: float
     annual_income_proxy: float
     price_to_income: float
@@ -187,6 +200,7 @@ def city_affordability(
     loan_years: float = 20.0,
     income_source: str = "nsdp",
     mpce_urban: Optional[pd.DataFrame] = None,
+    city_income: Optional[pd.DataFrame] = None,
 ) -> CityAffordability:
     """Compute affordability for one city using real RESIDEX prices and
     one of two explicit, documented income proxies (see module docstring
@@ -212,8 +226,8 @@ def city_affordability(
     row = city_prices[city_prices["quarter"] == quarter]
     if row.empty:
         raise ValueError(f"No RESIDEX price data for {city!r} at quarter {quarter!r}.")
-    price_per_sqm = float(row["composite_price_inr_per_sqm"].iloc[0])
-    unit_price = price_per_sqm * unit_size_sqm
+    price_per_sqft = float(row["composite_price_inr_per_sqft"].iloc[0])
+    unit_price = price_per_sqft * unit_size_sqm * SQFT_PER_SQM
 
     if income_source == "nsdp":
         income_row = nsdp_current[(nsdp_current["state"] == state)].dropna(subset=["percapita_nsdp_current_prices_inr"])
@@ -232,8 +246,16 @@ def city_affordability(
             raise ValueError(f"No HCES urban MPCE data for {state!r} (proxy for {city!r}).")
         monthly_mpce = float(mpce_row["average_monthly_per_capita_consumption_expenditure_inr"].iloc[0])
         annual_income_proxy = monthly_mpce * 12.0
+    elif income_source == "city":
+        if city_income is None:
+            raise ValueError("income_source='city' requires city_income "
+                             "(data_sources.loaders.load_city_household_income()).")
+        crow = city_income[city_income["residex_city"] == city]
+        if crow.empty:
+            raise ValueError(f"No city household income for {city!r}.")
+        annual_income_proxy = float(crow["avg_annual_household_income_lakh"].iloc[0]) * 1e5
     else:
-        raise ValueError(f"Unknown income_source: {income_source!r}. Must be 'nsdp' or 'mpce'.")
+        raise ValueError(f"Unknown income_source: {income_source!r}. Must be 'nsdp', 'mpce' or 'city'.")
 
     loan_amount = unit_price * (1 - down_payment_pct)
     emi_monthly = emi(loan_amount, annual_interest_rate, loan_years)
@@ -241,7 +263,7 @@ def city_affordability(
     emi_pct = mortgage_payment_to_income_ratio(emi_monthly, annual_income_proxy / 12.0) * 100.0
 
     return CityAffordability(
-        city=city, state=state, quarter=str(quarter), price_per_sqm=price_per_sqm, unit_price=unit_price,
+        city=city, state=state, quarter=str(quarter), price_per_sqft=price_per_sqft, unit_price=unit_price,
         annual_income_proxy=annual_income_proxy, price_to_income=pi, emi_monthly=emi_monthly, emi_to_income_pct=emi_pct,
         income_source=income_source, income_caveat=INCOME_PROXY_CAVEATS[income_source],
     )
@@ -251,6 +273,7 @@ def affordability_across_cities(
     price_levels: pd.DataFrame,
     nsdp_current: pd.DataFrame,
     mpce_urban: Optional[pd.DataFrame] = None,
+    city_income: Optional[pd.DataFrame] = None,
     **kwargs,
 ) -> pd.DataFrame:
     """city_affordability() for every city with both price and income
@@ -266,7 +289,8 @@ def affordability_across_cities(
         if state is None:
             continue
         try:
-            result = city_affordability(price_levels, nsdp_current, city, mpce_urban=mpce_urban, **kwargs)
+            result = city_affordability(price_levels, nsdp_current, city, mpce_urban=mpce_urban,
+                                        city_income=city_income, **kwargs)
             rows.append(vars(result))
         except (KeyError, ValueError):
             continue
@@ -433,6 +457,7 @@ def stress_index_cross_section(
     high_pctile: float = 95.0,
     income_source: str = "nsdp",
     mpce_urban: Optional[pd.DataFrame] = None,
+    city_income: Optional[pd.DataFrame] = None,
 ) -> StressIndexResult:
     """A percentile-clipped, 0-100 affordability-stress score across cities
     at a SINGLE quarter (cross-section, not a time series -- for the time
@@ -467,7 +492,7 @@ def stress_index_cross_section(
         quarter = sort_quarters(price_levels.drop_duplicates(subset=["quarter"]))["quarter"].iloc[-1]
 
     aff = affordability_across_cities(
-        price_levels, nsdp_current, mpce_urban=mpce_urban, quarter=quarter,
+        price_levels, nsdp_current, mpce_urban=mpce_urban, city_income=city_income, quarter=quarter,
         unit_size_sqm=unit_size_sqm, down_payment_pct=down_payment_pct,
         annual_interest_rate=annual_interest_rate, loan_years=loan_years,
         income_source=income_source,

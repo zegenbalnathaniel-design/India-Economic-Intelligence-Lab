@@ -393,7 +393,7 @@ def build(hid: str, *, include_tentative: bool = False) -> Hypothesis:
         lv = loaders.load_residex_price_levels()
         rows, dropped_fy = [], 0
         for city, d in lv.groupby("city"):
-            fy = rel.quarterly_to_financial_year(d, "quarter", "composite_price_inr_per_sqm",
+            fy = rel.quarterly_to_financial_year(d, "quarter", "composite_price_inr_per_sqft",
                                                  housing.financial_year_of_quarter)
             hit = fy.data[fy.data["financial_year"] == "2023-24"]
             rows.append({"city": city, "value": float(hit["value"].iloc[0]) if not hit.empty else np.nan})
@@ -412,8 +412,8 @@ def build(hid: str, *, include_tentative: bool = False) -> Hypothesis:
             VarSpec("Urban average MPCE of the city's state, 2023-24 (₹ / person / month)", "state urban MPCE",
                     "₹ per person per month", "VERIFIED", SRC_HCES + " via analysis.housing.CITY_TO_STATE",
                     "HCES survey year 2023-24"),
-            VarSpec("RESIDEX composite price, FY 2023-24 average of 4 quarters (₹ / sq m)", "city house price",
-                    "₹ per sq m", "PARTIAL", SRC_RESIDEX, "FY 2023-24 (Jun-2023 to Mar-2024)"),
+            VarSpec("RESIDEX composite price, FY 2023-24 average of 4 quarters (₹ / sq ft)", "city house price",
+                    "₹ per sq ft", "PARTIAL", SRC_RESIDEX, "FY 2023-24 (Jun-2023 to Mar-2024)"),
             x, y, caveats=("repeated_values", "proxy"),
             caveat_note=f"{top_n} of the cities are in {top_state} and share its single MPCE value; state consumption is not city income",
         )
