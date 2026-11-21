@@ -1,4 +1,5 @@
 import { MACRO_INDICATORS } from '../../data/macro/indicators';
+import { LABS } from '../../labs/registry';
 import { BANKS } from '../../data/banking/panel';
 import { GLOSSARY } from '../../data/glossary/terms';
 import { LIBRARY } from '../../data/research/library';
@@ -33,6 +34,8 @@ export const KIND_LABEL: Record<CommandKind, string> = {
 
 const PAGES: Command[] = [
   { id: 'p-home', kind: 'page', title: 'Home', to: '/' },
+  { id: 'p-labs', kind: 'page', title: 'The research labs', subtitle: 'Seven labs over real Indian data', to: '/labs', keywords: 'lab' },
+  ...LABS.map((l) => ({ id: `p-lab-${l.slug}`, kind: 'page' as const, title: l.title, subtitle: l.question, to: `/labs/${l.slug}`, keywords: l.keywords })),
   { id: 'p-research', kind: 'page', title: 'Research', subtitle: 'Papers and methodology notes', to: '/research' },
   { id: 'p-data', kind: 'page', title: 'Data', subtitle: 'Macro, banking and states', to: '/data' },
   { id: 'p-models', kind: 'page', title: 'Models', subtitle: 'The IEIL Model Lab', to: '/models' },
@@ -46,6 +49,7 @@ const PAGES: Command[] = [
 ];
 
 const ACTIONS: Command[] = [
+  ...LABS.map((l) => ({ id: `a-lab-${l.slug}`, kind: 'action' as const, verb: `> Open ${l.short} lab`, title: `Open ${l.title}`, subtitle: l.question, to: `/labs/${l.slug}`, keywords: l.keywords })),
   { id: 'a-bfpi', kind: 'action', verb: '> Open BFPI', title: 'Open BFPI', subtitle: 'Bank Financial Performance Index', to: '/models/bfpi', keywords: 'bank index composite pillar' },
   { id: 'a-fig2', kind: 'action', verb: '> Open Figure 2', title: 'Open Figure 2', subtitle: 'Household wealth accumulation model', to: '/models/figure-2', keywords: 'wealth compounding portfolio' },
   { id: 'a-inflation', kind: 'action', verb: '> Show inflation', title: 'Show inflation', subtitle: 'CPI inflation in the Data explorer', to: '/data?indicator=cpi-inflation', keywords: 'cpi prices' },

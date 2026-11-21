@@ -62,7 +62,7 @@ export function CalculationViewer({ result }: { result: Figure2Result }) {
                   {fractionAsPercent(ASSET_KEYS.reduce((s, k) => s + (r.inputs.allocation[k] ?? 0), 0), 1)}
                 </td>
                 <td className="py-2 pr-3" />
-                <td className="py-2 text-right text-[#e8933a]" data-numeric>
+                <td className="py-2 text-right text-[#f3c542]" data-numeric>
                   {fractionAsPercent(r.portfolioReturn, 4)}
                 </td>
               </tr>
@@ -75,7 +75,7 @@ export function CalculationViewer({ result }: { result: Figure2Result }) {
         <pre className="overflow-x-auto whitespace-pre-wrap break-words font-mono text-xs leading-relaxed text-ink-300">
 {`R_p = Σ wᵢ Rᵢ
     = ${ASSET_KEYS.map((k) => `${(r.inputs.allocation[k] ?? 0).toFixed(2)} × ${((r.inputs.returns[k] ?? 0) * 100).toFixed(2)}%`).join('\n    + ')}
-    = `}<span className="text-[#e8933a]">{fractionAsPercent(r.portfolioReturn, 4)}</span>
+    = `}<span className="text-[#f3c542]">{fractionAsPercent(r.portfolioReturn, 4)}</span>
         </pre>
       </Step>
 
@@ -100,7 +100,7 @@ export function CalculationViewer({ result }: { result: Figure2Result }) {
    n = ${r.inputs.years * r.periodsPerYear}
 
 FV = ${rupees(r.inputs.annualSaving / r.periodsPerYear)} × [ (1 + ${r.periodicRate.toFixed(6)})^${r.inputs.years * r.periodsPerYear} − 1 ] / ${r.periodicRate.toFixed(6)}
-   = `}<span className="text-[#e8933a]">{rupees(closedForm)}</span>
+   = `}<span className="text-[#f3c542]">{rupees(closedForm)}</span>
         </pre>
         {r.inputs.startingCapital > 0 && (
           <pre className="mt-3 overflow-x-auto whitespace-pre-wrap font-mono text-xs leading-relaxed text-ink-300">

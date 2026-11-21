@@ -65,7 +65,7 @@ export function Footer() {
                     <li key={l.to + l.label}>
                       <Link
                         to={l.to}
-                        className="text-[0.8125rem] text-ink-400 transition-colors hover:text-[#e8933a]"
+                        className="text-[0.8125rem] text-ink-400 transition-colors hover:text-[#f3c542]"
                       >
                         {l.label}
                       </Link>

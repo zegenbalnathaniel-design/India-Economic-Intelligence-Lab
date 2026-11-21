@@ -65,7 +65,7 @@ export function BankExplorer() {
                 className={cn(
                   'border px-2 py-1 font-mono text-2xs uppercase tracking-[0.12em] transition-colors',
                   selected.includes(b.id)
-                    ? 'border-[#e8933a]/50 bg-[#e8933a]/10 text-[#e8933a]'
+                    ? 'border-[#f3c542]/50 bg-[#f3c542]/10 text-[#f3c542]'
                     : 'border-white/[0.09] text-ink-500 hover:text-ink-200',
                 )}
               >
@@ -123,7 +123,7 @@ export function BankExplorer() {
                 className={cn(
                   'border px-2 py-1 font-mono text-2xs uppercase tracking-[0.12em] transition-colors',
                   view === v
-                    ? 'border-[#e8933a]/50 bg-[#e8933a]/10 text-[#e8933a]'
+                    ? 'border-[#f3c542]/50 bg-[#f3c542]/10 text-[#f3c542]'
                     : 'border-white/[0.09] text-ink-500 hover:text-ink-200',
                 )}
               >
@@ -219,7 +219,7 @@ export function BankExplorer() {
                                 <span
                                   className="metric text-sm"
                                   data-numeric
-                                  style={{ color: (score?.z ?? 0) >= 0 ? '#4fae86' : '#d3675d' }}
+                                  style={{ color: (score?.z ?? 0) >= 0 ? '#6fae4f' : '#f04a32' }}
                                 >
                                   {score?.z == null ? '—' : `${score.z >= 0 ? '+' : ''}${score.z.toFixed(2)}`}
                                 </span>
@@ -234,7 +234,7 @@ export function BankExplorer() {
                           withheld
                         </span>
                       ) : (
-                        <span className="metric text-base text-[#e8933a]" data-numeric>
+                        <span className="metric text-base text-[#f3c542]" data-numeric>
                           {res.bfpi.toFixed(1)}
                           {res.partial && <span className="ml-1 text-2xs text-ink-600">*</span>}
                         </span>
@@ -283,7 +283,7 @@ export function BankExplorer() {
             href={BANK_BY_ID[ordered[0]?.id ?? 'sbi']?.disclosureUrl ?? '#'}
             target="_blank"
             rel="noreferrer noopener"
-            className="inline-flex items-center gap-1.5 font-mono text-2xs text-ink-500 hover:text-[#e8933a]"
+            className="inline-flex items-center gap-1.5 font-mono text-2xs text-ink-500 hover:text-[#f3c542]"
           >
             Issuer disclosures <ExternalLink size={10} />
           </a>

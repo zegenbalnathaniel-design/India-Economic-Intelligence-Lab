@@ -58,7 +58,7 @@ export function Data() {
               className={cn(
                 'border px-3 py-1.5 font-mono text-2xs uppercase tracking-[0.14em] transition-colors',
                 tab === t
-                  ? 'border-[#e8933a]/50 bg-[#e8933a]/10 text-[#e8933a]'
+                  ? 'border-[#f3c542]/50 bg-[#f3c542]/10 text-[#f3c542]'
                   : 'border-white/[0.09] text-ink-500 hover:text-ink-200',
               )}
             >
@@ -79,7 +79,7 @@ export function Data() {
                   className={cn(
                     'flex w-full items-center justify-between gap-2 border-l-2 px-3 py-2.5 text-left transition-colors',
                     d.id === selected.id
-                      ? 'border-[#e8933a] bg-white/[0.04]'
+                      ? 'border-[#f3c542] bg-white/[0.04]'
                       : 'border-transparent hover:bg-white/[0.02]',
                   )}
                 >
@@ -218,7 +218,7 @@ export function Data() {
                         href={s.url}
                         target="_blank"
                         rel="noreferrer noopener"
-                        className="inline-flex items-center gap-1 font-mono text-2xs text-ink-500 hover:text-[#e8933a]"
+                        className="inline-flex items-center gap-1 font-mono text-2xs text-ink-500 hover:text-[#f3c542]"
                       >
                         Open <ExternalLink size={10} />
                       </a>

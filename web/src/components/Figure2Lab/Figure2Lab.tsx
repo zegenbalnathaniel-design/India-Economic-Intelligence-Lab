@@ -33,10 +33,10 @@ import {
 import { WealthChart } from './WealthChart';
 
 const CLASS_TONE: Record<string, string> = {
-  OBSERVED: '#4fae86',
-  DERIVED: '#4aa5a8',
-  ASSUMPTION: '#e8933a',
-  SCENARIO: '#8b7fd4',
+  OBSERVED: '#6fae4f',
+  DERIVED: '#24a6a1',
+  ASSUMPTION: '#f3c542',
+  SCENARIO: '#5fd0c9',
 };
 
 function Readout({
@@ -173,7 +173,7 @@ export function Figure2Lab({ compact = false }: { compact?: boolean }) {
             value={result.totalContributed}
             format={(n) => rupees(n)}
             sub={`${rupees(inputs.annualSaving)} × ${inputs.years} years`}
-            tone="#5d6a72"
+            tone="#6b6f80"
           />
           <Readout
             label="Final value"
@@ -184,21 +184,21 @@ export function Figure2Lab({ compact = false }: { compact?: boolean }) {
                 ? `at ${fractionAsPercent(result.portfolioReturn, 2)} p.a.`
                 : `invested portion at ${fractionAsPercent(result.assetReturn, 2)} p.a.`
             }
-            tone="#e8933a"
+            tone="#f3c542"
           />
           <Readout
             label="Investment gain"
             value={result.investmentGain}
             format={(n) => rupees(n)}
             sub="final value − contributed"
-            tone="#4fae86"
+            tone="#6fae4f"
           />
           <Readout
             label="Wealth multiple"
             value={result.wealthMultiple}
             format={(n) => (n === null ? '—' : `${n.toFixed(2)}×`)}
             sub="per rupee contributed"
-            tone="#5b9bd5"
+            tone="#4d6ff0"
           />
         </dl>
 
@@ -231,14 +231,14 @@ export function Figure2Lab({ compact = false }: { compact?: boolean }) {
             >
               <div className="bg-ink-900 p-4">
                 <p className="label">Baseline</p>
-                <p className="metric mt-2 text-lg text-[#5b9bd5]">{rupees(baseline.finalValue)}</p>
+                <p className="metric mt-2 text-lg text-[#4d6ff0]">{rupees(baseline.finalValue)}</p>
                 <p className="mt-1 font-mono text-2xs text-ink-600">
                   observed portfolio · {fractionAsPercent(baseline.portfolioReturn, 2)} p.a.
                 </p>
               </div>
               <div className="bg-ink-900 p-4">
                 <p className="label">Your scenario</p>
-                <p className="metric mt-2 text-lg text-[#e8933a]">{rupees(result.finalValue)}</p>
+                <p className="metric mt-2 text-lg text-[#f3c542]">{rupees(result.finalValue)}</p>
                 <p className="mt-1 font-mono text-2xs text-ink-600">
                   {fractionAsPercent(result.portfolioReturn, 2)} p.a.
                 </p>
@@ -247,7 +247,7 @@ export function Figure2Lab({ compact = false }: { compact?: boolean }) {
                 <p className="label">Difference</p>
                 <p
                   className="metric mt-2 text-lg"
-                  style={{ color: comparison.difference >= 0 ? '#4fae86' : '#d3675d' }}
+                  style={{ color: comparison.difference >= 0 ? '#6fae4f' : '#f04a32' }}
                 >
                   {comparison.difference >= 0 ? '+' : '−'}
                   {rupees(Math.abs(comparison.difference))}
@@ -360,7 +360,7 @@ export function Figure2Lab({ compact = false }: { compact?: boolean }) {
             <h4 className="label-accent">Portfolio</h4>
             <span
               className="metric text-xs"
-              style={{ color: valid ? '#4fae86' : '#d3675d' }}
+              style={{ color: valid ? '#6fae4f' : '#f04a32' }}
               data-numeric
             >
               {(result.validation.total * 100).toFixed(1)}%
@@ -383,7 +383,7 @@ export function Figure2Lab({ compact = false }: { compact?: boolean }) {
             ))}
           </div>
           {!valid && (
-            <p className="mt-3 font-mono text-2xs leading-relaxed text-[#d3675d]">
+            <p className="mt-3 font-mono text-2xs leading-relaxed text-[#f04a32]">
               Allocation must equal 100%.
             </p>
           )}
@@ -439,7 +439,7 @@ export function Figure2Lab({ compact = false }: { compact?: boolean }) {
                       href={c.sourceUrl}
                       target="_blank"
                       rel="noreferrer noopener"
-                      className="mt-1 inline-block font-mono text-2xs text-ink-500 underline decoration-ink-700 underline-offset-2 hover:text-[#e8933a]"
+                      className="mt-1 inline-block font-mono text-2xs text-ink-500 underline decoration-ink-700 underline-offset-2 hover:text-[#f3c542]"
                     >
                       {c.source}
                     </a>
@@ -517,7 +517,7 @@ export function WealthExperiment() {
         </dl>
 
         {alloc.property < 0 && (
-          <p className="mt-4 font-mono text-2xs leading-relaxed text-[#d3675d]">
+          <p className="mt-4 font-mono text-2xs leading-relaxed text-[#f04a32]">
             Property has gone negative. The slider has taken more out of property than exists there — a
             borrowing position rather than a portfolio. The arithmetic still runs; it just no longer describes a
             household.
@@ -528,15 +528,15 @@ export function WealthExperiment() {
       <div className="bg-ink-950 p-5 md:p-7">
         {/* Causal chain — the point of the animation is that it shows propagation. */}
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-2xs uppercase tracking-[0.14em]">
-          <span className={cn('transition-colors', moved ? 'text-[#5b9bd5]' : 'text-ink-600')}>
+          <span className={cn('transition-colors', moved ? 'text-[#4d6ff0]' : 'text-ink-600')}>
             Financial share {moved ? (financial > DEFAULT_ALLOCATION.financial * 100 ? '↑' : '↓') : '—'}
           </span>
           <span className="text-ink-700">→</span>
-          <span className={cn('transition-colors', moved ? 'text-[#5b9bd5]' : 'text-ink-600')}>
+          <span className={cn('transition-colors', moved ? 'text-[#4d6ff0]' : 'text-ink-600')}>
             Portfolio return {fractionAsPercent(comparison.scenario.portfolioReturn, 2)}
           </span>
           <span className="text-ink-700">→</span>
-          <span className={cn('transition-colors', moved ? 'text-[#e8933a]' : 'text-ink-600')}>
+          <span className={cn('transition-colors', moved ? 'text-[#f3c542]' : 'text-ink-600')}>
             Final wealth
           </span>
         </div>
@@ -544,7 +544,7 @@ export function WealthExperiment() {
         <div className="mt-5 grid grid-cols-1 gap-px border border-white/[0.07] bg-white/[0.07] sm:grid-cols-3">
           <div className="bg-ink-900 p-4">
             <p className="label">Baseline</p>
-            <p className="metric mt-2 text-xl text-[#5b9bd5]" data-numeric>
+            <p className="metric mt-2 text-xl text-[#4d6ff0]" data-numeric>
               {rupees(comparison.baseline.finalValue)}
             </p>
             <p className="mt-1 font-mono text-2xs text-ink-600">observed 5% financial</p>
@@ -554,7 +554,7 @@ export function WealthExperiment() {
             <AnimatedNumber
               value={comparison.scenario.finalValue}
               format={(n) => rupees(n)}
-              className="metric mt-2 block text-xl text-[#e8933a]"
+              className="metric mt-2 block text-xl text-[#f3c542]"
             />
             <p className="mt-1 font-mono text-2xs text-ink-600">{financial.toFixed(1)}% financial</p>
           </div>

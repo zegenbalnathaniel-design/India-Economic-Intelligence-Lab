@@ -170,7 +170,7 @@ export function BFPILab({ initialBank = 'icicibank' }: { initialBank?: string })
               )}
             >
               {active && (
-                <motion.span layoutId="bfpi-bank" className="absolute inset-x-0 top-0 h-px bg-[#e8933a]" />
+                <motion.span layoutId="bfpi-bank" className="absolute inset-x-0 top-0 h-px bg-[#f3c542]" />
               )}
               <span className={cn('block font-mono text-2xs uppercase tracking-[0.14em]', active ? 'text-ink-50' : 'text-ink-400')}>
                 {b.shortName}
@@ -309,7 +309,7 @@ export function BFPILab({ initialBank = 'icicibank' }: { initialBank?: string })
                                 {score?.raw === null || score?.raw === undefined ? (
                                   <span className="text-ink-700">unavailable</span>
                                 ) : (
-                                  <span className={overridden ? 'text-[#8b7fd4]' : 'text-ink-200'}>
+                                  <span className={overridden ? 'text-[#5fd0c9]' : 'text-ink-200'}>
                                     {number(score.raw, 2)}
                                   </span>
                                 )}
@@ -320,7 +320,7 @@ export function BFPILab({ initialBank = 'icicibank' }: { initialBank?: string })
                               <td
                                 className="py-1.5 pr-3"
                                 data-numeric
-                                style={{ color: score?.z == null ? '#5d6a72' : score.z >= 0 ? '#4fae86' : '#d3675d' }}
+                                style={{ color: score?.z == null ? '#6b6f80' : score.z >= 0 ? '#6fae4f' : '#f04a32' }}
                               >
                                 {score?.z == null ? '—' : `${score.z >= 0 ? '+' : ''}${score.z.toFixed(3)}`}
                               </td>
@@ -352,7 +352,7 @@ export function BFPILab({ initialBank = 'icicibank' }: { initialBank?: string })
                     })}
                     <div className="flex items-baseline justify-between gap-3 border-t border-white/[0.07] pt-2 font-mono text-2xs">
                       <span className="text-ink-300">50 (sample centre) + contributions</span>
-                      <span className="text-[#e8933a]" data-numeric>
+                      <span className="text-[#f3c542]" data-numeric>
                         {result.bfpi === null ? 'withheld' : result.bfpi.toFixed(2)}
                       </span>
                     </div>
@@ -393,7 +393,7 @@ export function BFPILab({ initialBank = 'icicibank' }: { initialBank?: string })
                       <p className="mt-1.5 text-2xs leading-snug text-ink-600">{field.note}</p>
                       <button
                         type="button"
-                        className="mt-2 font-mono text-2xs uppercase tracking-[0.14em] text-[#8b7fd4] hover:underline"
+                        className="mt-2 font-mono text-2xs uppercase tracking-[0.14em] text-[#5fd0c9] hover:underline"
                         onClick={() => setOverride(k, (spec.min + spec.max) / 8)}
                       >
                         + Supply a scenario value
@@ -407,7 +407,7 @@ export function BFPILab({ initialBank = 'icicibank' }: { initialBank?: string })
                         min={spec.min}
                         max={Math.min(spec.max, k === 'lcr' ? 250 : spec.max)}
                         step={spec.step}
-                        accent={overrides[k] !== undefined ? '#8b7fd4' : '#e8933a'}
+                        accent={overrides[k] !== undefined ? '#5fd0c9' : '#f3c542'}
                         baselineValue={field.value ?? undefined}
                         onChange={(v) => setOverride(k, v)}
                         format={(v) => `${v.toFixed(2)}`}

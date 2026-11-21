@@ -15,7 +15,7 @@ function ChangeChip({ change }: { change: DataPoint['change'] }) {
   const flat = change.value === 0;
   const up = change.value > 0;
   const good = change.better === 'neutral' ? null : up === (change.better === 'up');
-  const colour = flat ? '#818e96' : good === null ? '#818e96' : good ? '#4fae86' : '#d3675d';
+  const colour = flat ? '#8b8d99' : good === null ? '#8b8d99' : good ? '#6fae4f' : '#f04a32';
   const Icon = flat ? ArrowRight : up ? ArrowUpRight : ArrowDownRight;
   return (
     <span className="flex items-center gap-1.5 font-mono text-2xs" style={{ color: colour }}>
@@ -44,7 +44,7 @@ function PulseTile({ point, onOpen, index }: { point: DataPoint; onOpen: () => v
     >
       <span
         aria-hidden
-        className="absolute inset-x-0 top-0 h-px origin-left scale-x-0 bg-[#e8933a] transition-transform duration-300 group-hover:scale-x-100"
+        className="absolute inset-x-0 top-0 h-px origin-left scale-x-0 bg-[#f3c542] transition-transform duration-300 group-hover:scale-x-100"
       />
 
       <div className="flex items-start justify-between gap-3">
@@ -67,7 +67,7 @@ function PulseTile({ point, onOpen, index }: { point: DataPoint; onOpen: () => v
         )}
         <div className="mt-2 h-8">
           {point.series && point.series.length > 1 && (
-            <Sparkline series={point.series} colour={missing ? '#5d6a72' : '#e8933a'} />
+            <Sparkline series={point.series} colour={missing ? '#6b6f80' : '#f3c542'} />
           )}
         </div>
       </div>
@@ -147,7 +147,7 @@ function DetailPanel({ point, onClose }: { point: DataPoint; onClose: () => void
         {point.series && point.series.length > 1 && (
           <div className="mt-6 border border-white/[0.07] bg-ink-950/50 p-4">
             <p className="label mb-3">Historical series</p>
-            <Sparkline series={point.series} colour="#e8933a" height={96} showAxis />
+            <Sparkline series={point.series} colour="#f3c542" height={96} showAxis />
           </div>
         )}
 
@@ -168,7 +168,7 @@ function DetailPanel({ point, onClose }: { point: DataPoint; onClose: () => void
                   className={cn(
                     'flex flex-wrap items-baseline justify-between gap-2 px-3 py-2',
                     i > 0 && 'border-t border-white/[0.05]',
-                    i === point.vintages!.length - 1 && 'bg-[#e8933a]/[0.05]',
+                    i === point.vintages!.length - 1 && 'bg-[#f3c542]/[0.05]',
                   )}
                 >
                   <span className="text-[0.8125rem] text-ink-200">{v.label}</span>

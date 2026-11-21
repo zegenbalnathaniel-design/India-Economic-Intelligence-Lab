@@ -20,7 +20,7 @@ export function Navigation({ onOpenPalette }: { onOpenPalette: () => void }) {
         className="fixed inset-x-0 top-0 z-50"
         initial={false}
         animate={{
-          backgroundColor: compact ? 'rgba(8,9,10,0.82)' : 'rgba(8,9,10,0)',
+          backgroundColor: compact ? 'rgba(12,14,20,0.82)' : 'rgba(12,14,20,0)',
           borderBottomColor: compact ? 'rgba(255,255,255,0.09)' : 'rgba(255,255,255,0)',
         }}
         transition={{ duration: 0.3, ease: EASE_OUT }}
@@ -69,7 +69,7 @@ export function Navigation({ onOpenPalette }: { onOpenPalette: () => void }) {
                     {(isActive || location.pathname.startsWith(item.to)) && (
                       <motion.span
                         layoutId="nav-active"
-                        className="absolute inset-x-2 -bottom-px h-px bg-[#e8933a]"
+                        className="absolute inset-x-2 -bottom-px h-px bg-[#f3c542]"
                         transition={SPRING.control}
                       />
                     )}
@@ -82,7 +82,7 @@ export function Navigation({ onOpenPalette }: { onOpenPalette: () => void }) {
             <button
               type="button"
               onClick={onOpenPalette}
-              className="ml-3 flex items-center gap-2 border border-white/[0.12] px-2.5 py-1.5 font-mono text-2xs text-ink-400 transition-colors hover:border-[#e8933a]/50 hover:text-ink-100"
+              className="ml-3 flex items-center gap-2 border border-white/[0.12] px-2.5 py-1.5 font-mono text-2xs text-ink-400 transition-colors hover:border-[#f3c542]/50 hover:text-ink-100"
               aria-label="Open command palette"
             >
               <Search size={12} />

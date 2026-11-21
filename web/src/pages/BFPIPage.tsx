@@ -27,6 +27,13 @@ export function BFPIPage() {
     <>
       <PageHeader
         label="Model 02 · BFPI"
+        figure={{
+          name: 'Slow',
+          accent: '#4d6ff0',
+          label: 'A belt of crates through a gate; hovering slows it — a metaphor for policy tightening slowing activity.',
+          idle: 'RBI policy repo rate: 5.50% (7 Oct 2026) — hover the belt.',
+          caption: (read) => (read.startsWith('rate 1.00') ? null : 'Tighter conditions, slower activity — a metaphor, not a forecast.'),
+        }}
         title="Bank Financial Performance Index"
         lede="A composite framework for evaluating bank performance across profitability, capital strength, asset quality and liquidity. BFPI is an original constructed analytical index — not an RBI index, not an official banking-sector rating, and not a prediction of future performance."
         actions={
@@ -69,7 +76,7 @@ export function BFPIPage() {
             <ul className="space-y-3">
               {PANEL_CAVEATS.map((c) => (
                 <li key={c} className="flex gap-3 text-[0.875rem] leading-relaxed text-ink-300">
-                  <span aria-hidden className="mt-[0.6em] h-px w-3 shrink-0 bg-[#e8933a]" />
+                  <span aria-hidden className="mt-[0.6em] h-px w-3 shrink-0 bg-[#f3c542]" />
                   {c}
                 </li>
               ))}

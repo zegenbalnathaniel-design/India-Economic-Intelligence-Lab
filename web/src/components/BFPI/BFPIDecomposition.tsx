@@ -6,10 +6,10 @@ import { useReducedMotionPref } from '../../lib/motion';
 import { AnimatedNumber } from '../ui';
 
 const PILLAR_COLOUR: Record<string, string> = {
-  profitability: '#e8933a',
-  capital: '#5b9bd5',
-  assetQuality: '#4fae86',
-  liquidity: '#4aa5a8',
+  profitability: '#f3c542',
+  capital: '#4d6ff0',
+  assetQuality: '#6fae4f',
+  liquidity: '#24a6a1',
 };
 
 /**
@@ -70,7 +70,7 @@ export function BFPIDecomposition({
                 <path
                   d={arcPath(start, arcSpan, R)}
                   fill="none"
-                  stroke={p.available ? 'rgba(255,255,255,0.07)' : 'rgba(129,142,150,0.12)'}
+                  stroke={p.available ? 'rgba(255,255,255,0.07)' : 'rgba(139,141,153,0.12)'}
                   strokeWidth={STROKE}
                   strokeLinecap="butt"
                   strokeDasharray={p.available ? undefined : '3 4'}
@@ -104,7 +104,7 @@ export function BFPIDecomposition({
                 y1={inner.y}
                 x2={outer.x}
                 y2={outer.y}
-                stroke="rgba(8,9,10,0.5)"
+                stroke="rgba(12,14,20,0.5)"
                 strokeWidth={1}
               />
             );
@@ -130,7 +130,7 @@ export function BFPIDecomposition({
               {delta !== null && Math.abs(delta) > 0.05 && (
                 <span
                   className="mt-1 font-mono text-2xs"
-                  style={{ color: delta > 0 ? '#4fae86' : '#d3675d' }}
+                  style={{ color: delta > 0 ? '#6fae4f' : '#f04a32' }}
                   data-numeric
                 >
                   {delta > 0 ? '+' : '−'}
@@ -209,7 +209,7 @@ function PillarRow({ pillar, onHover }: { pillar: PillarScore; onHover?: (k: str
                 </span>
                 <span
                   className="w-14 text-right"
-                  style={{ color: ind.z >= 0 ? '#4fae86' : '#d3675d' }}
+                  style={{ color: ind.z >= 0 ? '#6fae4f' : '#f04a32' }}
                   data-numeric
                 >
                   z {ind.z >= 0 ? '+' : ''}

@@ -13,7 +13,8 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
-            if (id.includes('three') || id.includes('@react-three')) return 'webgl';
+            if (id.includes('three') || id.includes('@react-three') || id.includes('world-atlas') || id.includes('topojson') || id.includes('d3-geo')) return 'webgl';
+            if (id.includes('@lucasmarkes/hairline')) return 'hairline';
             if (id.includes('d3') || id.includes('recharts')) return 'charts';
             if (id.includes('framer-motion')) return 'motion';
             return 'vendor';
@@ -23,7 +24,7 @@ export default defineConfig({
     },
     // three.js is the only chunk over this, and it is lazy-loaded with the
     // globe rather than shipped on first paint.
-    chunkSizeWarningLimit: 1000,
+    chunkSizeWarningLimit: 1100,
   },
   test: {
     environment: 'node',

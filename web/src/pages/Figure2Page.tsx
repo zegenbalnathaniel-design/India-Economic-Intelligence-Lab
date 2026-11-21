@@ -10,6 +10,11 @@ export function Figure2Page() {
     <>
       <PageHeader
         label="Model 01 · Figure 02"
+        figure={{
+          name: 'Terrain',
+          label: 'Eighty-one pillars on a plinth that rise around the pointer — wealth compounding where it is placed.',
+          idle: 'Move across the plinth: wealth rises where it compounds.',
+        }}
         title="Household Wealth Accumulation"
         lede="What happens when ₹1 lakh is saved every year for 30 years? The defaults are the household portfolio the RBI measured and a set of return assumptions stated in full. Change any of them and everything recomputes — the curve, the headline numbers and the working."
         actions={
@@ -60,12 +65,12 @@ export function Figure2Page() {
                         style={{
                           color:
                             c.classification === 'OBSERVED'
-                              ? '#4fae86'
+                              ? '#6fae4f'
                               : c.classification === 'DERIVED'
-                                ? '#4aa5a8'
+                                ? '#24a6a1'
                                 : c.classification === 'ASSUMPTION'
-                                  ? '#e8933a'
-                                  : '#8b7fd4',
+                                  ? '#f3c542'
+                                  : '#5fd0c9',
                           borderColor: 'rgba(255,255,255,0.14)',
                         }}
                       >
@@ -82,7 +87,7 @@ export function Figure2Page() {
                           href={c.sourceUrl}
                           target="_blank"
                           rel="noreferrer noopener"
-                          className="mt-1 block text-ink-500 underline decoration-ink-700 underline-offset-2 hover:text-[#e8933a]"
+                          className="mt-1 block text-ink-500 underline decoration-ink-700 underline-offset-2 hover:text-[#f3c542]"
                         >
                           {c.source}
                         </a>

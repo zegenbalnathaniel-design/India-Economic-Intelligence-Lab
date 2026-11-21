@@ -15,8 +15,8 @@ function Row({ k, v }: { k: string; v: React.ReactNode }) {
 
 export function SourceDiscrepancy({ d }: { d: Discrepancy }) {
   return (
-    <div className="border border-[#e8933a]/30 bg-[#e8933a]/[0.05] p-4">
-      <p className="font-mono text-2xs uppercase tracking-[0.14em] text-[#e8933a]">
+    <div className="border border-[#f3c542]/30 bg-[#f3c542]/[0.05] p-4">
+      <p className="font-mono text-2xs uppercase tracking-[0.14em] text-[#f3c542]">
         ⚠ Source discrepancy detected
       </p>
       <p className="mt-2 text-[0.8125rem] leading-relaxed text-ink-200">{d.summary}</p>
@@ -37,7 +37,7 @@ export function SourceDiscrepancy({ d }: { d: Discrepancy }) {
                     href={e.url}
                     target="_blank"
                     rel="noreferrer noopener"
-                    className="inline-flex items-center gap-1.5 hover:text-[#e8933a]"
+                    className="inline-flex items-center gap-1.5 hover:text-[#f3c542]"
                   >
                     {e.label}
                     <ExternalLink size={11} className="opacity-50" />
@@ -91,7 +91,7 @@ export function DataProvenance({ point, defaultOpen = false }: { point: DataPoin
               href={point.sourceUrl}
               target="_blank"
               rel="noreferrer noopener"
-              className="inline-flex items-center gap-1.5 hover:text-[#e8933a]"
+              className="inline-flex items-center gap-1.5 hover:text-[#f3c542]"
             >
               {source.fullName}
               <ExternalLink size={11} className="opacity-50" />

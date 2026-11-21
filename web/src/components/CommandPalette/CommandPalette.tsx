@@ -7,14 +7,14 @@ import { EASE_OUT } from '../../lib/motion';
 import { KIND_LABEL, buildRegistry, scoreCommand, type Command } from './registry';
 
 const KIND_COLOUR: Record<string, string> = {
-  action: '#e8933a',
-  indicator: '#4fae86',
-  bank: '#5b9bd5',
-  term: '#8b7fd4',
-  research: '#e8933a',
-  state: '#4aa5a8',
-  page: '#818e96',
-  event: '#c9a227',
+  action: '#f3c542',
+  indicator: '#6fae4f',
+  bank: '#4d6ff0',
+  term: '#5fd0c9',
+  research: '#f3c542',
+  state: '#24a6a1',
+  page: '#8b8d99',
+  event: '#f3c542',
 };
 
 /**

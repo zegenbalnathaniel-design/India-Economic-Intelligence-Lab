@@ -166,7 +166,7 @@ export function Slider({
   format,
   unit,
   hint,
-  accent = '#e8933a',
+  accent = '#f3c542',
   disabled,
   baselineValue,
 }: {
@@ -318,7 +318,7 @@ export function SegmentedControl<T extends string>({
               {active && (
                 <motion.span
                   layoutId={`seg-${label ?? options.map((x) => x.value).join()}`}
-                  className="absolute inset-0 bg-[#e8933a]"
+                  className="absolute inset-0 bg-[#f3c542]"
                   transition={SPRING.control}
                 />
               )}
@@ -355,7 +355,7 @@ export function Disclosure({
         aria-expanded={open}
         className={cn(
           'flex w-full items-center justify-between gap-4 py-3 text-left font-mono text-2xs uppercase tracking-[0.14em] transition-colors',
-          tone === 'accent' ? 'text-[#e8933a] hover:text-[#f0a45a]' : 'text-ink-400 hover:text-ink-100',
+          tone === 'accent' ? 'text-[#f3c542] hover:text-[#f7d36b]' : 'text-ink-400 hover:text-ink-100',
         )}
       >
         {summary}
@@ -394,7 +394,7 @@ export function Notice({
   children: ReactNode;
 }) {
   const colour =
-    tone === 'caution' ? '#e8933a' : tone === 'missing' ? '#818e96' : '#5b9bd5';
+    tone === 'caution' ? '#f3c542' : tone === 'missing' ? '#8b8d99' : '#4d6ff0';
   return (
     <div
       className="border-l-2 bg-ink-900/50 px-4 py-3"

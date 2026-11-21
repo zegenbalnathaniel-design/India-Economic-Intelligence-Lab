@@ -4,11 +4,33 @@
 
 @layer base {
   :root {
-    --grid-line: rgba(255, 255, 255, 0.045);
-    --hairline: rgba(255, 255, 255, 0.09);
-    --hairline-strong: rgba(255, 255, 255, 0.16);
-    --accent: #e8933a;
+    /* Warm hairlines: warm white at low alpha, so rules read as drawn ink. */
+    --grid-line: rgba(245, 240, 230, 0.04);
+    --hairline: rgba(245, 240, 230, 0.09);
+    --hairline-strong: rgba(245, 240, 230, 0.18);
+    /* Site accent (gold); each lab overrides --accent with its own colour. */
+    --accent: #f3c542;
+    --accent-2: #f04a32;
     --lab-nav-h: 56px;
+
+    /* Seven-colour system */
+    --ink: #11131a;
+    --espresso: #181b26;
+    --rule: #2a2e3c;
+    --warm-white: #f5f0e6;
+    --cobalt: #4d6ff0;
+    --vermillion: #f04a32;
+    --gold: #f3c542;
+    --leaf: #6fae4f;
+    --turquoise: #24a6a1;
+
+    /* Hairline figures (@lucasmarkes/hairline) read these. */
+    --hairline-plate: #181b26;
+    --hairline-hi: var(--accent);
+    --hairline-edge: #f5f0e6;
+    --hairline-mid: #8b8d99;
+    --hairline-lo: #3a3f52;
+    --hairline-stroke: 1.25;
   }
 
   * {
@@ -22,8 +44,21 @@
 
   body {
     @apply bg-ink-950 text-ink-200 font-sans antialiased;
+    background-image: radial-gradient(1200px 600px at 12% -10%, rgba(49, 85, 217, 0.10), transparent 60%),
+      radial-gradient(900px 500px at 95% 0%, rgba(240, 74, 50, 0.07), transparent 60%),
+      radial-gradient(1000px 700px at 50% 110%, rgba(36, 166, 161, 0.06), transparent 60%);
+    background-attachment: fixed;
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'ss01';
     overflow-x: hidden;
+  }
+
+  /* Grid items may shrink below their content (long file paths, equations),
+     so nothing pushes the page wider than the phone it is on. */
+  .grid > * {
+    min-width: 0;
+  }
+  main {
+    overflow-wrap: break-word;
   }
 
   /* Tabular, instrument-like numerals everywhere numbers are shown. */
@@ -34,8 +69,8 @@
   }
 
   ::selection {
-    background: rgba(232, 147, 58, 0.28);
-    color: #f4f6f6;
+    background: rgba(243,197,66, 0.28);
+    color: #f5f0e6;
   }
 
   ::-webkit-scrollbar {
@@ -43,15 +78,15 @@
     height: 10px;
   }
   ::-webkit-scrollbar-track {
-    background: #08090a;
+    background: #0c0e14;
   }
   ::-webkit-scrollbar-thumb {
-    background: #262d32;
-    border: 3px solid #08090a;
+    background: #2a2e3c;
+    border: 3px solid #0c0e14;
     border-radius: 6px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #414c53;
+    background: #4b5064;
   }
 
   :focus-visible {
@@ -67,11 +102,11 @@
   }
   input[type='range']::-webkit-slider-runnable-track {
     height: 2px;
-    background: #262d32;
+    background: #2a2e3c;
   }
   input[type='range']::-moz-range-track {
     height: 2px;
-    background: #262d32;
+    background: #2a2e3c;
   }
   input[type='range']::-webkit-slider-thumb {
     -webkit-appearance: none;
@@ -80,8 +115,8 @@
     height: 13px;
     margin-top: -5.5px;
     border-radius: 999px;
-    background: #e4e8ea;
-    border: 1px solid #08090a;
+    background: #e6e0d3;
+    border: 1px solid #0c0e14;
     box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
     transition: background 120ms ease, box-shadow 120ms ease;
   }
@@ -89,16 +124,16 @@
     width: 13px;
     height: 13px;
     border-radius: 999px;
-    background: #e4e8ea;
-    border: 1px solid #08090a;
+    background: #e6e0d3;
+    border: 1px solid #0c0e14;
   }
   input[type='range']:hover::-webkit-slider-thumb,
   input[type='range']:focus-visible::-webkit-slider-thumb {
     background: var(--accent);
-    box-shadow: 0 0 0 4px rgba(232, 147, 58, 0.16);
+    box-shadow: 0 0 0 4px rgba(243,197,66, 0.16);
   }
   input[type='range']:disabled::-webkit-slider-thumb {
-    background: #5d6a72;
+    background: #6b6f80;
   }
 }
 
@@ -158,15 +193,15 @@
   }
   .btn:hover {
     @apply bg-ink-850 text-ink-50;
-    border-color: rgba(232, 147, 58, 0.5);
+    border-color: rgba(243,197,66, 0.5);
   }
   .btn-primary {
     background: var(--accent);
-    color: #08090a;
+    color: #0c0e14;
     border-color: var(--accent);
   }
   .btn-primary:hover {
-    background: #f0a45a;
+    background: #f7d36b;
   }
 
   .numfield {
@@ -175,11 +210,86 @@
     font-variant-numeric: tabular-nums;
   }
   .numfield:focus {
-    border-color: rgba(232, 147, 58, 0.55);
+    border-color: rgba(243,197,66, 0.55);
   }
 
   .scrim-top {
     mask-image: linear-gradient(to bottom, transparent, black 18%);
+  }
+}
+
+@layer components {
+  /* A hairline rule that draws itself left-to-right when it scrolls in. */
+  .rule-draw {
+    height: 1px;
+    background: linear-gradient(90deg, var(--accent), var(--hairline-strong) 38%, var(--hairline) 100%);
+    transform-origin: left;
+  }
+
+  /* Multi-accent text, used once per page at most. */
+  .spectrum-text {
+    background: linear-gradient(92deg, #f3c542 0%, #f04a32 34%, #4d6ff0 68%, #24a6a1 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .spectrum-bar {
+    background: linear-gradient(90deg, #3155d9, #24a6a1, #6fae4f, #f3c542, #f04a32);
+  }
+
+  /* Corner ticks: the instrument-frame motif around figures. */
+  .ticked {
+    position: relative;
+  }
+  .ticked::before,
+  .ticked::after {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-color: var(--accent);
+    pointer-events: none;
+  }
+  .ticked::before {
+    left: -1px;
+    top: -1px;
+    border-left: 1px solid;
+    border-top: 1px solid;
+  }
+  .ticked::after {
+    right: -1px;
+    bottom: -1px;
+    border-right: 1px solid;
+    border-bottom: 1px solid;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 border px-2.5 py-1 font-mono text-[10.5px] uppercase transition-colors;
+    letter-spacing: 0.12em;
+    border-color: var(--hairline-strong);
+    color: #b6af9e;
+  }
+  .chip:hover {
+    color: #f5f0e6;
+    border-color: var(--accent);
+  }
+  .chip[aria-pressed='true'] {
+    color: #0c0e14;
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .select {
+    @apply w-full appearance-none border bg-ink-950 px-3 py-2 pr-8 font-mono text-[12px] text-ink-50 outline-none transition-colors;
+    border-color: var(--hairline-strong);
+    background-image: linear-gradient(45deg, transparent 50%, #8b8d99 50%), linear-gradient(135deg, #8b8d99 50%, transparent 50%);
+    background-position: calc(100% - 14px) 52%, calc(100% - 9px) 52%;
+    background-size: 5px 5px;
+    background-repeat: no-repeat;
+  }
+  .select:focus {
+    border-color: var(--accent);
   }
 }
 

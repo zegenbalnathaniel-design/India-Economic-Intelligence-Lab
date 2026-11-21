@@ -84,7 +84,7 @@ export function IndiaMap() {
   };
 
   const tone = (s: StateRecord) => {
-    if (s.perCapitaNsdp.value === null) return '#5d6a72';
+    if (s.perCapitaNsdp.value === null) return '#6b6f80';
     const t = (s.perCapitaNsdp.value - min) / (max - min || 1);
     // Single-hue ramp: lightness carries the value, hue carries nothing.
     const mix = (a: number, b: number) => Math.round(a + (b - a) * t);
@@ -258,7 +258,7 @@ export function IndiaMap() {
               </dl>
 
               {selected.commentary && (
-                <p className="mt-4 border-l-2 border-[#e8933a] pl-3 text-[0.8125rem] leading-relaxed text-ink-300">
+                <p className="mt-4 border-l-2 border-[#f3c542] pl-3 text-[0.8125rem] leading-relaxed text-ink-300">
                   {selected.commentary}
                 </p>
               )}

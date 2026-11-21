@@ -34,7 +34,7 @@ function BootSequence({ onDone }: { onDone: () => void }) {
     >
       <div className="w-full max-w-md font-mono text-2xs leading-[1.9] sm:text-xs">
         <p className="text-ink-500">
-          <span className="text-[#e8933a]">IEIL</span> // INDIA ECONOMICS INTELLIGENCE LAB
+          <span className="text-[#f3c542]">IEIL</span> // INDIA ECONOMICS INTELLIGENCE LAB
         </p>
         <p className="mt-3 text-ink-600">INITIALISING ECONOMIC SYSTEM...</p>
         <div className="mt-3 space-y-0.5">
@@ -49,7 +49,7 @@ function BootSequence({ onDone }: { onDone: () => void }) {
               <span>
                 {s} <span className="text-ink-700">{DOTS(s)}</span>
               </span>
-              <span className="text-[#4fae86]">ONLINE</span>
+              <span className="text-[#6fae4f]">ONLINE</span>
             </motion.p>
           ))}
         </div>
@@ -93,7 +93,7 @@ export function Hero() {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            'radial-gradient(120% 80% at 50% 0%, rgba(232,147,58,0.07), transparent 55%), radial-gradient(90% 60% at 50% 100%, rgba(91,155,213,0.05), transparent 60%)',
+            'radial-gradient(120% 80% at 50% 0%, rgba(243,197,66,0.07), transparent 55%), radial-gradient(90% 60% at 50% 100%, rgba(77,111,240,0.05), transparent 60%)',
         }}
         aria-hidden
       />
@@ -110,7 +110,7 @@ export function Hero() {
           transition={{ duration: 0.7, delay: booting ? 0 : 0.1, ease: EASE_OUT }}
         >
           <div className="flex items-center gap-3">
-            <span className="h-px w-8 bg-[#e8933a]" aria-hidden />
+            <span className="h-px w-8 bg-[#f3c542]" aria-hidden />
             <span className="label-accent">India Economics Intelligence Lab</span>
           </div>
 
@@ -124,8 +124,8 @@ export function Hero() {
           </p>
 
           <div className="mt-10 flex flex-wrap items-center gap-3">
-            <Link to="/models" className="btn btn-primary">
-              Explore the Lab <ArrowRight size={13} />
+            <Link to="/labs" className="btn btn-primary">
+              Explore the Labs <ArrowRight size={13} />
             </Link>
             <Link to="/research/the-great-indian-promise" className="btn">
               Read the Research <ArrowRight size={13} />

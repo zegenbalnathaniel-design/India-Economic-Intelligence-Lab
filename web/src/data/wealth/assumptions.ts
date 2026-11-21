@@ -24,7 +24,7 @@ export const ASSETS: Record<AssetKey, AssetSpec> = {
     key: 'property',
     label: 'Property',
     short: 'PROP',
-    colour: '#e8933a',
+    colour: '#f04a32',
     description:
       'Land and buildings, including the dwelling the household lives in. Indivisible, illiquid, and for most households bought once and held.',
   },
@@ -32,7 +32,7 @@ export const ASSETS: Record<AssetKey, AssetSpec> = {
     key: 'gold',
     label: 'Gold',
     short: 'GOLD',
-    colour: '#c9a227',
+    colour: '#f3c542',
     description:
       'Bullion and ornaments. Liquid in a way property is not, and culturally embedded as a store of value and as collateral of last resort.',
   },
@@ -40,7 +40,7 @@ export const ASSETS: Record<AssetKey, AssetSpec> = {
     key: 'financial',
     label: 'Financial Assets',
     short: 'FIN',
-    colour: '#5b9bd5',
+    colour: '#4d6ff0',
     description:
       'Deposits, provident and pension balances, insurance, mutual funds and direct equity. The only bucket that compounds without being sold.',
   },
@@ -48,7 +48,7 @@ export const ASSETS: Record<AssetKey, AssetSpec> = {
     key: 'other',
     label: 'Other Physical',
     short: 'OTHER',
-    colour: '#6b7a82',
+    colour: '#6b6f80',
     description:
       'Durable goods, vehicles, livestock, machinery and business equipment. Productive for some households, depreciating for most.',
   },

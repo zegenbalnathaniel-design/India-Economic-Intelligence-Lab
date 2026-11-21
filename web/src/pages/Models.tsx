@@ -15,7 +15,7 @@ const MODELS = [
       'A deterministic accumulation model over the household portfolio the RBI’s Household Finance Committee measured. Allocation is observed; returns are assumptions, each anchored below its historical range and each editable. The model shows its full working and exports its series.',
     inputs: ['Annual saving', 'Horizon', 'Starting capital', 'Frequency', 'Four portfolio weights', 'Four assumed returns'],
     outputs: ['Portfolio return Σ wᵢRᵢ', 'Terminal wealth', 'Investment gain', 'Wealth multiple'],
-    tone: '#e8933a',
+    tone: '#f3c542',
   },
   {
     n: '02',
@@ -27,7 +27,7 @@ const MODELS = [
       'An original composite index over profitability, capital, asset quality and liquidity, built by standardising six indicators within a selected sample and averaging them into four equally-weighted pillars. Relative by construction: change the sample and every score moves.',
     inputs: ['NIM', 'ROE', 'CET1', 'NPL ratio', 'Credit-loss provisions', 'LCR'],
     outputs: ['Six z-scores', 'Four pillar scores', 'Composite on a 0–100 scale', 'Full derivation'],
-    tone: '#5b9bd5',
+    tone: '#4d6ff0',
   },
 ];
 

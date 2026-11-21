@@ -29,7 +29,7 @@ function renderInline(text: string, citations: Citation[], onCite: (n: number) =
           type="button"
           onClick={() => onCite(n)}
           title={cite ? `${cite.publisher} (${cite.year})` : undefined}
-          className="mx-[1px] align-super font-mono text-[0.65em] text-[#e8933a] transition-colors hover:text-[#f0a45a]"
+          className="mx-[1px] align-super font-mono text-[0.65em] text-[#f3c542] transition-colors hover:text-[#f7d36b]"
         >
           [{n}]
         </button>,
@@ -59,7 +59,7 @@ function BlockView({
   switch (block.kind) {
     case 'lead':
       return (
-        <p className="font-display text-[1.25rem] leading-[1.6] text-ink-100 text-pretty first-letter:float-left first-letter:mr-2 first-letter:mt-1 first-letter:font-display first-letter:text-[3.25rem] first-letter:leading-[0.82] first-letter:text-[#e8933a]">
+        <p className="font-display text-[1.25rem] leading-[1.6] text-ink-100 text-pretty first-letter:float-left first-letter:mr-2 first-letter:mt-1 first-letter:font-display first-letter:text-[3.25rem] first-letter:leading-[0.82] first-letter:text-[#f3c542]">
           {renderInline(block.text, citations, onCite)}
         </p>
       );
@@ -72,7 +72,7 @@ function BlockView({
         <ul className="my-2 space-y-3">
           {block.items.map((it, i) => (
             <li key={i} className="flex gap-3">
-              <span aria-hidden className="mt-[0.7em] h-px w-3 shrink-0 bg-[#e8933a]" />
+              <span aria-hidden className="mt-[0.7em] h-px w-3 shrink-0 bg-[#f3c542]" />
               <span className="font-display text-[1rem] leading-[1.7] text-ink-300 text-pretty">
                 {renderInline(it, citations, onCite)}
               </span>
@@ -95,11 +95,11 @@ function BlockView({
       return (
         <aside
           className="my-6 border-l-2 bg-ink-900/40 px-5 py-4"
-          style={{ borderColor: block.tone === 'caution' ? '#e8933a' : '#5b9bd5' }}
+          style={{ borderColor: block.tone === 'caution' ? '#f3c542' : '#4d6ff0' }}
         >
           <p
             className="font-mono text-2xs uppercase tracking-[0.14em]"
-            style={{ color: block.tone === 'caution' ? '#e8933a' : '#5b9bd5' }}
+            style={{ color: block.tone === 'caution' ? '#f3c542' : '#4d6ff0' }}
           >
             {block.title}
           </p>
@@ -110,7 +110,7 @@ function BlockView({
       );
     case 'quote':
       return (
-        <blockquote className="my-6 border-l-2 border-[#e8933a] pl-5">
+        <blockquote className="my-6 border-l-2 border-[#f3c542] pl-5">
           <p className="font-display text-[1.375rem] leading-[1.45] text-ink-50 text-pretty">{block.text}</p>
           {block.attribution && (
             <cite className="mt-2 block font-mono text-2xs not-italic text-ink-500">{block.attribution}</cite>
@@ -147,11 +147,11 @@ function BlockView({
                             ? {
                                 color:
                                   c === 'OBSERVED'
-                                    ? '#4fae86'
+                                    ? '#6fae4f'
                                     : c === 'DERIVED'
-                                      ? '#4aa5a8'
+                                      ? '#24a6a1'
                                       : c === 'ASSUMPTION'
-                                        ? '#e8933a'
+                                        ? '#f3c542'
                                         : undefined,
                               }
                             : undefined
@@ -172,8 +172,8 @@ function BlockView({
       );
     case 'link':
       return (
-        <Link to={block.to} className="my-5 block border border-white/[0.09] p-4 transition-colors hover:border-[#e8933a]/40 hover:bg-ink-900/50">
-          <span className="flex items-center gap-2 font-mono text-2xs uppercase tracking-[0.14em] text-[#e8933a]">
+        <Link to={block.to} className="my-5 block border border-white/[0.09] p-4 transition-colors hover:border-[#f3c542]/40 hover:bg-ink-900/50">
+          <span className="flex items-center gap-2 font-mono text-2xs uppercase tracking-[0.14em] text-[#f3c542]">
             {block.label}
           </span>
           {block.sublabel && <span className="mt-1.5 block text-[0.8125rem] text-ink-400">{block.sublabel}</span>}
@@ -211,7 +211,7 @@ function SectionView({
                     <span className="label-accent">{b.title} — interactive</span>
                     <Link
                       to="/models/figure-2"
-                      className="font-mono text-2xs uppercase tracking-[0.14em] text-ink-400 transition-colors hover:text-[#e8933a]"
+                      className="font-mono text-2xs uppercase tracking-[0.14em] text-ink-400 transition-colors hover:text-[#f3c542]"
                     >
                       Open in the Model Lab →
                     </Link>
@@ -276,7 +276,7 @@ export function ResearchReader({ paper }: { paper: Paper }) {
   return (
     <div>
       <motion.div
-        className="fixed inset-x-0 top-0 z-[60] h-px origin-left bg-[#e8933a]"
+        className="fixed inset-x-0 top-0 z-[60] h-px origin-left bg-[#f3c542]"
         style={{ scaleX: progress }}
         aria-hidden
       />
@@ -333,7 +333,7 @@ export function ResearchReader({ paper }: { paper: Paper }) {
                       {active && (
                         <motion.span
                           layoutId="reader-marker"
-                          className="absolute -left-px top-0 h-full w-px bg-[#e8933a]"
+                          className="absolute -left-px top-0 h-full w-px bg-[#f3c542]"
                         />
                       )}
                       <a
@@ -357,13 +357,13 @@ export function ResearchReader({ paper }: { paper: Paper }) {
               <div className="mt-6 border-t border-white/[0.07] pt-4">
                 <Link
                   to="/models/figure-2"
-                  className="block font-mono text-2xs uppercase leading-relaxed tracking-[0.14em] text-ink-400 transition-colors hover:text-[#e8933a]"
+                  className="block font-mono text-2xs uppercase leading-relaxed tracking-[0.14em] text-ink-400 transition-colors hover:text-[#f3c542]"
                 >
                   Figure 2 model →
                 </Link>
                 <Link
                   to="/models/bfpi/methodology"
-                  className="mt-2 block font-mono text-2xs uppercase leading-relaxed tracking-[0.14em] text-ink-400 transition-colors hover:text-[#e8933a]"
+                  className="mt-2 block font-mono text-2xs uppercase leading-relaxed tracking-[0.14em] text-ink-400 transition-colors hover:text-[#f3c542]"
                 >
                   BFPI methodology →
                 </Link>
@@ -381,7 +381,7 @@ export function ResearchReader({ paper }: { paper: Paper }) {
                   {paper.abstract}
                 </p>
 
-                <div className="mt-8 border-l-2 border-[#e8933a] pl-5">
+                <div className="mt-8 border-l-2 border-[#f3c542] pl-5">
                   <p className="label mb-2">Research question</p>
                   <p className="font-display text-[1.125rem] leading-snug text-ink-100 text-pretty">
                     {paper.question}
@@ -405,11 +405,11 @@ export function ResearchReader({ paper }: { paper: Paper }) {
                       id={`ref-${c.n}`}
                       className={cn(
                         'scroll-mt-32 border-l-2 pl-4 transition-colors duration-500',
-                        highlightCite === c.n ? 'border-[#e8933a] bg-[#e8933a]/[0.06]' : 'border-white/[0.09]',
+                        highlightCite === c.n ? 'border-[#f3c542] bg-[#f3c542]/[0.06]' : 'border-white/[0.09]',
                       )}
                     >
                       <div className="flex gap-3">
-                        <span className="font-mono text-2xs text-[#e8933a]">[{c.n}]</span>
+                        <span className="font-mono text-2xs text-[#f3c542]">[{c.n}]</span>
                         <div>
                           <p className="text-[0.875rem] leading-relaxed text-ink-200">{c.text}</p>
                           <p className="mt-1.5 flex flex-wrap items-center gap-2 font-mono text-2xs text-ink-500">
@@ -420,7 +420,7 @@ export function ResearchReader({ paper }: { paper: Paper }) {
                               href={c.url}
                               target="_blank"
                               rel="noreferrer noopener"
-                              className="inline-flex items-center gap-1 text-ink-400 transition-colors hover:text-[#e8933a]"
+                              className="inline-flex items-center gap-1 text-ink-400 transition-colors hover:text-[#f3c542]"
                             >
                               Open source <ExternalLink size={10} />
                             </a>

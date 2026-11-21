@@ -160,14 +160,14 @@ export const PILLARS: Record<PillarKey, PillarSpec> = {
  * on this evidence (spec §29).
  */
 export const BFPI_BANDS: BFPIBand[] = [
-  { min: 80, max: 100.0001, label: 'Very strong relative performance', tone: '#4fae86' },
-  { min: 70, max: 80, label: 'Strong relative performance', tone: '#57a889' },
-  { min: 60, max: 70, label: 'Above-average performance', tone: '#6ba088' },
-  { min: 50, max: 60, label: 'Around-average performance', tone: '#8d9a8d' },
-  { min: 40, max: 50, label: 'Below-average performance', tone: '#c08f5e' },
-  { min: 30, max: 40, label: 'Weak relative performance', tone: '#cb7d51' },
-  { min: 20, max: 30, label: 'Very weak relative performance', tone: '#d3675d' },
-  { min: 0, max: 20, label: 'Extremely weak relative performance', tone: '#c2554c' },
+  { min: 80, max: 100.0001, label: 'Very strong relative performance', tone: '#6fae4f' },
+  { min: 70, max: 80, label: 'Strong relative performance', tone: '#7cba5b' },
+  { min: 60, max: 70, label: 'Above-average performance', tone: '#7cba5b' },
+  { min: 50, max: 60, label: 'Around-average performance', tone: '#8b8d99' },
+  { min: 40, max: 50, label: 'Below-average performance', tone: '#d9a441' },
+  { min: 30, max: 40, label: 'Weak relative performance', tone: '#f0663f' },
+  { min: 20, max: 30, label: 'Very weak relative performance', tone: '#f04a32' },
+  { min: 0, max: 20, label: 'Extremely weak relative performance', tone: '#d93d27' },
 ];
 
 export function bandFor(bfpi: number | null): BFPIBand | null {

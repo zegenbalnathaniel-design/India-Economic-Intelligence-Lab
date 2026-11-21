@@ -46,6 +46,13 @@ export function About() {
     <>
       <PageHeader
         label="About"
+        figure={{
+          name: 'Vault',
+          accent: '#f04a32',
+          label: 'A vault door with a combination dial; turning it to the combination opens the bolts.',
+          idle: 'Turn the dial.',
+          caption: (read) => (!read || read === 'rest' ? null : read.includes('open') ? 'A model is not reality. It is a way of asking questions about reality.' : 'Keep turning…'),
+        }}
         title="Why IEIL?"
         lede="Economics is often presented as something to read rather than something to interrogate. A paper states a result; a reader accepts or doubts it; nothing in between is available. IEIL exists to put something in between."
       />
@@ -111,7 +118,7 @@ export function About() {
                 transition={{ delay: Math.min(i * 0.05, 0.3), duration: 0.5, ease: EASE_OUT }}
                 className="bg-ink-950 p-5 md:p-6"
               >
-                <span className="metric text-2xl text-[#e8933a] opacity-40">{p.n}</span>
+                <span className="metric text-2xl text-[#f3c542] opacity-40">{p.n}</span>
                 <h3 className="display mt-3 text-[1.1875rem] leading-snug">{p.title}</h3>
                 <p className="mt-3 text-[0.875rem] leading-relaxed text-ink-400 text-pretty">{p.body}</p>
               </motion.div>

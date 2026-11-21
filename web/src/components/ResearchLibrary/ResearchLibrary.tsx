@@ -13,9 +13,9 @@ const STATUS_LABEL: Record<LibraryEntry['status'], string> = {
 };
 
 const STATUS_TONE: Record<LibraryEntry['status'], string> = {
-  published: '#e8933a',
-  methodology: '#5b9bd5',
-  'in-preparation': '#5d6a72',
+  published: '#f3c542',
+  methodology: '#4d6ff0',
+  'in-preparation': '#6b6f80',
 };
 
 export function ResearchLibrary({ limit }: { limit?: number }) {
@@ -43,7 +43,7 @@ export function ResearchLibrary({ limit }: { limit?: number }) {
             className={cn(
               'border px-2.5 py-1 font-mono text-2xs uppercase tracking-[0.12em] transition-colors',
               category === null
-                ? 'border-[#e8933a]/50 bg-[#e8933a]/10 text-[#e8933a]'
+                ? 'border-[#f3c542]/50 bg-[#f3c542]/10 text-[#f3c542]'
                 : 'border-white/[0.09] text-ink-500 hover:text-ink-200',
             )}
           >
@@ -61,7 +61,7 @@ export function ResearchLibrary({ limit }: { limit?: number }) {
                 className={cn(
                   'border px-2.5 py-1 font-mono text-2xs uppercase tracking-[0.12em] transition-colors',
                   n === 0 && 'cursor-not-allowed border-white/[0.05] text-ink-700',
-                  n > 0 && category === c && 'border-[#e8933a]/50 bg-[#e8933a]/10 text-[#e8933a]',
+                  n > 0 && category === c && 'border-[#f3c542]/50 bg-[#f3c542]/10 text-[#f3c542]',
                   n > 0 && category !== c && 'border-white/[0.09] text-ink-500 hover:text-ink-200',
                 )}
               >
@@ -102,7 +102,7 @@ export function ResearchLibrary({ limit }: { limit?: number }) {
                   {e.readingMinutes ? ` · ${e.readingMinutes} min` : ''}
                 </span>
                 {e.to && (
-                  <span className="flex items-center gap-1.5 font-mono text-2xs uppercase tracking-[0.14em] text-ink-400 transition-colors group-hover:text-[#e8933a]">
+                  <span className="flex items-center gap-1.5 font-mono text-2xs uppercase tracking-[0.14em] text-ink-400 transition-colors group-hover:text-[#f3c542]">
                     Read <ArrowRight size={12} />
                   </span>
                 )}

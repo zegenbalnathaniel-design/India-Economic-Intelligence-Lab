@@ -35,6 +35,12 @@ export function BFPIMethodology() {
     <>
       <PageHeader
         label="Methodology"
+        figure={{
+          name: 'Elevator',
+          label: 'An elevator against four floors, each a step in the research process.',
+          idle: 'Move the pointer up and down the shaft to step through the process.',
+          caption: (read) => ({ ground: '01 · QUESTION', 'floor 1': '02 · DATA', 'floor 2': '03 · MODEL & SIMULATION', 'floor 3': '04 · INTERPRETATION' } as Record<string, string>)[read] ?? null,
+        }}
         title="How BFPI is constructed"
         lede="Every choice behind the index, stated and defended: which indicators, which direction, why equal weights, why z-scores, why a 0–100 scale, and what the index cannot tell you."
         actions={
@@ -70,11 +76,11 @@ export function BFPIMethodology() {
               return (
                 <div key={k} className="border-l-2 border-white/[0.12] pl-4">
                   <div className="flex flex-wrap items-baseline gap-3">
-                    <span className="font-mono text-2xs uppercase tracking-[0.14em] text-[#e8933a]">{s.short}</span>
+                    <span className="font-mono text-2xs uppercase tracking-[0.14em] text-[#f3c542]">{s.short}</span>
                     <span className="text-[0.9375rem] text-ink-100">{s.label}</span>
                     <span
                       className="font-mono text-2xs"
-                      style={{ color: s.direction > 0 ? '#4fae86' : '#d3675d' }}
+                      style={{ color: s.direction > 0 ? '#6fae4f' : '#f04a32' }}
                     >
                       d = {s.direction > 0 ? '+1' : '−1'} ({s.direction > 0 ? 'higher is better' : 'lower is better'})
                     </span>
@@ -124,7 +130,7 @@ export function BFPIMethodology() {
                 <div key={k} className="bg-ink-950 p-4">
                   <div className="flex flex-wrap items-baseline justify-between gap-2">
                     <span className="text-[0.9375rem] text-ink-100">{p.label}</span>
-                    <span className="metric text-sm text-[#e8933a]">{(p.weight * 100).toFixed(0)}%</span>
+                    <span className="metric text-sm text-[#f3c542]">{(p.weight * 100).toFixed(0)}%</span>
                   </div>
                   <p className="mt-1.5 font-mono text-2xs text-ink-500">
                     {p.indicators.map((i) => INDICATORS[i].short).join(' + ')}
@@ -202,7 +208,7 @@ export function BFPIMethodology() {
               'A z-score requires at least one other bank in the sample to have reported the same indicator. Where none has, the indicator cannot be standardised and is treated as unavailable.',
             ].map((t) => (
               <li key={t} className="flex gap-3 text-[0.9375rem] leading-relaxed text-ink-300">
-                <span aria-hidden className="mt-[0.65em] h-px w-3 shrink-0 bg-[#e8933a]" />
+                <span aria-hidden className="mt-[0.65em] h-px w-3 shrink-0 bg-[#f3c542]" />
                 {t}
               </li>
             ))}
@@ -236,7 +242,7 @@ export function BFPIMethodology() {
               'No causal claim is supported. The index describes positions; it does not explain them and does not predict what follows.',
             ].map((t) => (
               <li key={t} className="flex gap-3 text-[0.9375rem] leading-relaxed text-ink-300">
-                <span aria-hidden className="mt-[0.65em] h-px w-3 shrink-0 bg-[#d3675d]" />
+                <span aria-hidden className="mt-[0.65em] h-px w-3 shrink-0 bg-[#f04a32]" />
                 {t}
               </li>
             ))}

@@ -241,8 +241,8 @@ export function WealthChart({ scenario, baseline, showBaseline, aspect = 'wide' 
       >
         <defs>
           <linearGradient id="gain-fill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#e8933a" stopOpacity="0.22" />
-            <stop offset="100%" stopColor="#e8933a" stopOpacity="0.015" />
+            <stop offset="0%" stopColor="#f3c542" stopOpacity="0.22" />
+            <stop offset="100%" stopColor="#f3c542" stopOpacity="0.015" />
           </linearGradient>
         </defs>
 
@@ -273,7 +273,7 @@ export function WealthChart({ scenario, baseline, showBaseline, aspect = 'wide' 
             ref={contribRef}
             d={buildPath(target.xs, target.contributed)}
             fill="none"
-            stroke="#5d6a72"
+            stroke="#6b6f80"
             strokeWidth={1.25}
             strokeDasharray="4 4"
             vectorEffect="non-scaling-stroke"
@@ -283,7 +283,7 @@ export function WealthChart({ scenario, baseline, showBaseline, aspect = 'wide' 
             ref={baselineRef}
             d={buildPath(target.xs, target.baseline)}
             fill="none"
-            stroke="#5b9bd5"
+            stroke="#4d6ff0"
             strokeWidth={1.5}
             strokeDasharray="6 4"
             vectorEffect="non-scaling-stroke"
@@ -294,7 +294,7 @@ export function WealthChart({ scenario, baseline, showBaseline, aspect = 'wide' 
             ref={scenarioRef}
             d={buildPath(target.xs, target.scenario)}
             fill="none"
-            stroke="#e8933a"
+            stroke="#f3c542"
             strokeWidth={2.25}
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -308,19 +308,19 @@ export function WealthChart({ scenario, baseline, showBaseline, aspect = 'wide' 
                 x2={x(hovered.year)}
                 y1={0}
                 y2={ih}
-                stroke="rgba(232,147,58,0.4)"
+                stroke="rgba(243,197,66,0.4)"
                 strokeWidth={1}
                 vectorEffect="non-scaling-stroke"
               />
-              <circle cx={x(hovered.year)} cy={y(hovered.value)} r={3.5} fill="#e8933a" />
-              <circle cx={x(hovered.year)} cy={y(hovered.contributed)} r={2.5} fill="#5d6a72" />
+              <circle cx={x(hovered.year)} cy={y(hovered.value)} r={3.5} fill="#f3c542" />
+              <circle cx={x(hovered.year)} cy={y(hovered.contributed)} r={2.5} fill="#6b6f80" />
               {showBaseline && hoveredBaseline && (
-                <circle cx={x(hoveredBaseline.year)} cy={y(hoveredBaseline.value)} r={2.5} fill="#5b9bd5" />
+                <circle cx={x(hoveredBaseline.year)} cy={y(hoveredBaseline.value)} r={2.5} fill="#4d6ff0" />
               )}
             </g>
           )}
 
-          <circle ref={markerRef} cx={target.markerX} cy={target.markerY} r={4} fill="#e8933a" />
+          <circle ref={markerRef} cx={target.markerX} cy={target.markerY} r={4} fill="#f3c542" />
         </g>
       </svg>
 
@@ -335,12 +335,12 @@ export function WealthChart({ scenario, baseline, showBaseline, aspect = 'wide' 
           <p className="font-mono text-2xs uppercase tracking-[0.14em] text-ink-500">Year {hovered.year}</p>
           <dl className="mt-1.5 space-y-0.5">
             <div className="flex items-baseline gap-3">
-              <dt className="w-24 font-mono text-2xs text-[#e8933a]">Your scenario</dt>
+              <dt className="w-24 font-mono text-2xs text-[#f3c542]">Your scenario</dt>
               <dd className="metric text-xs">{rupees(hovered.value)}</dd>
             </div>
             {showBaseline && hoveredBaseline && (
               <div className="flex items-baseline gap-3">
-                <dt className="w-24 font-mono text-2xs text-[#5b9bd5]">Baseline</dt>
+                <dt className="w-24 font-mono text-2xs text-[#4d6ff0]">Baseline</dt>
                 <dd className="metric text-xs">{rupees(hoveredBaseline.value)}</dd>
               </div>
             )}
@@ -357,11 +357,11 @@ export function WealthChart({ scenario, baseline, showBaseline, aspect = 'wide' 
       )}
 
       <div className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-white/[0.07] pt-3">
-        <Legend colour="#e8933a" label="Your scenario" />
-        {showBaseline && <Legend colour="#5b9bd5" label="Research baseline" dashed />}
-        <Legend colour="#5d6a72" label="Total contributed" dashed />
+        <Legend colour="#f3c542" label="Your scenario" />
+        {showBaseline && <Legend colour="#4d6ff0" label="Research baseline" dashed />}
+        <Legend colour="#6b6f80" label="Total contributed" dashed />
         <span className="flex items-center gap-2 font-mono text-2xs text-ink-500">
-          <span className="h-2.5 w-4" style={{ background: 'rgba(232,147,58,0.2)' }} aria-hidden />
+          <span className="h-2.5 w-4" style={{ background: 'rgba(243,197,66,0.2)' }} aria-hidden />
           Investment gain
         </span>
         <span className="ml-auto flex gap-4 font-mono text-2xs text-ink-700">

@@ -41,7 +41,7 @@ export function Glossary({ initialTerm }: { initialTerm?: string }) {
             className={cn(
               'border px-2 py-1 font-mono text-2xs uppercase tracking-[0.12em] transition-colors',
               category === null
-                ? 'border-[#e8933a]/50 bg-[#e8933a]/10 text-[#e8933a]'
+                ? 'border-[#f3c542]/50 bg-[#f3c542]/10 text-[#f3c542]'
                 : 'border-white/[0.09] text-ink-500 hover:text-ink-200',
             )}
           >
@@ -56,7 +56,7 @@ export function Glossary({ initialTerm }: { initialTerm?: string }) {
               className={cn(
                 'border px-2 py-1 font-mono text-2xs uppercase tracking-[0.12em] transition-colors',
                 category === c
-                  ? 'border-[#e8933a]/50 bg-[#e8933a]/10 text-[#e8933a]'
+                  ? 'border-[#f3c542]/50 bg-[#f3c542]/10 text-[#f3c542]'
                   : 'border-white/[0.09] text-ink-500 hover:text-ink-200',
               )}
             >
@@ -90,7 +90,7 @@ function TermRow({ term, open, onToggle }: { term: GlossaryTerm; open: boolean; 
           <span className="flex flex-wrap items-baseline gap-2.5">
             <span className="text-[0.9375rem] text-ink-100">{term.term}</span>
             {term.abbreviation && (
-              <span className="font-mono text-2xs uppercase tracking-[0.14em] text-[#e8933a]">
+              <span className="font-mono text-2xs uppercase tracking-[0.14em] text-[#f3c542]">
                 {term.abbreviation}
               </span>
             )}
@@ -122,8 +122,8 @@ function TermRow({ term, open, onToggle }: { term: GlossaryTerm; open: boolean; 
               )}
 
               {term.caution && (
-                <p className="border-l-2 border-[#e8933a] pl-3 text-[0.8125rem] leading-relaxed text-ink-400">
-                  <span className="font-mono text-2xs uppercase tracking-[0.14em] text-[#e8933a]">Caution · </span>
+                <p className="border-l-2 border-[#f3c542] pl-3 text-[0.8125rem] leading-relaxed text-ink-400">
+                  <span className="font-mono text-2xs uppercase tracking-[0.14em] text-[#f3c542]">Caution · </span>
                   {term.caution}
                 </p>
               )}

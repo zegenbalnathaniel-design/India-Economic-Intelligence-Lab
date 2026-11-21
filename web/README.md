@@ -30,6 +30,14 @@ Requires Node 20+. No API keys, no backend, no analytics.
 | `/experiments` | Single-variable experiments on wealth and banking |
 | `/india` | State economics map and the economic timeline |
 | `/glossary` | Terms, formulas, and what each measure cannot tell you |
+| `/labs` | The seven research labs, ported from the Streamlit supplement |
+| `/labs/states` | State Economy Lab — σ/β convergence, tile map, rankings, comparison workbench |
+| `/labs/housing` | Housing Intelligence Lab — RESIDEX prices, price-to-income, EMI, RPIPI, ICHASI |
+| `/labs/inequality` | Inequality & Financialisation Lab — WIL Lorenz curves and Ginis, AIDIS, Findex/WDI |
+| `/labs/structural` | Structural Transformation Lab — output vs employment shares, RLP, peers, states |
+| `/labs/relationships` | Economic Relationships Lab — 15 hypotheses and a multiple-regression workbench |
+| `/labs/transmission` | Macro Transmission Simulator — four cited shock chains, editable parameter sets |
+| `/labs/macro` | India Macro & World — latest monthly releases, RBI decisions, WDI vs peers |
 
 `⌘K` (or `/`) opens the command palette, which reaches every indicator, bank, glossary
 term and paper section in the lab.
@@ -146,3 +154,27 @@ BFPI is an original composite index, not an official measure or rating, and does
 establish that any bank is best, safest or strongest. Figure 2 results are conditional on
 the assumptions entered; historical returns do not guarantee future performance. Nothing
 here is financial advice.
+
+
+---
+
+## The labs
+
+The seven labs reuse the Streamlit supplement's own data and analysis code. `scripts/export_lab_data.py`
+runs the repository's Python loaders and analysis modules and writes one JSON bundle per lab to
+`src/data/labs/`, including a snapshot of every World Bank series the Streamlit pages fetched live, so
+the static site never depends on an API being up. Regenerate with:
+
+```bash
+# from the repository root
+SSL_CERT_FILE=$(.venv/bin/python -m certifi) .venv/bin/python web/scripts/export_lab_data.py
+```
+
+The interactive mathematics is ported to TypeScript under `src/models/` (`stats/`, `convergence/`,
+`housing/`, `inequality/`, `structural/`, `transmission/`). Each bundle also carries `reference` results
+computed by the Python; `src/models/labs.test.ts` and `src/models/stats/stats.test.ts` assert the
+TypeScript engines reproduce them (OLS with classical/HC1/HAC errors, Breusch–Pagan, Jarque–Bera,
+σ/β convergence, EMI/RPIPI/ICHASI, lower-bound Gini, every transmission scenario).
+
+Each lab opens with an interactive [Hairline](https://www.npmjs.com/package/@lucasmarkes/hairline)
+figure lit in the lab's accent, whose captions are real labels from the lab's data.

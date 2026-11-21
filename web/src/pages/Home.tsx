@@ -6,6 +6,7 @@ import { EconomicPulse } from '../components/EconomicPulse/EconomicPulse';
 import { EconomicTimeline } from '../components/EconomicTimeline/EconomicTimeline';
 import { Figure2Lab, WealthExperiment } from '../components/Figure2Lab/Figure2Lab';
 import { Hero } from '../components/Hero/Hero';
+import { LabsReel } from '../components/Lab/LabsReel';
 import { IndiaMap } from '../components/IndiaMap/IndiaMap';
 import { ResearchLibrary } from '../components/ResearchLibrary/ResearchLibrary';
 import { SectionShell } from '../components/ui';
@@ -68,12 +69,37 @@ export function Home() {
         </Suspense>
       </SectionShell>
 
+      <section id="labs" className="relative border-t border-white/[0.07] pt-20 md:pt-28">
+        <div className="mx-auto max-w-[1400px] px-5 md:px-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.7, ease: EASE_OUT }}
+            className="mb-10 md:mb-4"
+          >
+            <div className="flex items-baseline gap-4">
+              <span className="label-accent">Labs</span>
+              <span className="label">Seven research labs</span>
+            </div>
+            <h2 className="display mt-5 max-w-4xl text-balance text-[2rem] leading-[1.08] md:text-[3.25rem]">
+              One economy, taken apart <span className="spectrum-text">seven ways</span>
+            </h2>
+            <p className="mt-5 max-w-3xl text-[0.95rem] leading-relaxed text-ink-400">
+              States, housing, inequality, structural change, economic relationships, macro transmission and India against the
+              world — each on real data, each with its working shown. Keep scrolling.
+            </p>
+          </motion.div>
+        </div>
+        <LabsReel />
+      </section>
+
       {/* ---------------------- Featured research ---------------------- */}
       <section id="featured" className="relative border-t border-white/[0.07] py-20 md:py-32">
         <div
           className="pointer-events-none absolute inset-0"
           style={{
-            background: 'radial-gradient(70% 50% at 20% 30%, rgba(232,147,58,0.06), transparent 65%)',
+            background: 'radial-gradient(70% 50% at 20% 30%, rgba(243,197,66,0.06), transparent 65%)',
           }}
           aria-hidden
         />
@@ -113,7 +139,7 @@ export function Home() {
                 ['+28%', 'terminal wealth from shifting 15 pp into financial assets', 'Under the stated assumptions, over 30 years'],
               ].map(([stat, label, sub]) => (
                 <div key={stat} className="bg-ink-950 p-5 md:p-6">
-                  <p className="metric text-[2.5rem] leading-none text-[#e8933a]">{stat}</p>
+                  <p className="metric text-[2.5rem] leading-none text-[#f3c542]">{stat}</p>
                   <p className="mt-3 text-[0.875rem] leading-snug text-ink-200">{label}</p>
                   <p className="mt-2 font-mono text-2xs leading-snug text-ink-600">{sub}</p>
                 </div>

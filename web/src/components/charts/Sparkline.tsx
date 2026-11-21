@@ -8,7 +8,7 @@ import type { SeriesPoint } from '../../data/types';
  */
 export function Sparkline({
   series,
-  colour = '#e8933a',
+  colour = '#f3c542',
   height = 32,
   showAxis = false,
 }: {
@@ -93,7 +93,7 @@ export function Sparkline({
             x2={px}
             y1={pad}
             y2={H - pad}
-            stroke="rgba(129,142,150,0.3)"
+            stroke="rgba(139,141,153,0.3)"
             strokeWidth={1}
             strokeDasharray="1 3"
             vectorEffect="non-scaling-stroke"

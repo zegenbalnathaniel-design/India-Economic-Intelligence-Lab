@@ -31,7 +31,7 @@ export function EconomicTimeline({ initialId }: { initialId?: string }) {
                       className={cn(
                         'absolute left-0 top-[8px] block h-2.5 w-2.5 rounded-full border transition-colors',
                         active
-                          ? 'border-[#e8933a] bg-[#e8933a]'
+                          ? 'border-[#f3c542] bg-[#f3c542]'
                           : 'border-ink-600 bg-ink-950 group-hover:border-ink-400',
                       )}
                       layout
@@ -40,7 +40,7 @@ export function EconomicTimeline({ initialId }: { initialId?: string }) {
                   <span
                     className={cn(
                       'mt-1 block font-mono text-xs transition-colors',
-                      active ? 'text-[#e8933a]' : 'text-ink-500 group-hover:text-ink-300',
+                      active ? 'text-[#f3c542]' : 'text-ink-500 group-hover:text-ink-300',
                     )}
                   >
                     {e.year}
@@ -75,7 +75,7 @@ export function EconomicTimeline({ initialId }: { initialId?: string }) {
               return (
                 <>
                   <div className="flex flex-wrap items-baseline gap-4">
-                    <span className="metric text-3xl text-[#e8933a]">{e.year}</span>
+                    <span className="metric text-3xl text-[#f3c542]">{e.year}</span>
                     <h3 className="display text-2xl">{e.title}</h3>
                   </div>
                   <p className="mt-1.5 font-mono text-2xs uppercase tracking-[0.14em] text-ink-500">{e.kicker}</p>
