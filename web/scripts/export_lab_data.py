@@ -37,9 +37,13 @@ from analysis import inequality as I  # noqa: E402
 from analysis import relationships as R  # noqa: E402
 from analysis import states as S  # noqa: E402
 from analysis import structural as ST  # noqa: E402
+from analysis import banking as BK  # noqa: E402
+from analysis import research_library as LIB  # noqa: E402
 from analysis import transmission as T  # noqa: E402
+from analysis import wealth as WL  # noqa: E402
 from analysis import workbench_catalogue as W  # noqa: E402
 from data_sources import loaders as L  # noqa: E402
+from data_sources import registry as REG  # noqa: E402
 from data_sources import wdi_financial as WF  # noqa: E402
 from data_sources import worldbank as WB  # noqa: E402
 
@@ -374,7 +378,123 @@ def export_transmission() -> None:
     })
 
 
+# ---------------------------------------------------------------------------
+# Wealth (composition effect, Monte Carlo, r - g, Paper A Figure 2)
+# ---------------------------------------------------------------------------
+
+def export_wealth() -> None:
+    ret = L.load_paper_a_returns()
+    fig2 = L.load_paper_a_figure2()
+    default = WL.composition_effect(100000, 30, WL.DEFAULT_ALLOCATION, inflation=0.05)
+    norebal = WL.composition_effect(100000, 30, WL.DEFAULT_ALLOCATION, inflation=0.05, rebalance=False)
+    pr = ret.set_index("asset")["nominal_return_1991_2021_pct"]
+    paper_r = {"Listed equity": pr["Financial assets: listed equity"] / 100,
+               "Residential property": pr["Residential property"] / 100, "Gold": pr["Gold"] / 100,
+               "Typical household portfolio": pr["Representative household portfolio"] / 100,
+               "Bank deposits": pr["Financial assets: deposits"] / 100}
+    opts = {"All listed equity": paper_r["Listed equity"],
+            "75% equity / 25% household mix": WL.equity_mix_return(.75, paper_r["Listed equity"], paper_r["Typical household portfolio"]),
+            "Typical household portfolio": paper_r["Typical household portfolio"]}
+    rank = WL.allocation_ranking(opts, 100000, 30, 0.065)
+    write("wealth", {
+        "retrieved": NOW,
+        "assetKeys": list(WL.ASSET_KEYS),
+        "assetLabels": dict(WL.ASSET_LABELS),
+        "defaultReturns": dict(WL.DEFAULT_NOMINAL_RETURNS),
+        "defaultVolatility": dict(WL.DEFAULT_VOLATILITY),
+        "defaultAllocation": dict(WL.DEFAULT_ALLOCATION),
+        "liquidity": dict(WL.LIQUIDITY),
+        "paperReturns": records(ret),
+        "paperR": paper_r,
+        "figure2": records(fig2),
+        "reference": {
+            "composition": {"final": float(default.nominal_wealth[-1]), "real": float(default.real_wealth[-1]),
+                            "r": default.weighted_return, "rReal": default.real_weighted_return,
+                            "noRebalFinal": float(norebal.nominal_wealth[-1])},
+            "ranking": records(rank),
+            "single": WL.single_asset_projection(100000, 30, 0.12, 0.05),
+            "excess": WL.implied_excess_growth(3.83, 5.75, 27),
+        },
+    })
+
+
+# ---------------------------------------------------------------------------
+# Banking (iBFPI vs repo rate)
+# ---------------------------------------------------------------------------
+
+def export_banking() -> None:
+    panel = L.load_bank_panel()
+    repo = L.load_repo_rate()
+    scored = BK.compute_ibfpi(panel)
+    agg = BK.cross_bank_aggregate(scored)
+    merged = agg.merge(repo, on="period", how="inner").dropna()
+    corr = BK.spearman(merged["repo_rate"], merged["ibfpi_system"])
+    lab, rising, falling, stable = BK.regime_split(merged)
+    fe = BK.fixed_effects_regression(scored, repo)
+    loo = BK.leave_one_out(panel, repo)
+    flips = BK.direction_flips(panel, repo)
+    sens = BK.weight_sensitivity(panel, repo)
+    decisions = L.load_rbi_policy_decisions()
+    write("banking", {
+        "retrieved": NOW,
+        "panel": [[r.bank, r.period.strftime("%Y-%m-%d"), *[clean(getattr(r, c)) for c in BK.INDICATOR_DIRECTION]]
+                  for r in panel.itertuples()],
+        "indicators": list(BK.INDICATOR_DIRECTION),
+        "directions": dict(BK.INDICATOR_DIRECTION),
+        "labels": dict(BK.INDICATOR_LABELS),
+        "madScale": BK.MAD_SCALE,
+        "repo": [[d.strftime("%Y-%m-%d"), float(v)] for d, v in zip(repo["period"], repo["repo_rate"])],
+        "latestDecision": records(decisions.tail(1))[0],
+        "reference": {
+            "system": records(agg.assign(period=agg["period"].dt.strftime("%Y-%m-%d"))),
+            "rho": [corr.rho, corr.p_value, corr.n],
+            "regimes": {k: [c.rho, c.p_value, c.n] for k, c in (("rising", rising), ("falling", falling), ("stable", stable))},
+            "regimeLabels": lab["regime"].tolist(),
+            "fe": [{"label": r.label, "slope": r.slope, "se": r.se, "p": r.p_value, "n": r.n, "seType": r.se_type} for r in fe],
+            "loo": records(loo),
+            "flips": records(flips),
+            "sensitivity": {"min": float(sens["rho"].min()), "max": float(sens["rho"].max()),
+                            "median": float(sens["rho"].median()), "shareNegative": float((sens["rho"] < 0).mean())},
+        },
+    })
+
+
+# ---------------------------------------------------------------------------
+# Research library + limitations robustness text
+# ---------------------------------------------------------------------------
+
+def export_library() -> None:
+    invs = []
+    ids = set()
+    for key, fn in LIB.INVESTIGATIONS.items():
+        inv = fn()
+        ids.update(inv.data)
+        invs.append({"key": key, "id": inv.id, "title": inv.title, "question": inv.question,
+                     "motivation": inv.motivation, "data": list(inv.data), "method": inv.method,
+                     "tables": {k: records(v) for k, v in inv.tables.items()},
+                     "facts": inv.facts, "statistics": inv.statistics, "interpretation": inv.interpretation,
+                     "hypotheses": inv.hypotheses, "limitations": inv.limitations,
+                     "furtherQuestions": inv.further_questions, "charts": inv.charts,
+                     "settings": {k: str(v) for k, v in inv.settings.items()}})
+    sources = {}
+    for i in sorted(ids):
+        try:
+            d = REG.get(i)
+        except Exception:  # noqa: BLE001
+            continue
+        sources[i] = {"name": d.name, "publisher": d.publisher, "url": d.url, "status": d.status,
+                      "period": d.period, "limitations": d.limitations}
+    rob = C.sigma_robustness(L.load_nsdp_spliced())
+    write("library", {
+        "retrieved": NOW,
+        "investigations": invs,
+        "sources": sources,
+        "notYetPossible": [list(x) for x in LIB.NOT_YET_POSSIBLE],
+        "sigmaRobustness": records(rob),
+    })
+
+
 if __name__ == "__main__":
     for fn in (export_states, export_housing, export_inequality, export_structural, export_macro,
-               export_relationships, export_transmission):
+               export_relationships, export_transmission, export_wealth, export_banking, export_library):
         fn()

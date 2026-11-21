@@ -30,7 +30,9 @@ Requires Node 20+. No API keys, no backend, no analytics.
 | `/experiments` | Single-variable experiments on wealth and banking |
 | `/india` | State economics map and the economic timeline |
 | `/glossary` | Terms, formulas, and what each measure cannot tell you |
-| `/labs` | The seven research labs, ported from the Streamlit supplement |
+| `/labs` | The ten research labs, ported from the Streamlit supplement |
+| `/labs/wealth` | Wealth & Inequality Lab — ladder, composition effect, Monte Carlo, single assets, r − g, Paper A Figure 2 |
+| `/labs/banking` | Banking & Monetary Policy Lab — iBFPI vs the repo rate, regimes, fixed effects, robustness (illustrative panel) |
 | `/labs/states` | State Economy Lab — σ/β convergence, tile map, rankings, comparison workbench |
 | `/labs/housing` | Housing Intelligence Lab — RESIDEX prices, price-to-income, EMI, RPIPI, ICHASI |
 | `/labs/inequality` | Inequality & Financialisation Lab — WIL Lorenz curves and Ginis, AIDIS, Findex/WDI |
@@ -38,6 +40,8 @@ Requires Node 20+. No API keys, no backend, no analytics.
 | `/labs/relationships` | Economic Relationships Lab — 15 hypotheses and a multiple-regression workbench |
 | `/labs/transmission` | Macro Transmission Simulator — four cited shock chains, editable parameter sets |
 | `/labs/macro` | India Macro & World — latest monthly releases, RBI decisions, WDI vs peers |
+| `/labs/library` | Research Library — five computed investigations, downloadable briefs |
+| `/limitations` | What the lab cannot tell you, module by module |
 
 `⌘K` (or `/`) opens the command palette, which reaches every indicator, bank, glossary
 term and paper section in the lab.
@@ -160,7 +164,7 @@ here is financial advice.
 
 ## The labs
 
-The seven labs reuse the Streamlit supplement's own data and analysis code. `scripts/export_lab_data.py`
+The labs reuse the Streamlit supplement's own data and analysis code. `scripts/export_lab_data.py`
 runs the repository's Python loaders and analysis modules and writes one JSON bundle per lab to
 `src/data/labs/`, including a snapshot of every World Bank series the Streamlit pages fetched live, so
 the static site never depends on an API being up. Regenerate with:
@@ -171,10 +175,10 @@ SSL_CERT_FILE=$(.venv/bin/python -m certifi) .venv/bin/python web/scripts/export
 ```
 
 The interactive mathematics is ported to TypeScript under `src/models/` (`stats/`, `convergence/`,
-`housing/`, `inequality/`, `structural/`, `transmission/`). Each bundle also carries `reference` results
-computed by the Python; `src/models/labs.test.ts` and `src/models/stats/stats.test.ts` assert the
+`housing/`, `inequality/`, `structural/`, `transmission/`, `wealth/`, `banking/`). Each bundle also carries `reference` results
+computed by the Python; `src/models/labs.test.ts`, `src/models/wealthBanking.test.ts` and `src/models/stats/stats.test.ts` assert the
 TypeScript engines reproduce them (OLS with classical/HC1/HAC errors, Breusch–Pagan, Jarque–Bera,
-σ/β convergence, EMI/RPIPI/ICHASI, lower-bound Gini, every transmission scenario).
+σ/β convergence, EMI/RPIPI/ICHASI, lower-bound Gini, every transmission scenario, the composition effect and Figure 2, and iBFPI with its regime split, fixed effects, leave-one-out and direction flips). The Monte Carlo uses a seeded generator rather than NumPy's, so it is tested statistically and against the deterministic path at zero volatility.
 
 Each lab opens with an interactive [Hairline](https://www.npmjs.com/package/@lucasmarkes/hairline)
 figure lit in the lab's accent, whose captions are real labels from the lab's data.

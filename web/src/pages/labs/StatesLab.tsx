@@ -8,6 +8,7 @@ import {
   Legend,
   Line,
   LineChart,
+  ReferenceLine,
   ResponsiveContainer,
   Scatter,
   Tooltip,
@@ -55,7 +56,7 @@ const lab = labBySlug('states')!;
 const ROWS = data.spliced as unknown as Row[];
 const PANEL = data.panel as [string, string, string, number | null][];
 type IndKey = keyof typeof data.indicators;
-const IND = data.indicators as Record<string, { key: string; label: string; unit: string; status: string; source: string; explainer: string }>;
+const IND = data.indicators as Record<string, { key: string; label: string; unit: string; status: string; source: string; explainer: string; priceBasis: string }>;
 const MEASURES = data.measures as Record<MeasureKey, { key: MeasureKey; label: string; unit: string; formula: string; reading: string }>;
 
 const { wide: WIDE, years: YEARS } = widePanel(ROWS);
@@ -66,6 +67,14 @@ const periodsFor = (ind: string) =>
   [...new Set(PANEL.filter((r) => r[1] === ind && r[3] !== null).map((r) => r[2]))].sort((a, b) => fyStart(a) - fyStart(b));
 const valuesFor = (ind: string, period: string) =>
   new Map(PANEL.filter((r) => r[1] === ind && r[2] === period && r[3] !== null).map((r) => [r[0], r[3] as number]));
+
+const PANEL_STATES = [...new Set(PANEL.map((r) => r[0]))].filter((x) => !/india/i.test(x)).sort();
+const NOTES = data.notes as Record<string, string>;
+const BENCH = data.benchmarks as { indicator: string; period: string; value: number }[];
+const benchmark = (ind: string, period: string) => BENCH.find((b) => b.indicator === ind && b.period === period)?.value ?? null;
+const MULTI_YEAR = Object.keys(IND).filter((k) => periodsFor(k).length > 2);
+const fmtInd = (ind: string, v: number | null | undefined) =>
+  v === null || v === undefined ? '—' : IND[ind].unit === '%' ? fmt.pct(v, 1) : `₹${Math.round(v).toLocaleString('en-IN')}${IND[ind].unit.includes('month') ? '/mo' : ''}`;
 
 // Hero: Branches — main line = highest latest per-capita NSDP, branch = fastest average growth.
 const heroMain = ALL_STATES.filter((s) => WIDE.get(s)!.has(LATEST))
@@ -147,6 +156,60 @@ export function StatesLab() {
     [wbStates, wbBase],
   );
   const colourOf = (s: string) => SERIES[wbStates.indexOf(s) % SERIES.length];
+
+  // G · unemployment
+  const unemp = useMemo(() => [...valuesFor('plfs_unemployment', '2023-24').entries()].map(([state, value]) => ({ state, value })).sort((a, b) => b.value - a.value), []);
+  const unempIndia = benchmark('plfs_unemployment', '2023-24');
+
+  // H · lookup
+  const [look, setLook] = useState('Kerala');
+  const profile = useMemo(
+    () =>
+      indKeys.map((k) => {
+        const rows = PANEL.filter((r) => r[0] === look && r[1] === k).sort((a, b) => fyStart(a[2]) - fyStart(b[2]));
+        const withVal = rows.filter((r) => r[3] !== null);
+        const last = withVal[withVal.length - 1];
+        const reason = !rows.length ? 'state not in this source' : !last ? NOTES[`${look}|${k}|${rows[rows.length - 1][2]}`] ?? 'blank in source' : '';
+        return { key: k, label: IND[k].label, status: IND[k].status, period: last?.[2] ?? '—', value: last?.[3] ?? null, india: last ? benchmark(k, last[2]) : null, reason };
+      }),
+    [look, indKeys],
+  );
+
+  // I · side by side
+  const [cmpStates, setCmpStates] = useState<string[]>(['Bihar', 'Karnataka', 'Maharashtra', 'Uttar Pradesh']);
+  const [cmpInds, setCmpInds] = useState<string[]>(['nsdp_pc_current_rbi', 'hces_urban_mpce', 'plfs_unemployment']);
+  const sideBySide = useMemo(
+    () =>
+      cmpInds.map((k) => {
+        const ps = periodsFor(k);
+        const common = [...ps].reverse().find((p) => cmpStates.every((st) => valuesFor(k, p).has(st))) ?? ps[ps.length - 1];
+        const vals = valuesFor(k, common);
+        return { key: k, period: common, bench: benchmark(k, common), rows: cmpStates.map((st) => ({ state: st, value: vals.get(st) ?? null })) };
+      }),
+    [cmpStates, cmpInds],
+  );
+
+  // J · change over time
+  const [histInd, setHistInd] = useState('nsdp_pc_constant_spliced');
+  const histPeriods = useMemo(() => periodsFor(histInd), [histInd]);
+  const [hStart, setHStart] = useState('');
+  const [hEnd, setHEnd] = useState('');
+  const h0 = histPeriods.includes(hStart) ? hStart : histPeriods[0];
+  const h1 = histPeriods.includes(hEnd) && fyStart(hEnd) > fyStart(h0) ? hEnd : histPeriods[histPeriods.length - 1];
+  const [strict, setStrict] = useState<'strict' | 'nearest'>('strict');
+  const hist = useMemo(() => {
+    const yrs = fyStart(h1) - fyStart(h0);
+    return PANEL_STATES.map((st) => {
+      const rows = PANEL.filter((r) => r[0] === st && r[1] === histInd && r[3] !== null && fyStart(r[2]) >= fyStart(h0) && fyStart(r[2]) <= fyStart(h1)).sort((a, b) => fyStart(a[2]) - fyStart(b[2]));
+      if (rows.length < 2) return null;
+      const [f, l] = [rows[0], rows[rows.length - 1]];
+      if (strict === 'strict' && (f[2] !== h0 || l[2] !== h1)) return null;
+      const span = fyStart(l[2]) - fyStart(f[2]);
+      return { state: st, first: f[2], last: l[2], v0: f[3] as number, v1: l[3] as number, change: ((l[3] as number) / (f[3] as number) - 1) * 100, cagr: cagr(f[3] as number, l[3] as number, span), partial: span < yrs };
+    })
+      .filter((x): x is NonNullable<typeof x> => !!x)
+      .sort((a, b) => b.cagr - a.cagr);
+  }, [histInd, h0, h1, strict]);
 
   const m = MEASURES[measure];
   const tileMax = Math.max(...tileVals.values());
@@ -484,6 +547,162 @@ export function StatesLab() {
             ]}
             rows={ranks as unknown as Record<string, unknown>[]}
           />
+        </div>
+      </LabSection>
+
+      <LabSection index="G" title="Unemployment — a 2023-24 snapshot" lede="PLFS usual-status unemployment, age 15+. One survey year: a snapshot, not a trend. A low rate can coexist with widespread informal or under-employment.">
+        <ChartFrame title="Unemployment rate by state, 2023-24" subtitle={unempIndia !== null ? `dashed line: India ${unempIndia}%` : ''} source={IND.plfs_unemployment.source} height={Math.max(320, unemp.length * 18)}>
+          <ResponsiveContainer>
+            <BarChart data={unemp} layout="vertical" margin={{ top: 0, right: 30, bottom: 0, left: 8 }}>
+              <CartesianGrid {...grid} horizontal={false} />
+              <XAxis type="number" {...axis} tickFormatter={(v) => `${v}%`} />
+              <YAxis type="category" dataKey="state" {...axis} width={150} interval={0} tick={{ ...axis.tick, fontSize: 10.5 }} />
+              {unempIndia !== null && <ReferenceLine x={unempIndia} stroke="#f5f0e6" strokeDasharray="4 4" />}
+              <Tooltip {...tooltip} formatter={(v) => [fmt.pct(Number(v), 1), 'unemployment']} />
+              <Bar dataKey="value">
+                {unemp.map((u) => (
+                  <Cell key={u.state} fill={unempIndia !== null && u.value > unempIndia ? '#f04a32' : 'rgba(111,174,79,0.6)'} />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </ChartFrame>
+      </LabSection>
+
+      <LabSection index="H" title="State lookup" lede="Every indicator for one state at its latest available year, next to the national figure where the source has one. A missing value says why it is missing.">
+        <div className="max-w-sm">
+          <Field label="State or union territory">
+            <Select value={look} onChange={setLook} options={PANEL_STATES} />
+          </Field>
+        </div>
+        <div className="mt-6">
+          <DataTable
+            columns={[
+              { key: 'label', label: 'Indicator' },
+              { key: 'status', label: 'Status', format: (v) => <StatusPill status={v as string} /> },
+              { key: 'period', label: 'Year' },
+              { key: 'value', label: look, align: 'right', format: (v, r) => (v === null ? <span className="text-ink-500">{String(r.reason)}</span> : fmtInd(String(r.key), v as number)) },
+              { key: 'india', label: 'India', align: 'right', format: (v, r) => (v === null ? <span className="text-ink-600">no national figure</span> : fmtInd(String(r.key), v as number)) },
+              {
+                key: 'rel',
+                label: 'vs India',
+                align: 'right',
+                format: (_v, r) => (r.value !== null && r.india ? <span style={{ color: (r.value as number) >= (r.india as number) ? '#6fae4f' : '#f04a32' }}>{(((r.value as number) / (r.india as number)) * 100).toFixed(0)}%</span> : '—'),
+              },
+            ]}
+            rows={profile as unknown as Record<string, unknown>[]}
+          />
+        </div>
+      </LabSection>
+
+      <LabSection index="I" title="Compare states side by side" lede="Each indicator is shown for the latest year in which every chosen state has a value, so the comparison is like for like.">
+        <div className="grid gap-4 border border-white/[0.08] bg-ink-900/50 p-4">
+          <Field label={`States (${cmpStates.length}/6)`}>
+            <ChipMulti values={cmpStates} onChange={setCmpStates} options={PANEL_STATES} max={6} colour={(x) => SERIES[cmpStates.indexOf(x) % SERIES.length]} />
+          </Field>
+          <Field label="Indicators">
+            <ChipMulti values={cmpInds} onChange={setCmpInds} options={indKeys} />
+          </Field>
+          <div className="text-[11.5px] text-ink-500">{cmpInds.map((k) => `${k} = ${IND[k].label}`).join(' · ')}</div>
+        </div>
+        <div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          {sideBySide.map((b) => (
+            <ChartFrame key={b.key} title={IND[b.key].label} subtitle={`${b.period}${b.bench !== null ? ` · India ${fmtInd(b.key, b.bench)}` : ''}`} height={240}>
+              <ResponsiveContainer>
+                <BarChart data={b.rows} margin={{ top: 8, right: 8, bottom: 4, left: 4 }}>
+                  <CartesianGrid {...grid} vertical={false} />
+                  <XAxis dataKey="state" {...axis} interval={0} tick={{ ...axis.tick, fontSize: 9 }} tickFormatter={(x: string) => (data.tileAbbr as Record<string, string>)[x] ?? x.slice(0, 6)} />
+                  <YAxis {...axis} width={50} tickFormatter={(v) => (IND[b.key].unit === '%' ? `${v}%` : `${(Number(v) / 1000).toFixed(0)}k`)} />
+                  {b.bench !== null && <ReferenceLine y={b.bench} stroke="#f5f0e6" strokeDasharray="4 4" />}
+                  <Tooltip {...tooltip} formatter={(v) => fmtInd(b.key, v as number)} />
+                  <Bar dataKey="value">
+                    {b.rows.map((r) => (
+                      <Cell key={r.state} fill={SERIES[cmpStates.indexOf(r.state) % SERIES.length]} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </ChartFrame>
+          ))}
+        </div>
+      </LabSection>
+
+      <LabSection index="J" title="Change over time — first vs latest observation" lede="Compound annual growth between two years, for every state. Strict mode keeps only states observed in both endpoint years; otherwise each state’s nearest observations inside the window are used and flagged.">
+        <Controls className="md:grid-cols-4">
+          <Field label="Indicator">
+            <Select value={histInd} onChange={setHistInd} options={MULTI_YEAR.map((k) => ({ value: k, label: IND[k].label }))} />
+          </Field>
+          <Field label="From">
+            <Select value={h0} onChange={setHStart} options={histPeriods.slice(0, -1)} />
+          </Field>
+          <Field label="To">
+            <Select value={h1} onChange={setHEnd} options={histPeriods.filter((p) => fyStart(p) > fyStart(h0))} />
+          </Field>
+          <Field label="Endpoints">
+            <Segmented value={strict} onChange={setStrict} options={[{ value: 'strict', label: 'Both years only' }, { value: 'nearest', label: 'Nearest inside' }]} />
+          </Field>
+        </Controls>
+        <div className="mt-6 grid gap-6 xl:grid-cols-[1.2fr_1fr]">
+          <ChartFrame title={`CAGR, ${h0} → ${h1}`} subtitle={`${hist.length} states · ${IND[histInd].label}`} height={Math.max(320, hist.length * 18)}>
+            <ResponsiveContainer>
+              <BarChart data={hist} layout="vertical" margin={{ top: 0, right: 30, bottom: 0, left: 8 }}>
+                <CartesianGrid {...grid} horizontal={false} />
+                <XAxis type="number" {...axis} tickFormatter={(v) => `${v}%`} />
+                <YAxis type="category" dataKey="state" {...axis} width={150} interval={0} tick={{ ...axis.tick, fontSize: 10.5 }} />
+                <Tooltip {...tooltip} formatter={(v, _n, p) => [`${fmt.pct(Number(v), 2)} a year (${(p.payload as { first: string }).first} → ${(p.payload as { last: string }).last})`, 'CAGR']} />
+                <Bar dataKey="cagr">
+                  {hist.map((h) => (
+                    <Cell key={h.state} fill="var(--accent)" fillOpacity={h.partial ? 0.4 : 0.9} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </ChartFrame>
+          <DataTable
+            maxHeight={Math.max(320, hist.length * 18) + 60}
+            columns={[
+              { key: 'state', label: 'State / UT' },
+              { key: 'first', label: 'From' },
+              { key: 'last', label: 'To' },
+              { key: 'change', label: 'Change', align: 'right', format: (v) => fmt.pct(v as number, 0) },
+              { key: 'cagr', label: 'CAGR', align: 'right', format: (v, r) => <span style={{ color: r.partial ? '#f3c542' : undefined }}>{fmt.pct(v as number, 2)}</span> },
+            ]}
+            rows={hist as unknown as Record<string, unknown>[]}
+          />
+        </div>
+        {IND[histInd].priceBasis === 'current' && (
+          <div className="mt-4">
+            <Callout tone="warn">This series is at current prices: its growth mixes real growth with inflation.</Callout>
+          </div>
+        )}
+      </LabSection>
+
+      <LabSection index="K" title="Indicator inventory" lede="What each indicator measures, where it comes from, and what it cannot tell you.">
+        <div className="grid gap-3 lg:grid-cols-2">
+          {indKeys.map((k) => {
+            const ps = periodsFor(k);
+            const n = new Set(PANEL.filter((r) => r[1] === k && r[3] !== null).map((r) => r[0])).size;
+            return (
+              <details key={k} className="group border border-white/[0.08] bg-ink-900/50 p-4 open:bg-ink-900/80">
+                <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-2">
+                  <span className="text-[14px] text-ink-50">{IND[k].label}</span>
+                  <span className="flex items-center gap-2">
+                    <StatusPill status={IND[k].status} />
+                    <span className="font-mono text-[10.5px] text-ink-500">
+                      {ps[0]}
+                      {ps.length > 1 ? `–${ps[ps.length - 1]}` : ''} · {n} states
+                    </span>
+                  </span>
+                </summary>
+                <div className="mt-3 space-y-2 text-[12.5px] leading-relaxed text-ink-300">
+                  {IND[k].explainer.split('\n\n').map((para, i) => (
+                    <p key={i}>{para.replace(/\*\*/g, '')}</p>
+                  ))}
+                  <p className="text-ink-500">{IND[k].source}</p>
+                </div>
+              </details>
+            );
+          })}
         </div>
       </LabSection>
     </LabShell>

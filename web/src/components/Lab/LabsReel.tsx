@@ -6,7 +6,7 @@ import { LABS } from '../../labs/registry';
 import { useReducedMotionPref } from '../../lib/motion';
 
 /**
- * The seven labs as a scroll-driven reel: the section pins while vertical
+ * The labs as a scroll-driven reel: the section pins while vertical
  * scroll slides the cards sideways. Falls back to a plain grid under
  * reduced motion and on narrow screens, where pinning fights the thumb.
  */
@@ -69,7 +69,7 @@ export function LabsReel() {
         <motion.div ref={track} style={{ x }} className="flex h-[min(560px,70vh)] gap-5 pl-10 pr-10 will-change-transform">
           {cards}
           <Link to="/labs" className="flex w-[300px] shrink-0 flex-col items-center justify-center border border-dashed border-white/[0.14] text-center transition-colors hover:border-[var(--accent)]">
-            <span className="display text-[1.6rem]">All seven labs</span>
+            <span className="display text-[1.6rem]">All ten labs</span>
             <span className="label mt-3 inline-flex items-center gap-2">
               Open the index <ArrowUpRight size={12} />
             </span>

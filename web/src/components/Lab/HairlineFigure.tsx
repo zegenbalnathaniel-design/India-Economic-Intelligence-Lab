@@ -1,5 +1,9 @@
 import {
   Branches,
+  Drawer,
+  Padlock,
+  Rail,
+  Sieve,
   Cabinet,
   Dish,
   Elevator,
@@ -16,7 +20,7 @@ import { useState, type CSSProperties } from 'react';
 import { cn } from '../../lib/format';
 import { useReducedMotionPref } from '../../lib/motion';
 
-const FIGURES = { Branches, Cabinet, Dish, Elevator, Exploded, Lockers, Plot, Riffle, Slow, Terrain, Turntable, Vault };
+const FIGURES = { Branches, Drawer, Padlock, Rail, Sieve, Cabinet, Dish, Elevator, Exploded, Lockers, Plot, Riffle, Slow, Terrain, Turntable, Vault };
 export type HairlineName = keyof typeof FIGURES;
 
 /**

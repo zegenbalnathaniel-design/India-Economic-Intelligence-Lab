@@ -20,6 +20,10 @@ import { Research } from './pages/Research';
 
 // Each lab is its own chunk: its data bundle loads only when the lab is opened.
 const LabsIndex = lazy(() => import('./pages/labs/LabsIndex'));
+const WealthLab = lazy(() => import('./pages/labs/WealthLab'));
+const BankingLab = lazy(() => import('./pages/labs/BankingLab'));
+const LibraryLab = lazy(() => import('./pages/labs/LibraryLab'));
+const Limitations = lazy(() => import('./pages/Limitations'));
 const StatesLab = lazy(() => import('./pages/labs/StatesLab'));
 const HousingLab = lazy(() => import('./pages/labs/HousingLab'));
 const InequalityLab = lazy(() => import('./pages/labs/InequalityLab'));
@@ -79,6 +83,10 @@ export default function App() {
         <Suspense fallback={<LabFallback />}>
         <Routes>
           <Route path="/labs" element={<LabsIndex />} />
+          <Route path="/labs/wealth" element={<WealthLab />} />
+          <Route path="/labs/banking" element={<BankingLab />} />
+          <Route path="/labs/library" element={<LibraryLab />} />
+          <Route path="/limitations" element={<Limitations />} />
           <Route path="/labs/states" element={<StatesLab />} />
           <Route path="/labs/housing" element={<HousingLab />} />
           <Route path="/labs/inequality" element={<InequalityLab />} />

@@ -3,14 +3,14 @@
  * order of its navigation. One accent colour per lab (the Streamlit
  * LAB_ACCENTS system), carried into the lab's hero figure, rules and charts.
  */
-export type FigureName = 'Branches' | 'Lockers' | 'Riffle' | 'Elevator' | 'Exploded' | 'Plot' | 'Dish' | 'Cabinet' | 'Terrain' | 'Turntable';
+export type FigureName = 'Branches' | 'Lockers' | 'Riffle' | 'Elevator' | 'Exploded' | 'Plot' | 'Dish' | 'Cabinet' | 'Terrain' | 'Turntable' | 'Sieve' | 'Drawer' | 'Rail';
 
 export interface LabMeta {
   slug: string;
   n: string;
   title: string;
   short: string;
-  group: 'Labs' | 'Models & tools';
+  group: 'Labs' | 'Models & tools' | 'Research';
   question: string;
   blurb: string;
   accent: string;
@@ -19,6 +19,30 @@ export interface LabMeta {
 }
 
 export const LABS: LabMeta[] = [
+  {
+    slug: 'wealth',
+    n: '01',
+    title: 'Wealth & Inequality Lab',
+    short: 'Wealth',
+    group: 'Labs',
+    question: 'Why does the same saving build such different wealth?',
+    blurb: 'The income-to-ownership ladder, a composition-effect simulator, a Monte Carlo with correlations and fat tails, single-asset projections, r − g, and the paper’s Figure 2 rebuilt.',
+    accent: '#f04a32',
+    figure: 'Riffle',
+    keywords: 'composition effect monte carlo r minus g piketty asset allocation property gold equity figure 2 annuity',
+  },
+  {
+    slug: 'banking',
+    n: '02',
+    title: 'Banking & Monetary Policy Lab',
+    short: 'Banking',
+    group: 'Labs',
+    question: 'Did policy-rate changes move bank performance, 2018–2024?',
+    blurb: 'The iBFPI — robust z-scores of five indicators per bank — against the RBI repo rate, split by rate regime, and stress-tested against every construction choice.',
+    accent: '#4d6ff0',
+    figure: 'Drawer',
+    keywords: 'ibfpi bfpi repo rate bank performance robust z score regime spearman fixed effects newey west',
+  },
   {
     slug: 'states',
     n: '03',
@@ -51,8 +75,8 @@ export const LABS: LabMeta[] = [
     group: 'Labs',
     question: 'Who holds India’s income and wealth, and is finance broadening it?',
     blurb: 'Lorenz curves and lower-bound Ginis from the World Inequality Lab tables, what households hold and owe, and Global Findex / WDI financial-depth series.',
-    accent: '#f04a32',
-    figure: 'Riffle',
+    accent: '#ff7a59',
+    figure: 'Sieve',
     keywords: 'wil lorenz gini top 1% wealth income findex account ownership market cap aidis debt',
   },
   {
@@ -75,7 +99,7 @@ export const LABS: LabMeta[] = [
     group: 'Labs',
     question: 'Which economic variables actually move together — and does it survive scrutiny?',
     blurb: 'Fifteen pre-specified hypotheses with alignment reports, transforms, Spearman verdicts, first-difference checks, lag and rolling correlations — and a full multiple-regression workbench.',
-    accent: '#4d6ff0',
+    accent: '#8fa2ff',
     figure: 'Plot',
     keywords: 'correlation regression ols hypothesis spearman workbench robust hc1 hac diagnostics vif',
   },
@@ -87,7 +111,7 @@ export const LABS: LabMeta[] = [
     group: 'Models & tools',
     question: 'If the repo rate, oil, the rupee or capex moves — what follows, by how much?',
     blurb: 'Four shock scenarios propagated through linear chains whose every coefficient carries a citation, with two editable parameter sets side by side.',
-    accent: '#f0663f',
+    accent: '#f5a524',
     figure: 'Dish',
     keywords: 'repo rate oil crude rupee depreciation capex multiplier simulator shock cpi gdp cad',
   },
@@ -102,6 +126,18 @@ export const LABS: LabMeta[] = [
     accent: '#5fd0c9',
     figure: 'Cabinet',
     keywords: 'cpi iip inflation repo mpc world bank peers gdp growth reserves exchange rate',
+  },
+  {
+    slug: 'library',
+    n: '10',
+    title: 'Research Library',
+    short: 'Library',
+    group: 'Research',
+    question: 'What can the data in this project actually answer?',
+    blurb: 'Five investigations computed from the lab’s own data — question, motivation, sources, method, results, interpretation, limitations and further questions — and what is not yet possible.',
+    accent: '#c9c5ba',
+    figure: 'Rail',
+    keywords: 'investigation research brief convergence concentration composition housing financialisation',
   },
 ];
 

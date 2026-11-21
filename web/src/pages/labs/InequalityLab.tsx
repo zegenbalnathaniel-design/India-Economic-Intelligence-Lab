@@ -165,12 +165,14 @@ export function InequalityLab() {
           { label: 'Gini, lower bound', value: giniLowerBound(latestI).toFixed(3), sub: `income, ${latestI.year}` },
         ]}
         figure={{
-          name: 'Riffle',
-          label: 'A tray of eight cards, one per population group, from the bottom 10% to the top 0.1%, each with its share of India’s income and wealth.',
-          idle: 'Hover a card, or tab in and use the arrow keys.',
+          name: 'Sieve',
+          label: 'Three test sieves stacked over a pan: the Top 10%, the Middle 40% and the Bottom 50%, each with its share of income and wealth.',
+          idle: 'Move up and down the stack: each sieve is one group, and what it holds.',
           caption: (read) => {
-            if (!read || read === 'rest') return null;
-            return (D.riffleCaptions as string[])[parseInt(read, 10) - 1] ?? null;
+            const m = /^sieve (\d)/.exec(read);
+            if (!m) return null;
+            const [k, l] = ([['top_10', 'TOP 10%'], ['middle_40', 'MIDDLE 40%'], ['bottom_50', 'BOTTOM 50%']] as const)[Number(m[1]) - 1];
+            return `${l}\n${fmt.pct(latestI[k], 1)} of income (${latestI.year}) · ${fmt.pct(cw[k], 1)} of wealth (${cw.year})`;
           },
         }}
       />

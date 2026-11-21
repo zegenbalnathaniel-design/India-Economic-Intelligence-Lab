@@ -34,7 +34,7 @@ export const KIND_LABEL: Record<CommandKind, string> = {
 
 const PAGES: Command[] = [
   { id: 'p-home', kind: 'page', title: 'Home', to: '/' },
-  { id: 'p-labs', kind: 'page', title: 'The research labs', subtitle: 'Seven labs over real Indian data', to: '/labs', keywords: 'lab' },
+  { id: 'p-labs', kind: 'page', title: 'The research labs', subtitle: 'Ten labs over real Indian data', to: '/labs', keywords: 'lab' },
   ...LABS.map((l) => ({ id: `p-lab-${l.slug}`, kind: 'page' as const, title: l.title, subtitle: l.question, to: `/labs/${l.slug}`, keywords: l.keywords })),
   { id: 'p-research', kind: 'page', title: 'Research', subtitle: 'Papers and methodology notes', to: '/research' },
   { id: 'p-data', kind: 'page', title: 'Data', subtitle: 'Macro, banking and states', to: '/data' },
@@ -46,6 +46,7 @@ const PAGES: Command[] = [
   { id: 'p-india', kind: 'page', title: 'India', subtitle: 'Economic map and timeline', to: '/india' },
   { id: 'p-glossary', kind: 'page', title: 'Glossary', to: '/glossary' },
   { id: 'p-about', kind: 'page', title: 'About', to: '/about' },
+  { id: 'p-limits', kind: 'page', title: 'Limitations', subtitle: 'What this lab cannot tell you', to: '/limitations', keywords: 'caveats causality assumptions' },
 ];
 
 const ACTIONS: Command[] = [

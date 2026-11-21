@@ -7,13 +7,15 @@ const COLUMNS = [
     title: 'Research',
     links: [
       { label: 'The Great Indian Promise', to: '/research/the-great-indian-promise' },
-      { label: 'Research library', to: '/research' },
+      { label: 'Papers', to: '/research' },
+      { label: 'Research Library', to: '/labs/library' },
       { label: 'BFPI methodology', to: '/models/bfpi/methodology' },
     ],
   },
   {
     title: 'Models',
     links: [
+      { label: 'All ten labs', to: '/labs' },
       { label: 'Figure 2 — Wealth', to: '/models/figure-2' },
       { label: 'BFPI — Banking', to: '/models/bfpi' },
       { label: 'Experiments', to: '/experiments' },
@@ -33,6 +35,7 @@ const COLUMNS = [
       { label: 'Economic map', to: '/india' },
       { label: 'Timeline', to: '/india#timeline' },
       { label: 'About IEIL', to: '/about' },
+      { label: 'Limitations', to: '/limitations' },
     ],
   },
 ];

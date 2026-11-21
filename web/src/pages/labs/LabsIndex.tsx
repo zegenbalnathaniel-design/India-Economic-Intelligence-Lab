@@ -36,7 +36,7 @@ export function LabsIndex() {
               <span className="label-accent">The research labs</span>
             </div>
             <h1 className="display mt-6 max-w-[14ch] text-balance text-[2.8rem] leading-[1.02] md:text-[4.6rem]">
-              Seven labs. <span className="spectrum-text">One economy</span>, taken apart.
+              Ten labs. <span className="spectrum-text">One economy</span>, taken apart.
             </h1>
             <p className="mt-6 max-w-[58ch] text-[1rem] leading-relaxed text-ink-300">
               Each lab asks one question of real Indian data — RBI, MoSPI, NHB, the World Inequality Lab, the World Bank — and

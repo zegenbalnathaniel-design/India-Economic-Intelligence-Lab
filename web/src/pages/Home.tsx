@@ -80,14 +80,14 @@ export function Home() {
           >
             <div className="flex items-baseline gap-4">
               <span className="label-accent">Labs</span>
-              <span className="label">Seven research labs</span>
+              <span className="label">Ten research labs</span>
             </div>
             <h2 className="display mt-5 max-w-4xl text-balance text-[2rem] leading-[1.08] md:text-[3.25rem]">
-              One economy, taken apart <span className="spectrum-text">seven ways</span>
+              One economy, taken apart <span className="spectrum-text">ten ways</span>
             </h2>
             <p className="mt-5 max-w-3xl text-[0.95rem] leading-relaxed text-ink-400">
-              States, housing, inequality, structural change, economic relationships, macro transmission and India against the
-              world — each on real data, each with its working shown. Keep scrolling.
+              Wealth, banking, states, housing, inequality, structural change, economic relationships, macro transmission, India against the world and a research library
+              — each on real data, each with its working shown. Keep scrolling.
             </p>
           </motion.div>
         </div>

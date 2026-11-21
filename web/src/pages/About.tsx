@@ -47,11 +47,11 @@ export function About() {
       <PageHeader
         label="About"
         figure={{
-          name: 'Vault',
-          accent: '#f04a32',
-          label: 'A vault door with a combination dial; turning it to the combination opens the bolts.',
-          idle: 'Turn the dial.',
-          caption: (read) => (!read || read === 'rest' ? null : read.includes('open') ? 'A model is not reality. It is a way of asking questions about reality.' : 'Keep turning…'),
+          name: 'Padlock',
+          accent: '#f3c542',
+          label: 'A padlock whose shackle springs open as the pointer nears.',
+          idle: 'Come closer: nothing on this site is locked.',
+          caption: (read) => (read === 'open' ? 'Every assumption is unlocked: change it, and watch the result move.' : read && read !== 'rest' ? 'Opening…' : null),
         }}
         title="Why IEIL?"
         lede="Economics is often presented as something to read rather than something to interrogate. A paper states a result; a reader accepts or doubts it; nothing in between is available. IEIL exists to put something in between."
